@@ -1606,6 +1606,33 @@ app.get("/api/get_sort_vid", async (req, res) => {
   }
 });
 
+///////////////////////////////////////////// для получения суммы счета каждого пользователя
+app.get("/api/check_mon", async (req, res) => {
+  const id = req.query.id;
+  try {
+    const response = await db.query_await(
+      `select * from depozitary where codeid_agent = ${id} AND number_account = 400`
+    );
+    if (response) {
+      res.status(200).json(response?.recordsets);
+    }
+  } catch (err) {
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
+
+///////////////////////////////////////////// для получения pdf файла для соглашения с условиями биржы
+app.get("/api/agreement_doc", async (req, res) => {
+  try {
+    const pdfFilePath = "./files/00AAANewFilEEEEEEEEE123123.pdf";
+
+    res.status(200).json(pdfFilePath);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
+
 //// логинизация
 app.post("/api/login", async (req, res) => {
   try {
@@ -1634,6 +1661,26 @@ app.post("/api/history", async (req, res) => {
     );
     if (response) {
       res.status(200).json(response?.recordsets?.[0]);
+    }
+  } catch (err) {
+    res.status(500).json({ message: err.message || "Internal server error" });
+  }
+});
+
+/// для регистрации пользователя
+app.post("/api/register", async (req, res) => {
+  const { login, password, otherData } = req.body;
+
+  // Проверки на корректность данных и хеширование пароля (например, с использованием bcrypt)
+
+  // Сохранение данных в базу данных
+  try {
+    const response = await db.query_await(
+      // `INSERT INTO agents (login, password, other_column) VALUES ('${login}', '${hashedPassword}', '${otherData}')`
+      ``
+    );
+    if (response) {
+      res.status(200).json({ message: "Registration successful" });
     }
   } catch (err) {
     res.status(500).json({ message: err.message || "Internal server error" });
