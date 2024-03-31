@@ -1,8 +1,8 @@
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { useDispatch } from "react-redux";
 import { getProductEveryInvoice } from "../../store/reducers/requestSlice";
 
-export const EveryInvoiceTA = ({ obj, navigation }) => {
+export const EveryInvoiceTT = ({ obj, navigation }) => {
   //// каждая загрузка(накладная) типо истории
   const dispatch = useDispatch();
 
@@ -12,24 +12,46 @@ export const EveryInvoiceTA = ({ obj, navigation }) => {
       obj,
       title: `Накладная №${obj.codeid}`,
     });
+    // Alert.alert(obj.codeid?.toString())
+    // console.log(navigation,"navigation");
   };
 
   // console.log(obj, "asdasd");
   //   console.log(listInvoiceEveryTA, "listInvoiceEveryTA");
   //   console.log(listProductEveryInvoiceTA, "listProductEveryInvoiceTA");
 
+  const status = {
+    0: "Касса открыта",
+    1: "Касса закрыта",
+  };
+
   return (
     <>
       <TouchableOpacity style={styles.container} onPress={lookInvoice}>
         <View style={styles.innerBlock}>
+          {/* <Text
+            style={[
+              styles.titleDate,
+              { color: obj?.status === 0 ? "green" : "red" },
+            ]}
+          >
+            {status?.[obj?.status]}
+          </Text> */}
           <View style={styles.mainData}>
             <Text style={styles.titleNum}>{obj.codeid} </Text>
             <View>
-              <Text style={[styles.titleDate, styles.role]}>
-                {/* Жанара (Точка1) */}
+              {/* <Text style={[styles.titleDate, styles.role]}>
                 {obj?.seller} {obj?.point ? `(${obj.point})` : ""}
+              </Text> */}
+              <Text
+                style={[
+                  styles.titleDate,
+                  { color: obj?.status === 0 ? "green" : "red" },
+                ]}
+              >
+                {status?.[obj?.status]}
               </Text>
-              <Text style={styles.titleDate}>{obj.date}</Text>
+              <Text style={styles.titleDate}>{obj?.date_system}</Text>
             </View>
           </View>
           {obj.comment?.length !== 0 && (
@@ -44,7 +66,7 @@ export const EveryInvoiceTA = ({ obj, navigation }) => {
         </View>
         <View style={styles.mainDataArrow}>
           <View>
-            <Text style={styles.status}>Отгружено</Text>
+            <Text style={styles.status}>Выручка</Text>
             <Text style={styles.totalPrice}>{obj?.total_price} сом</Text>
           </View>
           <View style={styles.arrow}></View>

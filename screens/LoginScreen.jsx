@@ -73,7 +73,7 @@ export const LoginScreen = ({ navigation }) => {
             value={dataLogin.password}
             onChangeText={onChangePassword}
             placeholder="Ваш пароль"
-            // onSubmitEditing={sendLogin}
+            typePassword={true}
           />
         </View>
       </ViewContainer>
@@ -86,7 +86,7 @@ export const LoginScreen = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   loginBtn: {
-    backgroundColor: "rgba(184, 196, 246, 0.99)",
+    backgroundColor: "rgba(47, 71, 190, 0.591)",
     position: "absolute",
     bottom: 30,
     left: 10,

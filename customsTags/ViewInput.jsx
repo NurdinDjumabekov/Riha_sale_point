@@ -19,7 +19,13 @@ const TextLabel = styled.Text`
   text-align: left;
 `;
 
-export const ViewInput = ({ value, onChangeText, placeholder, text }) => {
+export const ViewInput = ({
+  value,
+  onChangeText,
+  placeholder,
+  text,
+  typePassword,
+}) => {
   return (
     <View>
       {text !== "" && <TextLabel>{text}</TextLabel>}
@@ -28,6 +34,7 @@ export const ViewInput = ({ value, onChangeText, placeholder, text }) => {
         onChangeText={onChangeText}
         placeholder={placeholder}
         autoFocus={true}
+        secureTextEntry={typePassword ? true : false}
       />
     </View>
   );

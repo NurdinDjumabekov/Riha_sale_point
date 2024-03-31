@@ -12,8 +12,8 @@ import { LogOut } from "../components/LogOut";
 import { LeftoversScreen } from "./LeftoversScreen";
 import { DetailedInvoice } from "./DetailedInvoice";
 import { EveryInvoice } from "./EveryInvoice";
-import { EveryInvoiceList } from "./EveryInvoiceList";
 import { EveryInvoiceHistoryScreen } from "./EveryInvoiceHistoryScreen";
+import { StyleSheet, Text } from "react-native";
 
 const Stack = createNativeStackNavigator();
 
@@ -64,15 +64,19 @@ export const Navigation = () => {
               component={MyShipmentScreen}
               options={{ title: "Отгрузки" }}
             />
-            <Stack.Screen name="everyInvoice" component={EveryInvoice} />
+            <Stack.Screen
+              name="everyInvoice"
+              component={EveryInvoice}
+              options={({ route }) => ({
+                headerRight: () => (
+                  <Text style={styles.date}>{route.params?.invoiceDate}</Text>
+                ),
+              })}
+            />
             <Stack.Screen
               name="everyInvoiceHistoryScreen"
               component={EveryInvoiceHistoryScreen}
             />
-            {/* <Stack.Screen
-              name="everyInvoiceList"
-              component={EveryInvoiceList}
-            /> */}
             {/* /////////////////////// Отгрузки /////////////////////// */}
           </>
         </Stack.Navigator>
@@ -81,3 +85,11 @@ export const Navigation = () => {
     </Provider>
   );
 };
+
+const styles = StyleSheet.create({
+  date: {
+    fontSize: 16,
+    fontWeight: "700",
+    color: "rgba(47, 71, 190, 0.591)",
+  },
+});

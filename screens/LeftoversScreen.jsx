@@ -132,10 +132,10 @@ export const LeftoversScreen = ({ route }) => {
                   data={listLeftovers.map((item) => [
                     item[0], // Товар
                     item[1], // Остаток на начало
-                    <Text style={[textStyles, { color: "green" }]}>
+                    <Text style={{ ...textStyles, color: "green" }}>
                       {item[2]}
                     </Text>, // Приход
-                    <Text style={[textStyles, { color: "red" }]}>
+                    <Text style={{ ...textStyles, color: "red" }}>
                       {item[3]}
                     </Text>, // Расход
                     item[4], // Остаток на конец

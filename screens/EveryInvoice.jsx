@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import {
   FlatList,
   RefreshControl,
@@ -8,23 +8,14 @@ import {
   View,
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  addProdInvoiceTT,
-  getCategoryTT,
-  getProductTA,
-} from "../store/reducers/requestSlice";
+import { getCategoryTT, getProductTA } from "../store/reducers/requestSlice";
 import { EveryProduct } from "../components/EveryProduct";
-import ConfirmationModal from "../components/ConfirmationModal";
 import { EveryCategoryInner } from "../components/TAComponents/EveryCategoryInner";
-import { changeStateForCategory } from "../store/reducers/stateSlice";
+import { transformDate } from "../helpers/transformDate";
 
 export const EveryInvoice = ({ navigation, route }) => {
   const dispatch = useDispatch();
-  const { codeid, guid } = route.params; //// guid - созданной накладной
-  const [modal, setModal] = useState(false);
-  const { listProductForTT, stateForCategory } = useSelector(
-    (state) => state.stateSlice
-  );
+  const { codeid, guid, date } = route.params; //// guid - созданной накладной
   const { preloader, listCategoryTA, listProductTA } = useSelector(
     (state) => state.requestSlice
   );
@@ -36,8 +27,10 @@ export const EveryInvoice = ({ navigation, route }) => {
     navigation.setOptions({
       title: `Накладная №${codeid}`,
     });
-    dispatch(changeStateForCategory("0"));
+    navigation.setParams({ invoiceDate: date });
   }, [guid]);
+
+  // console.log(navigation, "sdaas");
 
   const getData = async () => {
     await dispatch(getCategoryTT(seller_guid));
@@ -49,23 +42,7 @@ export const EveryInvoice = ({ navigation, route }) => {
     ); /// 0 - все продукты
   };
 
-  const sendData = () => {
-    const data = {
-      invoice_guid: guid,
-      products: listProductForTT?.map((i) => {
-        return {
-          guid: i.guid,
-          count: i.ves,
-          price: i.price,
-        };
-      }),
-    };
-    dispatch(addProdInvoiceTT({ data, navigation }));
-    setModal(false);
-  };
-
   // console.log(listProductTA, "listProductTA");
-  // console.log(stateForCategory, "stateForCategory");
 
   const widthMax = { minWidth: "100%", width: "100%" };
   return (
@@ -101,14 +78,6 @@ export const EveryInvoice = ({ navigation, route }) => {
           />
         </SafeAreaView>
       </View>
-      {/* /// для подтверждения отправки */}
-      <ConfirmationModal
-        visible={modal}
-        message="Подтвердить ?"
-        onYes={sendData}
-        onNo={() => setModal(false)}
-        onClose={() => setModal(false)}
-      />
     </>
   );
 };

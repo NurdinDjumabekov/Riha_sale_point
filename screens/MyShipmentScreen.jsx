@@ -5,7 +5,6 @@ import {
   Text,
   View,
   TextInput,
-  Alert,
   FlatList,
   RefreshControl,
   TouchableOpacity,
@@ -13,19 +12,20 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import {
   createInvoiceTT,
-  getAllSellersPoint,
-  getInvoiceEveryTA,
+  getInvoiceEveryTT,
 } from "../store/reducers/requestSlice";
 import { useEffect, useState } from "react";
 import { ViewButton } from "../customsTags/ViewButton";
 import {
   changeEveryInvoiceTA,
+  changeStateForCategory,
   clearEveryInvoiceTA,
 } from "../store/reducers/stateSlice";
-import { EveryInvoiceTA } from "../components/TAComponents/EveryInvoiceTA";
+import { EveryInvoiceTT } from "../components/TAComponents/EveryInvoiceTT";
+import { transformDate } from "../helpers/transformDate";
 
 export const MyShipmentScreen = ({ navigation }) => {
-  const { preloader, listSellersPoints, listInvoiceEveryTA } = useSelector(
+  const { preloader, listInvoiceEveryTT } = useSelector(
     (state) => state.requestSlice
   );
   const { createEveryInvoiceTA } = useSelector((state) => state.stateSlice);
@@ -34,29 +34,13 @@ export const MyShipmentScreen = ({ navigation }) => {
 
   const seller_guid = "93C7B683-048A-49D2-9E0A-23F31D563C23";
 
-  // useEffect(() => {
-  //   getData();
-  //   dispatch(
-  //     changeEveryInvoiceTA({
-  //       ...createEveryInvoiceTA,
-  //       seller_guid: listSellersPoints?.[0]?.value,
-  //     })
-  //   );
-  // }, []);
+  useEffect(() => {
+    getData();
+  }, []);
 
   const getData = () => {
-    dispatch(getAllSellersPoint(seller_guid));
-    dispatch(getInvoiceEveryTA(seller_guid));
+    dispatch(getInvoiceEveryTT(seller_guid));
   };
-
-  // const changeSelect = (guid) => {
-  //   dispatch(
-  //     changeEveryInvoiceTA({
-  //       ...createEveryInvoiceTA,
-  //       seller_guid: guid,
-  //     })
-  //   );
-  // };
 
   const changeComm = (text) => {
     dispatch(
@@ -74,7 +58,9 @@ export const MyShipmentScreen = ({ navigation }) => {
 
   const createAppInvoiceTA = () => {
     dispatch(createInvoiceTT({ data: createEveryInvoiceTA, navigation }));
-    dispatch(clearEveryInvoiceTA());
+    dispatch(clearEveryInvoiceTA()); // очищаю активный продукт
+    dispatch(changeStateForCategory("0")); /// категория будет "все"
+    setModalState(false);
     // console.log(createEveryInvoiceTA,"createEveryInvoiceTA");
     // if (createEveryInvoiceTA?.seller_guid === "") {
     //   Alert.alert("Выберите торговую точку!");
@@ -82,7 +68,7 @@ export const MyShipmentScreen = ({ navigation }) => {
     // }
   };
 
-  // console.log(listInvoiceEveryTA, "listInvoiceEveryTA");
+  // console.log(listInvoiceEveryTT, "listInvoiceEveryTT");
   // console.log(listSellersPoints, "listSellersPoints");
   // console.log(createEveryInvoiceTA, "createEveryInvoiceTA");
 
@@ -93,6 +79,7 @@ export const MyShipmentScreen = ({ navigation }) => {
     borderTopWidth: 1,
     borderColor: "rgba(47, 71, 190, 0.587)",
   };
+
   return (
     <>
       <View style={styles.parentBlock}>
@@ -102,26 +89,28 @@ export const MyShipmentScreen = ({ navigation }) => {
               styles={[styles.sendBtn, styles.sendBtnMore]}
               onclick={() => setModalState(true)}
             >
-              + Открыть кассу
+              Открыть кассу на {transformDate(new Date())}
             </ViewButton>
           </View>
-          {listInvoiceEveryTA?.length === 0 ? (
+          {listInvoiceEveryTT?.length === 0 ? (
             <Text style={styles.noneData}>Список накладных пустой</Text>
           ) : (
-            <FlatList
-              contentContainerStyle={FlatListStyle}
-              data={listInvoiceEveryTA}
-              renderItem={({ item }) => (
-                <EveryInvoiceTA obj={item} navigation={navigation} />
-              )}
-              keyExtractor={(item) => item.codeid}
-              refreshControl={
-                <RefreshControl
-                  refreshing={preloader}
-                  onRefresh={() => getData()}
-                />
-              }
-            />
+            <View style={{ paddingBottom: 180 }}>
+              <FlatList
+                contentContainerStyle={FlatListStyle}
+                data={listInvoiceEveryTT}
+                renderItem={({ item }) => (
+                  <EveryInvoiceTT obj={item} navigation={navigation} />
+                )}
+                keyExtractor={(item) => item.codeid}
+                refreshControl={
+                  <RefreshControl
+                    refreshing={preloader}
+                    onRefresh={() => getData()}
+                  />
+                }
+              />
+            </View>
           )}
         </SafeAreaView>
       </View>
@@ -137,38 +126,6 @@ export const MyShipmentScreen = ({ navigation }) => {
           onPress={closeModal} // Закрыть модальное окно
         >
           <View style={styles.modalInner} onPress={() => setModalState(true)}>
-            {/* <Text style={styles.titleSelect}>Создание накладной</Text> */}
-            {/* <Text style={styles.titleSelect}>Открыть кассу </Text> */}
-            {/* <View style={styles.selectBlock}>
-              <FlatList
-                contentContainerStyle={{
-                  minWidth: "100%",
-                  width: "100%",
-                }}
-                data={listSellersPoints}
-                renderItem={({ item }) => (
-                  <TouchableOpacity
-                    style={[
-                      styles.selectBlockInner,
-                      createEveryInvoiceTA?.seller_guid === item?.value &&
-                        styles.activeSelect,
-                    ]}
-                    onPress={() => changeSelect(item?.value)}
-                  >
-                    <Text
-                      style={[
-                        styles.selectText,
-                        createEveryInvoiceTA?.seller_guid === item?.value &&
-                          styles.activeSelectText,
-                      ]}
-                    >
-                      {item?.label}
-                    </Text>
-                  </TouchableOpacity>
-                )}
-                // keyExtractor={(item) => item.value}
-              />
-            </View> */}
             <TextInput
               style={styles.inputComm}
               value={createEveryInvoiceTA.comment}
@@ -189,6 +146,7 @@ export const MyShipmentScreen = ({ navigation }) => {
     </>
   );
 };
+
 const styles = StyleSheet.create({
   parentBlock: {
     flex: 1,
