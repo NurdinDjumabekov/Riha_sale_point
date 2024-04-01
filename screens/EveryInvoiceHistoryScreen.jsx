@@ -9,7 +9,7 @@ import { ViewButton } from "../customsTags/ViewButton";
 import ConfirmationModal from "../components/ConfirmationModal";
 import {
   changeStateForCategory,
-  clearEveryInvoiceTA,
+  changeTemporaryData,
 } from "../store/reducers/stateSlice";
 
 export const EveryInvoiceHistoryScreen = ({ route, navigation }) => {
@@ -39,8 +39,8 @@ export const EveryInvoiceHistoryScreen = ({ route, navigation }) => {
       guid: seller_guid,
       date: obj?.date_system,
     });
-    dispatch(clearEveryInvoiceTA()); // очищаю активный продукт
     dispatch(changeStateForCategory("0")); /// категория будет "все"
+    dispatch(changeTemporaryData({})); /// очищаю активный продукт
   };
 
   const status = {

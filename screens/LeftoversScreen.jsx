@@ -1,4 +1,4 @@
-import { Dimensions, SafeAreaView, StyleSheet, Text, View } from "react-native";
+import { Dimensions, SafeAreaView, StyleSheet, Text } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import {
   changeLeftovers,
@@ -6,9 +6,7 @@ import {
   getMyLeftovers,
 } from "../store/reducers/requestSlice";
 import { useEffect, useState } from "react";
-import RNPickerSelect from "react-native-picker-select";
 import { Table, Row, Rows, TableWrapper } from "react-native-table-component";
-import { ViewButton } from "../customsTags/ViewButton";
 import { ScrollView } from "react-native";
 
 export const LeftoversScreen = ({ route }) => {

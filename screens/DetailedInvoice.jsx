@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import {
   Dimensions,
-  Image,
   ScrollView,
   StyleSheet,
   Text,
@@ -12,7 +11,6 @@ import styled from "styled-components/native";
 import { useDispatch, useSelector } from "react-redux";
 import {
   acceptInvoiceTA,
-  changePreloader,
   getMyEveryInvoice,
 } from "../store/reducers/requestSlice";
 import { Row, Rows, Table } from "react-native-table-component";
@@ -20,7 +18,6 @@ import { CheckBoxTable } from "../components/CheckBoxTable";
 import ConfirmationModal from "../components/ConfirmationModal";
 import { ViewButton } from "../customsTags/ViewButton";
 import { InputDifference } from "../components/InputDifference";
-import gal from "../assets/images/checkGal2.png";
 import { changeAcceptInvoiceTA } from "../store/reducers/stateSlice";
 
 const Div = styled.View`

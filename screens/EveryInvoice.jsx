@@ -11,7 +11,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { getCategoryTT, getProductTA } from "../store/reducers/requestSlice";
 import { EveryProduct } from "../components/EveryProduct";
 import { EveryCategoryInner } from "../components/TAComponents/EveryCategoryInner";
-import { transformDate } from "../helpers/transformDate";
 
 export const EveryInvoice = ({ navigation, route }) => {
   const dispatch = useDispatch();

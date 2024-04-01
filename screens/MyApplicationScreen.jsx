@@ -1,5 +1,11 @@
 import { useEffect } from "react";
-import { SafeAreaView, FlatList, RefreshControl } from "react-native";
+import {
+  SafeAreaView,
+  FlatList,
+  RefreshControl,
+  StyleSheet,
+  Text,
+} from "react-native";
 import styled from "styled-components/native";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -30,28 +36,43 @@ export const MyApplicationScreen = ({ navigation, route }) => {
     return () => dispatch(changeListInvoices([]));
   }, []);
 
-  // console.log(listMyInvoice, "listMyInvoice");
+  console.log(listMyInvoice, "listMyInvoice");
   return (
     <SafeAreaView>
-      <ParentDiv>
-        <FlatList
-          contentContainerStyle={{
-            minWidth: "100%",
-            width: "100%",
-          }}
-          data={listMyInvoice}
-          renderItem={({ item }) => (
-            <EveryMyInvoice obj={item} navigation={navigation} />
-          )}
-          keyExtractor={(item) => item.guid}
-          refreshControl={
-            <RefreshControl
-              refreshing={preloader}
-              onRefresh={() => dispatch(getMyInvoice({ obj: route?.params }))}
-            />
-          }
-        />
-      </ParentDiv>
+      {listMyInvoice?.length === 0 ? (
+        <Text style={styles.noneData}>Список пустой</Text>
+      ) : (
+        <ParentDiv>
+          <FlatList
+            contentContainerStyle={{
+              minWidth: "100%",
+              width: "100%",
+            }}
+            data={listMyInvoice}
+            renderItem={({ item }) => (
+              <EveryMyInvoice obj={item} navigation={navigation} />
+            )}
+            keyExtractor={(item) => item.guid}
+            refreshControl={
+              <RefreshControl
+                refreshing={preloader}
+                onRefresh={() => dispatch(getMyInvoice({ obj: route?.params }))}
+              />
+            }
+          />
+        </ParentDiv>
+      )}
     </SafeAreaView>
   );
 };
+
+const styles = StyleSheet.create({
+  noneData: {
+    paddingTop: 250,
+    textAlign: "center",
+    fontSize: 20,
+    fontWeight: "500",
+    color: "#222",
+    height: "100%",
+  },
+});
