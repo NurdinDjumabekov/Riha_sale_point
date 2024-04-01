@@ -14,6 +14,7 @@ import { DetailedInvoice } from "./DetailedInvoice";
 import { EveryInvoice } from "./EveryInvoice";
 import { EveryInvoiceHistoryScreen } from "./EveryInvoiceHistoryScreen";
 import { StyleSheet, Text } from "react-native";
+import UserInfo from "../components/UserInfo";
 
 const Stack = createNativeStackNavigator();
 
@@ -40,8 +41,8 @@ export const Navigation = () => {
               name="Main"
               component={MainScreen}
               options={({ navigation }) => ({
-                title: "Главная страница",
-                headerLeft: () => <></>,
+                title: "",
+                headerLeft: () => <UserInfo />,
                 headerRight: () => <LogOut navigation={navigation} />,
               })}
             />

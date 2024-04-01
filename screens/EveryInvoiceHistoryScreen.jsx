@@ -16,7 +16,7 @@ export const EveryInvoiceHistoryScreen = ({ route, navigation }) => {
   const [modal, setModal] = useState(false);
   //// каждый продукт накладной (типо истории)
   const { obj, title } = route.params;
-  const seller_guid = "93C7B683-048A-49D2-9E0A-23F31D563C23";
+  const seller_guid = "e7458a29-6f7f-4364-a96d-ed878812f0cf";
 
   const dispatch = useDispatch();
 
@@ -219,7 +219,7 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "column",
     // justifyContent: "space-between",
-    width: "35%",
+    width: "37%",
   },
 
   priceHistory: {
@@ -245,9 +245,9 @@ const styles = StyleSheet.create({
   summ: {
     paddingRight: 20,
     paddingTop: 10,
-    fontSize: 15,
+    fontSize: 14,
     fontWeight: "500",
-    width: "35%",
+    width: "37%",
   },
 
   result: {
@@ -269,6 +269,5 @@ const styles = StyleSheet.create({
     height: "100%",
   },
 });
-
 
 ////  {"count": "1", "guid": "35A776EB-53C9-11EC-8382-000C292CE9DF", "invoice_guid": "48D5BD81-CA22-4A7A-A66F-149DE8EDEBCE", "price": 150}

@@ -1,5 +1,10 @@
-import { SafeAreaView, FlatList, RefreshControl, View } from "react-native";
-import styled from "styled-components/native";
+import {
+  SafeAreaView,
+  FlatList,
+  RefreshControl,
+  View,
+  StyleSheet,
+} from "react-native";
 import { ViewContainer } from "../customsTags/ViewContainer";
 import { dataCategory } from "../helpers/Data";
 import { EveryCategory } from "../components/EveryCategory";
@@ -10,14 +15,6 @@ export const MainScreen = ({ navigation }) => {
   const { token } = useSelector((state) => state.saveDataSlice);
   const { preloader } = useSelector((state) => state.requestSlice);
   const dispatch = useDispatch();
-
-  const ParentDiv = styled.View`
-    min-width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding-bottom: 10px;
-  `;
 
   const chnagePreloader = () => {
     dispatch(changePreloader(true));
@@ -32,7 +29,7 @@ export const MainScreen = ({ navigation }) => {
     <View style={{ paddingTop: 20, backgroundColor: "#ebeef2" }}>
       <ViewContainer>
         <SafeAreaView>
-          <ParentDiv>
+          <View style={styles.parentBlock}>
             <FlatList
               contentContainerStyle={{
                 minWidth: "100%",
@@ -53,9 +50,19 @@ export const MainScreen = ({ navigation }) => {
                 />
               }
             />
-          </ParentDiv>
+          </View>
         </SafeAreaView>
       </ViewContainer>
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  parentBlock: {
+    minWidth: "100%",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    paddingBottom: 10,
+  },
+});

@@ -11,7 +11,7 @@ const initialState = {
   }, // для подтверждения и принятия товаров ТА
 
   createEveryInvoiceTA: {
-    seller_guid: "93C7B683-048A-49D2-9E0A-23F31D563C23",
+    seller_guid: "e7458a29-6f7f-4364-a96d-ed878812f0cf",
     comment: "",
   }, // для создания каждой накладной ТА
 
@@ -45,7 +45,7 @@ const stateSlice = createSlice({
     },
     clearEveryInvoiceTA: (state, action) => {
       state.createEveryInvoiceTA = {
-        seller_guid: "93C7B683-048A-49D2-9E0A-23F31D563C23",
+        seller_guid: "e7458a29-6f7f-4364-a96d-ed878812f0cf",
         comment: "",
       };
     },

@@ -17,7 +17,7 @@ export const LeftoversScreen = ({ route }) => {
     (state) => state.requestSlice
   );
 
-  const seller_guid = "93C7B683-048A-49D2-9E0A-23F31D563C23";
+  const seller_guid = "e7458a29-6f7f-4364-a96d-ed878812f0cf";
 
   useEffect(() => {
     getData();
@@ -156,7 +156,6 @@ const styles = StyleSheet.create({
     paddingTop: 10,
     paddingBottom: 30,
     marginBottom: 10,
-
   },
   sortBlock: {
     display: "flex",
