@@ -19,6 +19,11 @@ const initialState = {
   dataInputsInv: { price: "", ves: "" },
   listProductForTT: [],
   stateForCategory: {}, // состояние для хранения временной категории(подсветка категории)
+  expense: {
+    expense_type: "",
+    comment: "",
+    amount: "",
+  }, /// данные суммы расходов каждой ТТ
 };
 
 const stateSlice = createSlice({
@@ -62,7 +67,6 @@ const stateSlice = createSlice({
       const indexToRemove = state.listProductForTT.findIndex(
         (item) => item.guid === action.payload?.guid
       );
-
       if (indexToRemove !== -1) {
         state.listProductForTT.splice(indexToRemove, 1);
       }
@@ -75,6 +79,16 @@ const stateSlice = createSlice({
     },
     changeStateForCategory: (state, action) => {
       state.stateForCategory = action.payload;
+    },
+    changeExpense: (state, action) => {
+      state.expense = action.payload;
+    },
+    clearExpense: (state, action) => {
+      state.expense = {
+        expense_type: "",
+        comment: "",
+        amount: "",
+      };
     },
   },
 });
@@ -92,6 +106,8 @@ export const {
   changeDataInputsInv,
   clearDataInputsInv,
   changeStateForCategory,
+  changeExpense,
+  clearExpense,
 } = stateSlice.actions;
 
 export default stateSlice.reducer;

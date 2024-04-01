@@ -2,11 +2,10 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { API } from "../../env";
 import {
-  addListProductForTT,
   changeAcceptInvoiceTA,
-  changeListProductForTT,
   changeTemporaryData,
   clearDataInputsInv,
+  clearExpense,
   clearLogin,
 } from "./stateSlice";
 import { changeToken } from "./saveDataSlice";
@@ -27,6 +26,8 @@ const initialState = {
     list: [],
     status: 0,
   }, /// список товаров каждой накладной ТT(типо истории)
+  listCategExpense: [],
+  listExpense: [],
 };
 
 /// logInAccount
@@ -328,7 +329,77 @@ export const closeKassa = createAsyncThunk(
   }
 );
 
-//////////////////////////////////////////////////////////////
+/////////////////////////////// для страницы расходов ТТ ///////////////////////////////
+
+/// getSelectExpense
+/// список селектов расходов ТТ(их траты)
+export const getSelectExpense = createAsyncThunk(
+  "getSelectExpense",
+  async function (info, { dispatch, rejectWithValue }) {
+    try {
+      const response = await axios({
+        method: "GET",
+        url: `${API}/tt/get_expense_type`,
+      });
+      if (response.status >= 200 && response.status < 300) {
+        // console.log(response?.data, "response?.data");
+        return response?.data;
+      } else {
+        throw Error(`Error: ${response.status}`);
+      }
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+/// addExpenseTT
+export const addExpenseTT = createAsyncThunk(
+  /// добавление продукта(по одному) в накладную торговой точки
+  "addExpenseTT",
+  async function ({ data, getData }, { dispatch, rejectWithValue }) {
+    try {
+      const response = await axios({
+        method: "POST",
+        url: `${API}/tt/add_expense`,
+        data,
+      });
+      if (response.status >= 200 && response.status < 300) {
+        getData();
+        dispatch(clearExpense());
+        // return response?.data?;
+        console.log(data,"555");
+      } else {
+        throw Error(`Error: ${response.status}`);
+      }
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+/// getExpense
+/// список расходов ТТ(их траты)
+export const getExpense = createAsyncThunk(
+  "getExpense",
+  async function (guid, { dispatch, rejectWithValue }) {
+    try {
+      const response = await axios({
+        method: "GET",
+        url: `${API}/tt/get_expenses?seller_guid=${guid}`,
+      });
+      if (response.status >= 200 && response.status < 300) {
+        // console.log(response?.data, "response?.data");
+        return response?.data;
+      } else {
+        throw Error(`Error: ${response.status}`);
+      }
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
 const requestSlice = createSlice({
   name: "requestSlice",
   initialState,
@@ -510,6 +581,35 @@ const requestSlice = createSlice({
       Alert.alert("Упс, что-то пошло не так! Не удалось закрыть кассу");
     });
     builder.addCase(closeKassa.pending, (state, action) => {
+      state.preloader = true;
+    });
+
+    /////// getSelectExpense
+    builder.addCase(getSelectExpense.fulfilled, (state, action) => {
+      state.preloader = false;
+      state.listCategExpense = action?.payload?.map(({ name, guid }, ind) => ({
+        label: `${ind + 1}. ${name}`,
+        value: guid,
+      }));
+    });
+    builder.addCase(getSelectExpense.rejected, (state, action) => {
+      state.error = action.payload;
+      state.preloader = false;
+    });
+    builder.addCase(getSelectExpense.pending, (state, action) => {
+      state.preloader = true;
+    });
+
+    /////// getExpense
+    builder.addCase(getExpense.fulfilled, (state, action) => {
+      state.preloader = false;
+      state.listExpense = action?.payload;
+    });
+    builder.addCase(getExpense.rejected, (state, action) => {
+      state.error = action.payload;
+      state.preloader = false;
+    });
+    builder.addCase(getExpense.pending, (state, action) => {
       state.preloader = true;
     });
   },

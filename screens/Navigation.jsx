@@ -15,6 +15,7 @@ import { EveryInvoice } from "./EveryInvoice";
 import { EveryInvoiceHistoryScreen } from "./EveryInvoiceHistoryScreen";
 import { StyleSheet, Text } from "react-native";
 import UserInfo from "../components/UserInfo";
+import { StoreSpendingScreen } from "./StoreSpendingScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -63,7 +64,7 @@ export const Navigation = () => {
             <Stack.Screen
               name="Shipment"
               component={MyShipmentScreen}
-              options={{ title: "Отгрузки" }}
+              options={{ title: "Продажа" }}
             />
             <Stack.Screen
               name="everyInvoiceHistoryScreen"
@@ -78,7 +79,13 @@ export const Navigation = () => {
                 ),
               })}
             />
-            {/* /////////////////////// Отгрузки /////////////////////// */}
+            {/* /////////////////////// траты /////////////////////// */}
+            <Stack.Screen
+              name="Spending"
+              component={StoreSpendingScreen}
+              options={{ title: "Касса" }}
+            />
+            {/* /////////////////////// траты /////////////////////// */}
           </>
         </Stack.Navigator>
         <StatusBar theme="auto" />
