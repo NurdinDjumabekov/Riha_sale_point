@@ -114,6 +114,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#ebeef2",
     padding: 10,
+    
   },
   selectBlock: {
     backgroundColor: "#f5f5f5",

@@ -8,13 +8,17 @@ import {
   View,
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import { getCategoryTT, getProductTA } from "../store/reducers/requestSlice";
+import {
+  closeKassa,
+  getCategoryTT,
+  getProductTA,
+} from "../store/reducers/requestSlice";
 import { EveryProduct } from "../components/EveryProduct";
 import { EveryCategoryInner } from "../components/TAComponents/EveryCategoryInner";
+import { ViewButton } from "../customsTags/ViewButton";
 
-export const EveryInvoice = ({ navigation, route }) => {
+export const EveryInvoice = ({ navigation, codeid, guid, date }) => {
   const dispatch = useDispatch();
-  const { codeid, guid, date } = route.params; //// guid - созданной накладной
   const { preloader, listCategoryTA, listProductTA } = useSelector(
     (state) => state.requestSlice
   );
@@ -24,9 +28,20 @@ export const EveryInvoice = ({ navigation, route }) => {
   useEffect(() => {
     getData();
     navigation.setOptions({
-      title: `Накладная №${codeid}`,
+      title: `${date}`,
     });
-    navigation.setParams({ invoiceDate: date });
+    navigation.setParams({
+      invoiceDate: (
+        <ViewButton
+          styles={styles.closeKassa}
+          onclick={() =>
+            dispatch(closeKassa({ guid: "obj.guid || guid", navigation }))
+          }
+        >
+          Закрыть кассу
+        </ViewButton>
+      ),
+    });
   }, [guid]);
 
   // console.log(navigation, "sdaas");
@@ -97,40 +112,6 @@ const styles = StyleSheet.create({
     position: "relative",
     backgroundColor: "rgba(162, 178, 238, 0.102)",
   },
-  arrow: {
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "space-between",
-    padding: 10,
-    paddingTop: 15,
-    paddingBottom: 15,
-    backgroundColor: "rgba(12, 169, 70, 0.486)",
-  },
-  arrowInner: {
-    borderTopWidth: 3,
-    borderRightWidth: 3,
-    borderColor: "#fff",
-    height: 15,
-    width: 15,
-    borderRadius: 3,
-    transform: [{ rotate: "45deg" }],
-    marginRight: 20,
-    marginTop: 5,
-  },
-  textBtn: {
-    fontSize: 20,
-    fontWeight: "500",
-    color: "#fff",
-  },
-  actionBlock: {
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    gap: 10,
-    marginBottom: 10,
-  },
-
   selectBlock: {
     backgroundColor: "#fff",
     marginTop: 5,
@@ -154,5 +135,15 @@ const styles = StyleSheet.create({
   },
   textTovar: {
     backgroundColor: "#fff",
+  },
+  closeKassa: {
+    fontSize: 15,
+    fontWeight: "700",
+    color: "#fff",
+    paddingHorizontal: 10,
+    paddingTop: 8,
+    paddingBottom: 8,
+    backgroundColor: "rgba(205, 70, 92, 0.756)",
+    borderRadius: 6,
   },
 });

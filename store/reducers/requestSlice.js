@@ -10,25 +10,6 @@ import {
 } from "./stateSlice";
 import { changeToken } from "./saveDataSlice";
 import { Alert } from "react-native";
-import { transformDate } from "../../helpers/transformDate";
-
-const initialState = {
-  preloader: false,
-  chech: "",
-  listMyInvoice: [],
-  everyInvoice: {},
-  listSellersPoints: [],
-  listCategoryTA: [], //  список категорий ТА
-  listProductTA: [], //  список продуктов ТА (cписок прод-тов отсортированные селектами)
-  listLeftovers: [], // список остатков
-  listInvoiceEveryTT: [], /// список накладных каждой ТТ(типо истории)
-  historyEveryInvoice: {
-    list: [],
-    status: 0,
-  }, /// список товаров каждой накладной ТT(типо истории)
-  listCategExpense: [],
-  listExpense: [],
-};
 
 /// logInAccount
 export const logInAccount = createAsyncThunk(
@@ -184,21 +165,23 @@ export const getMyLeftovers = createAsyncThunk(
 /// createInvoiceTT
 export const createInvoiceTT = createAsyncThunk(
   "createInvoiceTT",
-  /// создание накладной торговый точкой
-  async function ({ data, navigation }, { rejectWithValue }) {
+  /// создание накладной торговый точкой (открытие кассы)
+  async function ({ data, navigation }, { dispatch, rejectWithValue }) {
     try {
       const response = await axios({
         method: "POST",
         url: `${API}/tt/create_invoice`,
         data,
       });
-
       if (response.status >= 200 && response.status < 300) {
-        navigation.navigate("everyInvoice", {
-          codeid: response?.data?.codeid,
-          guid: response?.data?.guid,
-          date: transformDate(new Date()),
-        });
+        // navigation.navigate("everyInvoice", {
+        //   codeid: response?.data?.codeid,
+        //   guid: response?.data?.guid,
+        //   date: transformDate(new Date()),
+        // });
+        dispatch(changeStatusKassa(false));
+
+        /// запросить guid invoice
       } else {
         throw Error(`Error: ${response.status}`);
       }
@@ -317,6 +300,7 @@ export const closeKassa = createAsyncThunk(
       });
       if (response.status >= 200 && response.status < 300) {
         // console.log(response?.data, "response?.data");
+        dispatch(changeStatusKassa(true));
         setTimeout(() => {
           navigation.navigate("Main");
         }, 500);
@@ -367,8 +351,8 @@ export const addExpenseTT = createAsyncThunk(
       if (response.status >= 200 && response.status < 300) {
         getData();
         dispatch(clearExpense());
-        // return response?.data?;
-        console.log(data,"555");
+        return response?.data;
+        // console.log(data,"555");
       } else {
         throw Error(`Error: ${response.status}`);
       }
@@ -399,6 +383,47 @@ export const getExpense = createAsyncThunk(
     }
   }
 );
+
+/// checkStatusKassa
+/// чекаю статус кассы( открыто или закрыто)
+export const checkStatusKassa = createAsyncThunk(
+  "checkStatusKassa",
+  async function (guid, { dispatch, rejectWithValue }) {
+    try {
+      const response = await axios({
+        method: "GET",
+        // url: `${API}/tt/?seller_guid=${guid}`,----------------------------------
+      });
+      if (response.status >= 200 && response.status < 300) {
+        // console.log(response?.data, "response?.data");
+        return response?.data?.result;
+      } else {
+        throw Error(`Error: ${response.status}`);
+      }
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+const initialState = {
+  preloader: false,
+  chech: "",
+  listMyInvoice: [],
+  everyInvoice: {},
+  listSellersPoints: [],
+  listCategoryTA: [], //  список категорий ТА
+  listProductTA: [], //  список продуктов ТА (cписок прод-тов отсортированные селектами)
+  listLeftovers: [], // список остатков
+  listInvoiceEveryTT: [], /// список накладных каждой ТТ(типо истории)
+  historyEveryInvoice: {
+    list: [],
+    status: 0,
+  }, /// список товаров каждой накладной ТT(типо истории)
+  listCategExpense: [],
+  listExpense: [],
+  isOpenKassa: true, ///// чекаю статус кассы
+};
 
 const requestSlice = createSlice({
   name: "requestSlice",
@@ -612,6 +637,33 @@ const requestSlice = createSlice({
     builder.addCase(getExpense.pending, (state, action) => {
       state.preloader = true;
     });
+
+    /////// addExpenseTT
+    builder.addCase(addExpenseTT.fulfilled, (state, action) => {
+      state.preloader = false;
+    });
+    builder.addCase(addExpenseTT.rejected, (state, action) => {
+      state.error = action.payload;
+      state.preloader = false;
+      Alert.alert("Упс, что-то пошло не так!");
+    });
+    builder.addCase(addExpenseTT.pending, (state, action) => {
+      state.preloader = true;
+    });
+
+    /////// checkStatusKassa
+    builder.addCase(checkStatusKassa.fulfilled, (state, action) => {
+      state.preloader = false;
+      state.isOpenKassa = action.payload;
+    });
+    builder.addCase(checkStatusKassa.rejected, (state, action) => {
+      state.error = action.payload;
+      state.preloader = false;
+      Alert.alert("Упс, что-то пошло не так!");
+    });
+    builder.addCase(checkStatusKassa.pending, (state, action) => {
+      state.preloader = true;
+    });
   },
 
   reducers: {
@@ -627,6 +679,9 @@ const requestSlice = createSlice({
     changeListSellersPoints: (state, action) => {
       state.listSellersPoints = action.payload;
     },
+    changeStatusKassa: (state, action) => {
+      state.isOpenKassa = action.payload;
+    },
   },
 });
 export const {
@@ -634,6 +689,7 @@ export const {
   changeListInvoices,
   changeLeftovers,
   changeListSellersPoints,
+  changeStatusKassa,
 } = requestSlice.actions;
 
 export default requestSlice.reducer;

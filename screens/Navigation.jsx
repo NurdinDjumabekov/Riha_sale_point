@@ -13,7 +13,6 @@ import { LeftoversScreen } from "./LeftoversScreen";
 import { DetailedInvoice } from "./DetailedInvoice";
 import { EveryInvoice } from "./EveryInvoice";
 import { EveryInvoiceHistoryScreen } from "./EveryInvoiceHistoryScreen";
-import { StyleSheet, Text } from "react-native";
 import UserInfo from "../components/UserInfo";
 import { StoreSpendingScreen } from "./StoreSpendingScreen";
 
@@ -60,17 +59,19 @@ export const Navigation = () => {
               component={LeftoversScreen}
               options={{ title: "Остатки" }}
             />
-            {/* /////////////////////// Отгрузки ///////////////////////*/}
+            {/* /////////////////////// Продажа ///////////////////////*/}
             <Stack.Screen
               name="Shipment"
               component={MyShipmentScreen}
-              options={{ title: "Продажа" }}
+              options={({ route }) => ({
+                headerRight: () => <>{route.params?.invoiceDate}</>,
+              })}
             />
-            <Stack.Screen
+            {/* <Stack.Screen
               name="everyInvoiceHistoryScreen"
               component={EveryInvoiceHistoryScreen}
-            />
-            <Stack.Screen
+            /> */}
+            {/* <Stack.Screen
               name="everyInvoice"
               component={EveryInvoice}
               options={({ route }) => ({
@@ -78,12 +79,12 @@ export const Navigation = () => {
                   <Text style={styles.date}>{route.params?.invoiceDate}</Text>
                 ),
               })}
-            />
+            /> */}
             {/* /////////////////////// траты /////////////////////// */}
             <Stack.Screen
               name="Spending"
               component={StoreSpendingScreen}
-              options={{ title: "Касса" }}
+              options={{ title: "Расходы" }}
             />
             {/* /////////////////////// траты /////////////////////// */}
           </>
@@ -93,11 +94,3 @@ export const Navigation = () => {
     </Provider>
   );
 };
-
-const styles = StyleSheet.create({
-  date: {
-    fontSize: 16,
-    fontWeight: "700",
-    color: "rgba(47, 71, 190, 0.591)",
-  },
-});

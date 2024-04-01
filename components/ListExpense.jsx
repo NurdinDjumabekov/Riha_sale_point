@@ -54,6 +54,12 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(212, 223, 238, 0.47)",
     marginBottom: 10,
     borderRadius: 6,
+    // shadowColor: "#000",
+    // shadowOpacity: 0.2,
+    // shadowRadius: 4,
+    // elevation: 2,
+    borderWidth: 1,
+    borderColor: "rgba(47, 71, 190, 0.107)",
   },
   everyProdInner: {
     display: "flex",
