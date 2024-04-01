@@ -155,6 +155,8 @@ const styles = StyleSheet.create({
     paddingRight: 1,
     paddingTop: 10,
     paddingBottom: 30,
+    marginBottom: 10,
+
   },
   sortBlock: {
     display: "flex",

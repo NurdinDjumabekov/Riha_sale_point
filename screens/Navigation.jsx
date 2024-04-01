@@ -65,6 +65,10 @@ export const Navigation = () => {
               options={{ title: "Отгрузки" }}
             />
             <Stack.Screen
+              name="everyInvoiceHistoryScreen"
+              component={EveryInvoiceHistoryScreen}
+            />
+            <Stack.Screen
               name="everyInvoice"
               component={EveryInvoice}
               options={({ route }) => ({
@@ -72,10 +76,6 @@ export const Navigation = () => {
                   <Text style={styles.date}>{route.params?.invoiceDate}</Text>
                 ),
               })}
-            />
-            <Stack.Screen
-              name="everyInvoiceHistoryScreen"
-              component={EveryInvoiceHistoryScreen}
             />
             {/* /////////////////////// Отгрузки /////////////////////// */}
           </>

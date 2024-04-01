@@ -244,6 +244,7 @@ export const addProductInvoiceTT = createAsyncThunk(
       if (response.status >= 200 && response.status < 300) {
         dispatch(clearDataInputsInv());
         dispatch(changeTemporaryData({}));
+        console.log(data, "data5555");
         +response?.data?.result === 1 &&
           setTimeout(() => {
             getData();

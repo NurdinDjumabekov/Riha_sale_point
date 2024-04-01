@@ -36,7 +36,7 @@ export const EveryInvoiceHistoryScreen = ({ route, navigation }) => {
   const addProduct = () => {
     navigation.navigate("everyInvoice", {
       codeid: obj?.codeid,
-      guid: seller_guid,
+      guid: obj?.guid,
       date: obj?.date_system,
     });
     dispatch(changeStateForCategory("0")); /// категория будет "все"
@@ -269,3 +269,6 @@ const styles = StyleSheet.create({
     height: "100%",
   },
 });
+
+
+////  {"count": "1", "guid": "35A776EB-53C9-11EC-8382-000C292CE9DF", "invoice_guid": "48D5BD81-CA22-4A7A-A66F-149DE8EDEBCE", "price": 150}
