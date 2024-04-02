@@ -2,15 +2,16 @@ import { StyleSheet, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import {
   createInvoiceTT,
-  getInvoiceEveryTT,
+  checkStatusKassa,
 } from "../store/reducers/requestSlice";
 import { useEffect } from "react";
 import { ViewButton } from "../customsTags/ViewButton";
 import {
   changeStateForCategory,
-  clearEveryInvoiceTA,
+  changeTemporaryData,
 } from "../store/reducers/stateSlice";
 import { EveryInvoice } from "./EveryInvoice";
+import { transformDate } from "../helpers/transformDate";
 
 export const MyShipmentScreen = ({ navigation }) => {
   const { createEveryInvoiceTA } = useSelector((state) => state.stateSlice);
@@ -21,10 +22,16 @@ export const MyShipmentScreen = ({ navigation }) => {
 
   useEffect(() => {
     getData();
+    defaultFN();
+    navigation.setOptions({
+      title: `${transformDate(new Date())}`,
+    });
   }, []);
 
   const getData = () => {
-    dispatch(getInvoiceEveryTT(seller_guid));
+    dispatch(
+      checkStatusKassa({ seller_guid, date: transformDate(new Date()) }) /// "03.04.2024"
+    );
   };
 
   const createAppInvoiceTA = () => {
@@ -33,9 +40,11 @@ export const MyShipmentScreen = ({ navigation }) => {
   };
 
   const defaultFN = () => {
-    dispatch(clearEveryInvoiceTA()); // очищаю активный продукт
+    dispatch(changeTemporaryData({})); // очищаю активный продукт
     dispatch(changeStateForCategory("0")); /// категория будет "все"
   };
+
+  // console.log(isOpenKassa, "isOpenKassa");
 
   return (
     <>
@@ -50,12 +59,7 @@ export const MyShipmentScreen = ({ navigation }) => {
             </ViewButton>
           </View>
         ) : (
-          <EveryInvoice
-            navigation={navigation}
-            codeid="444"
-            guid="yourGuidValue"
-            date="01.04.2024"
-          />
+          <EveryInvoice navigation={navigation} />
         )}
       </View>
     </>

@@ -33,13 +33,14 @@ export const StoreSpendingScreen = ({ navigation }) => {
   const addExpense = () => {
     if (expense.amount === "" || expense.amount == "0") {
       Alert.alert("Заполните сумму");
+    } else {
+      if (expense.expense_type == null || expense.expense_type == "") {
+        Alert.alert("Выберите категорию!");
+      } else {
+        const data = { ...expense, seller_guid };
+        dispatch(addExpenseTT({ data, getData }));
+      }
     }
-    if (expense.expense_type == null || expense.expense_type == "") {
-      Alert.alert("Выберите категорию!");
-    }
-    const data = { ...expense, seller_guid };
-    dispatch(addExpenseTT({ data, getData }));
-    // console.log(data, "data");
   };
 
   const changeSel = (value) => {
@@ -114,7 +115,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#ebeef2",
     padding: 10,
-    
   },
   selectBlock: {
     backgroundColor: "#f5f5f5",

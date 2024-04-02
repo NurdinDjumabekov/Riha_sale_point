@@ -3,6 +3,7 @@ import axios from "axios";
 import { API } from "../../env";
 import {
   changeAcceptInvoiceTA,
+  changeStateForCategory,
   changeTemporaryData,
   clearDataInputsInv,
   clearExpense,
@@ -174,14 +175,8 @@ export const createInvoiceTT = createAsyncThunk(
         data,
       });
       if (response.status >= 200 && response.status < 300) {
-        // navigation.navigate("everyInvoice", {
-        //   codeid: response?.data?.codeid,
-        //   guid: response?.data?.guid,
-        //   date: transformDate(new Date()),
-        // });
-        dispatch(changeStatusKassa(false));
-
-        /// запросить guid invoice
+        console.log(response?.data, "response");
+        return { result: true, obj: response?.data };
       } else {
         throw Error(`Error: ${response.status}`);
       }
@@ -227,35 +222,15 @@ export const addProductInvoiceTT = createAsyncThunk(
       });
       if (response.status >= 200 && response.status < 300) {
         dispatch(clearDataInputsInv());
-        dispatch(changeTemporaryData({}));
-        console.log(data, "data5555");
+        dispatch(changeTemporaryData({})); // очищаю активный продукт
+        dispatch(changeStateForCategory("0")); /// категория будет "все"
+        // console.log(data, "data5555");
         +response?.data?.result === 1 &&
           setTimeout(() => {
             getData();
           }, 500);
         // console.log(response?.data?.result,"response?.data?.result");
         return response?.data?.result;
-      } else {
-        throw Error(`Error: ${response.status}`);
-      }
-    } catch (error) {
-      return rejectWithValue(error.message);
-    }
-  }
-);
-
-/// getInvoiceEveryTT
-/// список накладных каждой ТT(типо истории)
-export const getInvoiceEveryTT = createAsyncThunk(
-  "getInvoiceEveryTT",
-  async function (guid, { dispatch, rejectWithValue }) {
-    try {
-      const response = await axios({
-        method: "GET",
-        url: `${API}/tt/get_point_invoice?seller_guid=${guid}`,
-      });
-      if (response.status >= 200 && response.status < 300) {
-        return response?.data;
       } else {
         throw Error(`Error: ${response.status}`);
       }
@@ -278,6 +253,34 @@ export const getProductEveryInvoice = createAsyncThunk(
       if (response.status >= 200 && response.status < 300) {
         // console.log(response?.data?.[0], "response?.data");
         return response?.data?.[0];
+      } else {
+        throw Error(`Error: ${response.status}`);
+      }
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+/// checkStatusKassa
+/// список накладных каждой ТT(типо истории, список касса ждя проверки)
+export const checkStatusKassa = createAsyncThunk(
+  "checkStatusKassa",
+  async function ({ seller_guid, date }, { dispatch, rejectWithValue }) {
+    try {
+      const response = await axios({
+        method: "GET",
+        url: `${API}/tt/get_point_invoice?seller_guid=${seller_guid}`,
+      });
+      if (response.status >= 200 && response.status < 300) {
+        const containsDate = response?.data?.some(
+          (item) => item.date_system === date
+        );
+        const obj = response?.data?.filter((item) => item.date_system === date);
+        return {
+          result: !containsDate,
+          obj,
+        }; /// true - касса открыта, false она закрыта
       } else {
         throw Error(`Error: ${response.status}`);
       }
@@ -384,28 +387,6 @@ export const getExpense = createAsyncThunk(
   }
 );
 
-/// checkStatusKassa
-/// чекаю статус кассы( открыто или закрыто)
-export const checkStatusKassa = createAsyncThunk(
-  "checkStatusKassa",
-  async function (guid, { dispatch, rejectWithValue }) {
-    try {
-      const response = await axios({
-        method: "GET",
-        // url: `${API}/tt/?seller_guid=${guid}`,----------------------------------
-      });
-      if (response.status >= 200 && response.status < 300) {
-        // console.log(response?.data, "response?.data");
-        return response?.data?.result;
-      } else {
-        throw Error(`Error: ${response.status}`);
-      }
-    } catch (error) {
-      return rejectWithValue(error.message);
-    }
-  }
-);
-
 const initialState = {
   preloader: false,
   chech: "",
@@ -422,7 +403,8 @@ const initialState = {
   }, /// список товаров каждой накладной ТT(типо истории)
   listCategExpense: [],
   listExpense: [],
-  isOpenKassa: true, ///// чекаю статус кассы
+  isOpenKassa: true, ///// чекаю статус кассы (true - касса открыта, false она закрыта)
+  infoKassa: {},
 };
 
 const requestSlice = createSlice({
@@ -481,12 +463,20 @@ const requestSlice = createSlice({
     //// createInvoiceTT
     builder.addCase(createInvoiceTT.fulfilled, (state, action) => {
       state.preloader = false;
-      Alert.alert("Касса открыта!");
+      state.isOpenKassa = true;
+      state.infoKassa = action.payload?.obj;
+      if (+action.payload?.obj?.result === 2) {
+        Alert.alert("Сегодня касса уже была открыта!");
+      } else {
+        Alert.alert("Касса открыта!");
+        state.isOpenKassa = false;
+      }
     });
     builder.addCase(createInvoiceTT.rejected, (state, action) => {
       state.error = action.payload;
       Alert.alert("Упс, что-то пошло не так! Не удалось открыть кассу");
       state.preloader = false;
+      state.isOpenKassa = true;
     });
     builder.addCase(createInvoiceTT.pending, (state, action) => {
       state.preloader = true;
@@ -545,19 +535,7 @@ const requestSlice = createSlice({
     builder.addCase(getMyLeftovers.pending, (state, action) => {
       state.preloader = true;
     });
-    ////// getInvoiceEveryTT
-    builder.addCase(getInvoiceEveryTT.fulfilled, (state, action) => {
-      state.preloader = false;
-      state.listInvoiceEveryTT = action.payload;
-    });
-    builder.addCase(getInvoiceEveryTT.rejected, (state, action) => {
-      state.error = action.payload;
-      state.preloader = false;
-      Alert.alert("Упс, что-то пошло не так! Не удалось загрузить данные");
-    });
-    builder.addCase(getInvoiceEveryTT.pending, (state, action) => {
-      state.preloader = true;
-    });
+
     ////// getProductEveryInvoice
     builder.addCase(getProductEveryInvoice.fulfilled, (state, action) => {
       state.preloader = false;
@@ -595,6 +573,24 @@ const requestSlice = createSlice({
     builder.addCase(addProductInvoiceTT.pending, (state, action) => {
       state.preloader = true;
     });
+
+    /////// checkStatusKassa
+    builder.addCase(checkStatusKassa.fulfilled, (state, action) => {
+      state.preloader = false;
+      state.isOpenKassa = action.payload?.result;
+      state.infoKassa = action.payload?.obj?.[0];
+    });
+    builder.addCase(checkStatusKassa.rejected, (state, action) => {
+      state.error = action.payload;
+      state.preloader = false;
+      Alert.alert(
+        "Упс, что-то пошло не так! Попробуйте перезайти в приложение..."
+      );
+    });
+    builder.addCase(checkStatusKassa.pending, (state, action) => {
+      state.preloader = true;
+    });
+
     ////// closeKassa
     builder.addCase(closeKassa.fulfilled, (state, action) => {
       state.preloader = false;
@@ -648,20 +644,6 @@ const requestSlice = createSlice({
       Alert.alert("Упс, что-то пошло не так!");
     });
     builder.addCase(addExpenseTT.pending, (state, action) => {
-      state.preloader = true;
-    });
-
-    /////// checkStatusKassa
-    builder.addCase(checkStatusKassa.fulfilled, (state, action) => {
-      state.preloader = false;
-      state.isOpenKassa = action.payload;
-    });
-    builder.addCase(checkStatusKassa.rejected, (state, action) => {
-      state.error = action.payload;
-      state.preloader = false;
-      Alert.alert("Упс, что-то пошло не так!");
-    });
-    builder.addCase(checkStatusKassa.pending, (state, action) => {
       state.preloader = true;
     });
   },

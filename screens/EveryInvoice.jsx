@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import {
   FlatList,
   RefreshControl,
@@ -16,35 +16,32 @@ import {
 import { EveryProduct } from "../components/EveryProduct";
 import { EveryCategoryInner } from "../components/TAComponents/EveryCategoryInner";
 import { ViewButton } from "../customsTags/ViewButton";
+import ConfirmationModal from "../components/ConfirmationModal";
 
-export const EveryInvoice = ({ navigation, codeid, guid, date }) => {
+export const EveryInvoice = ({ navigation }) => {
   const dispatch = useDispatch();
-  const { preloader, listCategoryTA, listProductTA } = useSelector(
-    (state) => state.requestSlice
-  );
+  const { preloader, listCategoryTA, listProductTA, isOpenKassa, infoKassa } =
+    useSelector((state) => state.requestSlice);
+  const [modal, setModal] = useState(false);
 
   const seller_guid = "e7458a29-6f7f-4364-a96d-ed878812f0cf";
 
   useEffect(() => {
     getData();
     navigation.setOptions({
-      title: `${date}`,
+      title: `${infoKassa?.date_system}`,
     });
     navigation.setParams({
       invoiceDate: (
-        <ViewButton
-          styles={styles.closeKassa}
-          onclick={() =>
-            dispatch(closeKassa({ guid: "obj.guid || guid", navigation }))
-          }
-        >
+        <ViewButton styles={styles.closeKassa} onclick={() => setModal(true)}>
           Закрыть кассу
         </ViewButton>
       ),
     });
-  }, [guid]);
+  }, [infoKassa?.guid, isOpenKassa]);
 
-  // console.log(navigation, "sdaas");
+  const close = () =>
+    dispatch(closeKassa({ guid: infoKassa?.guid, navigation })); //  guid кассы
 
   const getData = async () => {
     await dispatch(getCategoryTT(seller_guid));
@@ -57,6 +54,7 @@ export const EveryInvoice = ({ navigation, codeid, guid, date }) => {
   };
 
   // console.log(listProductTA, "listProductTA");
+  // console.log(infoKassa, "infoKassa");
 
   const widthMax = { minWidth: "100%", width: "100%" };
   return (
@@ -82,7 +80,7 @@ export const EveryInvoice = ({ navigation, codeid, guid, date }) => {
             contentContainerStyle={widthMax}
             data={listProductTA}
             renderItem={({ item, index }) => (
-              <EveryProduct obj={item} index={index} guidInvoive={guid} />
+              <EveryProduct obj={item} index={index} />
             )}
             // keyExtractor={(item) => item.guid}
             keyExtractor={(item, ind) => `${item.guid}${ind}`}
@@ -92,6 +90,13 @@ export const EveryInvoice = ({ navigation, codeid, guid, date }) => {
           />
         </SafeAreaView>
       </View>
+      <ConfirmationModal
+        visible={modal}
+        message="Закрыть кассу ?"
+        onYes={close}
+        onNo={() => setModal(false)}
+        onClose={() => setModal(false)}
+      />
     </>
   );
 };
@@ -137,13 +142,14 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
   },
   closeKassa: {
-    fontSize: 15,
+    fontSize: 14,
     fontWeight: "700",
     color: "#fff",
     paddingHorizontal: 10,
     paddingTop: 8,
     paddingBottom: 8,
-    backgroundColor: "rgba(205, 70, 92, 0.756)",
+    backgroundColor: "green",
     borderRadius: 6,
+    marginTop: 5,
   },
 });

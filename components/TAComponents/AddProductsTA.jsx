@@ -8,12 +8,13 @@ import {
   getProductTA,
 } from "../../store/reducers/requestSlice";
 
-export const AddProductsTA = ({ productGuid, guidInvoive }) => {
+export const AddProductsTA = ({ productGuid }) => {
   //// для добавления продуктов в список
   const dispatch = useDispatch();
   const seller_guid = "e7458a29-6f7f-4364-a96d-ed878812f0cf";
 
   const { dataInputsInv } = useSelector((state) => state.stateSlice);
+  const { infoKassa } = useSelector((state) => state.requestSlice);
 
   const addInInvoice = () => {
     if (
@@ -28,7 +29,7 @@ export const AddProductsTA = ({ productGuid, guidInvoive }) => {
         guid: productGuid,
         count: dataInputsInv?.ves,
         price: dataInputsInv?.price,
-        invoice_guid: guidInvoive,
+        invoice_guid: infoKassa?.guid,
       };
       dispatch(addProductInvoiceTT({ data, getData }));
     }
@@ -42,7 +43,7 @@ export const AddProductsTA = ({ productGuid, guidInvoive }) => {
         seller_guid,
       })
     ); /// 0 - все продукты
-  }; /// для вызова категорий и продкетов
+  }; /// для вызова категорий и продуктов
 
   // console.log(dataInputsInv, "dataInputsInv");
 
