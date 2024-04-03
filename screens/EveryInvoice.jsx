@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import {
   FlatList,
+  Keyboard,
   RefreshControl,
   SafeAreaView,
   StyleSheet,
@@ -8,40 +9,22 @@ import {
   View,
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  closeKassa,
-  getCategoryTT,
-  getProductTA,
-} from "../store/reducers/requestSlice";
+import { getCategoryTT, getProductTA } from "../store/reducers/requestSlice";
 import { EveryProduct } from "../components/EveryProduct";
 import { EveryCategoryInner } from "../components/TAComponents/EveryCategoryInner";
-import { ViewButton } from "../customsTags/ViewButton";
-import ConfirmationModal from "../components/ConfirmationModal";
 
 export const EveryInvoice = ({ navigation }) => {
   const dispatch = useDispatch();
-  const { preloader, listCategoryTA, listProductTA, isOpenKassa, infoKassa } =
-    useSelector((state) => state.requestSlice);
-  const [modal, setModal] = useState(false);
+  const { preloader, listCategoryTA, listProductTA, infoKassa } = useSelector(
+    (state) => state.requestSlice
+  );
+  const [openKeyBoard, setOpenKeyBoard] = useState(false);
 
   const seller_guid = "e7458a29-6f7f-4364-a96d-ed878812f0cf";
 
   useEffect(() => {
     getData();
-    navigation.setOptions({
-      title: `${infoKassa?.date_system}`,
-    });
-    navigation.setParams({
-      invoiceDate: (
-        <ViewButton styles={styles.closeKassa} onclick={() => setModal(true)}>
-          Закрыть кассу
-        </ViewButton>
-      ),
-    });
-  }, [infoKassa?.guid, isOpenKassa]);
-
-  const close = () =>
-    dispatch(closeKassa({ guid: infoKassa?.guid, navigation })); //  guid кассы
+  }, [infoKassa?.guid]);
 
   const getData = async () => {
     await dispatch(getCategoryTT(seller_guid));
@@ -53,8 +36,29 @@ export const EveryInvoice = ({ navigation }) => {
     ); /// 0 - все продукты
   };
 
+  useEffect(() => {
+    /// события открытия клавиатуры
+    const keyboardDidShowListener = Keyboard.addListener(
+      "keyboardDidShow",
+      () => setOpenKeyBoard(true)
+    );
+    /// события закрытия клавиатуры
+    const keyboardDidHideListener = Keyboard.addListener(
+      "keyboardDidHide",
+      () => setOpenKeyBoard(false)
+    );
+    // Удаление слушателей после использования
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    };
+  }, []);
+
+  // console.log(openKeyBoard, "openKeyBoard");
   // console.log(listProductTA, "listProductTA");
   // console.log(infoKassa, "infoKassa");
+
+  const checkLength = listProductTA?.length <= 4;
 
   const widthMax = { minWidth: "100%", width: "100%" };
   return (
@@ -66,6 +70,16 @@ export const EveryInvoice = ({ navigation }) => {
               <Text style={styles.textCateg}>Категории</Text>
               <FlatList
                 contentContainerStyle={widthMax}
+                // data={[
+                //   ...listCategoryTA,
+                //   ...listCategoryTA,
+                //   ...listCategoryTA,
+                //   ...listCategoryTA,
+                //   ...listCategoryTA,
+                //   ...listCategoryTA,
+                //   ...listCategoryTA,
+                //   ...listCategoryTA,
+                // ]}
                 data={listCategoryTA}
                 renderItem={({ item }) => <EveryCategoryInner obj={item} />}
                 keyExtractor={(item, ind) => `${item.guid}${ind}`}
@@ -76,27 +90,36 @@ export const EveryInvoice = ({ navigation }) => {
             </View>
           </View>
           <Text style={[styles.textCateg, styles.textTovar]}>Товары</Text>
-          <FlatList
-            contentContainerStyle={widthMax}
-            data={listProductTA}
-            renderItem={({ item, index }) => (
-              <EveryProduct obj={item} index={index} />
-            )}
-            // keyExtractor={(item) => item.guid}
-            keyExtractor={(item, ind) => `${item.guid}${ind}`}
-            refreshControl={
-              <RefreshControl refreshing={preloader} onRefresh={getData} />
-            }
-          />
+          <View
+            style={[
+              styles.blockSelectProd,
+              openKeyBoard && checkLength && styles.paddingB50,
+            ]}
+          >
+            <FlatList
+              contentContainerStyle={widthMax}
+              // data={[
+              //   ...listProductTA,
+              //   ...listProductTA,
+              //   ...listProductTA,
+              //   ...listProductTA,
+              //   ...listProductTA,
+              //   ...listProductTA,
+              //   ...listProductTA,
+              //   ...listProductTA,
+              // ]}
+              data={listProductTA}
+              renderItem={({ item, index }) => (
+                <EveryProduct obj={item} index={index} />
+              )}
+              keyExtractor={(item, ind) => `${item.guid}${ind}`}
+              refreshControl={
+                <RefreshControl refreshing={preloader} onRefresh={getData} />
+              }
+            />
+          </View>
         </SafeAreaView>
       </View>
-      <ConfirmationModal
-        visible={modal}
-        message="Закрыть кассу ?"
-        onYes={close}
-        onNo={() => setModal(false)}
-        onClose={() => setModal(false)}
-      />
     </>
   );
 };
@@ -119,7 +142,7 @@ const styles = StyleSheet.create({
   },
   selectBlock: {
     backgroundColor: "#fff",
-    marginTop: 5,
+    marginTop: 3,
     marginBottom: 5,
     borderStyle: "solid",
     borderRadius: 3,
@@ -132,11 +155,12 @@ const styles = StyleSheet.create({
     fontWeight: "500",
     marginBottom: 3,
     shadowColor: "#000",
-    shadowOpacity: 0.3,
+    shadowOpacity: 0.9,
     shadowRadius: 4,
     elevation: 2,
-    paddingBottom: 10,
-    paddingTop: 10,
+    paddingBottom: 9,
+    paddingTop: 9,
+    backgroundColor: "#fff",
   },
   textTovar: {
     backgroundColor: "#fff",
@@ -151,5 +175,13 @@ const styles = StyleSheet.create({
     backgroundColor: "green",
     borderRadius: 6,
     marginTop: 5,
+  },
+  blockSelectProd: {
+    minHeight: "30%",
+    overflow: "scroll",
+    height: "48%",
+  },
+  paddingB50: {
+    // paddingBottom: 95,
   },
 });

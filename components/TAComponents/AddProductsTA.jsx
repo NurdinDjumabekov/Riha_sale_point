@@ -23,7 +23,7 @@ export const AddProductsTA = ({ productGuid }) => {
       dataInputsInv.price == 0 ||
       dataInputsInv.ves == 0
     ) {
-      Alert.alert("Введите цену и вес(кол-во)!");
+      Alert.alert("Введите цену и вес (кол-во)!");
     } else {
       const data = {
         guid: productGuid,
@@ -32,6 +32,7 @@ export const AddProductsTA = ({ productGuid }) => {
         invoice_guid: infoKassa?.guid,
       };
       dispatch(addProductInvoiceTT({ data, getData }));
+      // console.log(data,"data");
     }
   };
 

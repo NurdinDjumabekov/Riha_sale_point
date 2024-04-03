@@ -11,8 +11,7 @@ const initialState = {
   }, // для подтверждения и принятия товаров ТА
 
   createEveryInvoiceTA: {
-    seller_guid: "e7458a29-6f7f-4364-a96d-ed878812f0cf",
-    comment: "",
+    seller_guid: "e7458a29-6f7f-4364-a96d-ed878812f0cf", /// delete
   }, // для создания каждой накладной ТА
 
   temporaryData: {}, ///// временные данные(после добавления сюда, они добавляются в список(listProductForTT))
@@ -51,7 +50,6 @@ const stateSlice = createSlice({
     clearEveryInvoiceTA: (state, action) => {
       state.createEveryInvoiceTA = {
         seller_guid: "e7458a29-6f7f-4364-a96d-ed878812f0cf",
-        comment: "",
       };
     },
     changeTemporaryData: (state, action) => {

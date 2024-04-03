@@ -167,16 +167,16 @@ export const getMyLeftovers = createAsyncThunk(
 export const createInvoiceTT = createAsyncThunk(
   "createInvoiceTT",
   /// создание накладной торговый точкой (открытие кассы)
-  async function ({ data, navigation }, { dispatch, rejectWithValue }) {
+  async function (seller_guid, { dispatch, rejectWithValue }) {
     try {
       const response = await axios({
         method: "POST",
         url: `${API}/tt/create_invoice`,
-        data,
+        data: { seller_guid },
       });
       if (response.status >= 200 && response.status < 300) {
-        console.log(response?.data, "response");
-        return { result: true, obj: response?.data };
+        console.log(response?.data);
+        return { codeid: response?.data?.codeid, guid: response?.data?.guid };
       } else {
         throw Error(`Error: ${response.status}`);
       }
@@ -224,13 +224,57 @@ export const addProductInvoiceTT = createAsyncThunk(
         dispatch(clearDataInputsInv());
         dispatch(changeTemporaryData({})); // очищаю активный продукт
         dispatch(changeStateForCategory("0")); /// категория будет "все"
-        // console.log(data, "data5555");
         +response?.data?.result === 1 &&
           setTimeout(() => {
             getData();
           }, 500);
-        // console.log(response?.data?.result,"response?.data?.result");
         return response?.data?.result;
+      } else {
+        throw Error(`Error: ${response.status}`);
+      }
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+//// getListSoldProd
+export const getListSoldProd = createAsyncThunk(
+  /// список проданных товаров
+  "getListSoldProd",
+  async function (guidInvoice, { dispatch, rejectWithValue }) {
+    try {
+      const response = await axios({
+        method: "GET",
+        url: `${API}/tt/get_point_invoice_product?invoice_guid=${guidInvoice}`,
+      });
+      if (response.status >= 200 && response.status < 300) {
+        // console.log(response?.data?.[0]?.list, "response");
+        return response?.data?.[0]?.list;
+      } else {
+        throw Error(`Error: ${response.status}`);
+      }
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+//// deleteSoldProd
+export const deleteSoldProd = createAsyncThunk(
+  /// удаление данных из списока проданных товаров
+  "deleteSoldProd",
+  async function ({ guid, guidInvoice }, { dispatch, rejectWithValue }) {
+    try {
+      const response = await axios({
+        method: "POST",
+        url: `${API}/tt/del_product`,
+        data: { product_guid: guid },
+      });
+      if (response.status >= 200 && response.status < 300) {
+        setTimeout(() => {
+          dispatch(getListSoldProd(guidInvoice));
+        }, 1000);
       } else {
         throw Error(`Error: ${response.status}`);
       }
@@ -262,7 +306,7 @@ export const getProductEveryInvoice = createAsyncThunk(
   }
 );
 
-/// checkStatusKassa
+/// checkStatusKassa /// delete
 /// список накладных каждой ТT(типо истории, список касса ждя проверки)
 export const checkStatusKassa = createAsyncThunk(
   "checkStatusKassa",
@@ -290,7 +334,7 @@ export const checkStatusKassa = createAsyncThunk(
   }
 );
 
-/// closeKassa
+/// closeKassa ///delete
 /// список товаров каждой накладной ТT(типо истории)
 export const closeKassa = createAsyncThunk(
   "closeKassa",
@@ -303,7 +347,6 @@ export const closeKassa = createAsyncThunk(
       });
       if (response.status >= 200 && response.status < 300) {
         // console.log(response?.data, "response?.data");
-        dispatch(changeStatusKassa(true));
         setTimeout(() => {
           navigation.navigate("Main");
         }, 500);
@@ -396,15 +439,12 @@ const initialState = {
   listCategoryTA: [], //  список категорий ТА
   listProductTA: [], //  список продуктов ТА (cписок прод-тов отсортированные селектами)
   listLeftovers: [], // список остатков
+  listSoldProd: [], /// список проданных товаров
+
   listInvoiceEveryTT: [], /// список накладных каждой ТТ(типо истории)
-  historyEveryInvoice: {
-    list: [],
-    status: 0,
-  }, /// список товаров каждой накладной ТT(типо истории)
   listCategExpense: [],
   listExpense: [],
-  isOpenKassa: true, ///// чекаю статус кассы (true - касса открыта, false она закрыта)
-  infoKassa: {},
+  infoKassa: { guid: "", codeid: "" }, /// guid каждой накладной ТТ
 };
 
 const requestSlice = createSlice({
@@ -462,21 +502,17 @@ const requestSlice = createSlice({
     });
     //// createInvoiceTT
     builder.addCase(createInvoiceTT.fulfilled, (state, action) => {
+      const { codeid, guid } = action.payload;
       state.preloader = false;
-      state.isOpenKassa = true;
-      state.infoKassa = action.payload?.obj;
-      if (+action.payload?.obj?.result === 2) {
-        Alert.alert("Сегодня касса уже была открыта!");
-      } else {
-        Alert.alert("Касса открыта!");
-        state.isOpenKassa = false;
-      }
+      state.infoKassa = {
+        codeid,
+        guid,
+      };
     });
     builder.addCase(createInvoiceTT.rejected, (state, action) => {
       state.error = action.payload;
-      Alert.alert("Упс, что-то пошло не так! Не удалось открыть кассу");
+      Alert.alert("Упс, что-то пошло не так! Не удалось создать накладную");
       state.preloader = false;
-      state.isOpenKassa = true;
     });
     builder.addCase(createInvoiceTT.pending, (state, action) => {
       state.preloader = true;
@@ -537,21 +573,21 @@ const requestSlice = createSlice({
     });
 
     ////// getProductEveryInvoice
-    builder.addCase(getProductEveryInvoice.fulfilled, (state, action) => {
-      state.preloader = false;
-      state.historyEveryInvoice = {
-        status: action.payload?.status,
-        list: action.payload?.list,
-      };
-    });
-    builder.addCase(getProductEveryInvoice.rejected, (state, action) => {
-      state.error = action.payload;
-      state.preloader = false;
-      Alert.alert("Упс, что-то пошло не так! Не удалось загрузить данные");
-    });
-    builder.addCase(getProductEveryInvoice.pending, (state, action) => {
-      state.preloader = true;
-    });
+    // builder.addCase(getProductEveryInvoice.fulfilled, (state, action) => {
+    //   state.preloader = false;
+    //   state.historyEveryInvoice = {
+    //     status: action.payload?.status,
+    //     list: action.payload?.list,
+    //   };
+    // });
+    // builder.addCase(getProductEveryInvoice.rejected, (state, action) => {
+    //   state.error = action.payload;
+    //   state.preloader = false;
+    //   Alert.alert("Упс, что-то пошло не так! Не удалось загрузить данные");
+    // });
+    // builder.addCase(getProductEveryInvoice.pending, (state, action) => {
+    //   state.preloader = true;
+    // });
     /////// addProductInvoiceTT
     builder.addCase(addProductInvoiceTT.fulfilled, (state, action) => {
       /// 0 - error
@@ -574,10 +610,39 @@ const requestSlice = createSlice({
       state.preloader = true;
     });
 
+    /////// getListSoldProd
+    builder.addCase(getListSoldProd.fulfilled, (state, action) => {
+      state.preloader = false;
+      state.listSoldProd = action.payload;
+    });
+    builder.addCase(getListSoldProd.rejected, (state, action) => {
+      state.error = action.payload;
+      state.preloader = false;
+      state.listSoldProd = [];
+      Alert.alert(
+        "Упс, что-то пошло не так! Попробуйте перезайти в приложение..."
+      );
+    });
+    builder.addCase(getListSoldProd.pending, (state, action) => {
+      state.preloader = true;
+    });
+
+    /////// deleteSoldProd
+    builder.addCase(deleteSoldProd.fulfilled, (state, action) => {
+      state.preloader = false;
+    });
+    builder.addCase(deleteSoldProd.rejected, (state, action) => {
+      state.error = action.payload;
+      state.preloader = false;
+      Alert.alert("Упс, что-то пошло не так! Не удалось удалить...");
+    });
+    builder.addCase(deleteSoldProd.pending, (state, action) => {
+      state.preloader = true;
+    });
+
     /////// checkStatusKassa
     builder.addCase(checkStatusKassa.fulfilled, (state, action) => {
       state.preloader = false;
-      state.isOpenKassa = action.payload?.result;
       state.infoKassa = action.payload?.obj?.[0];
     });
     builder.addCase(checkStatusKassa.rejected, (state, action) => {
@@ -661,9 +726,6 @@ const requestSlice = createSlice({
     changeListSellersPoints: (state, action) => {
       state.listSellersPoints = action.payload;
     },
-    changeStatusKassa: (state, action) => {
-      state.isOpenKassa = action.payload;
-    },
   },
 });
 export const {
@@ -671,7 +733,6 @@ export const {
   changeListInvoices,
   changeLeftovers,
   changeListSellersPoints,
-  changeStatusKassa,
 } = requestSlice.actions;
 
 export default requestSlice.reducer;

@@ -73,6 +73,7 @@ export const DetailedInvoice = ({ route, navigation }) => {
       const tableDataList = everyInvoice?.list?.map((item) => {
         return [
           `${item?.codeid}. ${item?.product_name}`,
+          `${item?.product_price}`,
           `${item?.count}`,
           <InputDifference
             guidProduct={item?.guid}
@@ -90,7 +91,7 @@ export const DetailedInvoice = ({ route, navigation }) => {
   }, [everyInvoice]);
 
   const windowWidth = Dimensions.get("window").width;
-  const arrWidth = [50, 18, 20, 12]; //  проценты %
+  const arrWidth = [40, 14, 17, 17, 12]; //  проценты %
 
   // Преобразуем проценты в абсолютные значения ширины
   const resultWidths = arrWidth.map(
@@ -112,7 +113,7 @@ export const DetailedInvoice = ({ route, navigation }) => {
       return changeValue !== 0 && changeValue !== "";
     });
 
-  // console.log(everyInvoice.list, "everyInvoice");
+  // console.log(everyInvoice?.list, "everyInvoice");
   // console.log(acceptConfirmInvoice, "acceptConfirmInvoice");
 
   return (
@@ -125,7 +126,7 @@ export const DetailedInvoice = ({ route, navigation }) => {
         </Div>
         <Table>
           <Row
-            data={[" Продукт", "Вес (кол-во)", "Вес принято", "  ...."]}
+            data={[" Продукт", "Цена", "Вес (кол-во)", "Вес принято", "  ...."]}
             style={styles.head}
             textStyle={styles.textTitle}
             widthArr={resultWidths}
@@ -189,11 +190,11 @@ const styles = StyleSheet.create({
     color: "#222",
   },
   textTitle: {
-    fontSize: 15,
-    fontWeight: "500",
-    paddingTop: 10,
+    fontSize: 14,
+    fontWeight: "600",
+    // paddingTop: 10,
     paddingRight: 0,
-    paddingBottom: 15,
+    // paddingBottom: 15,
     paddingLeft: 5,
     color: "#383838",
   },

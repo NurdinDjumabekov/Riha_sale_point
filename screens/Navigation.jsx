@@ -12,9 +12,9 @@ import { LogOut } from "../components/LogOut";
 import { LeftoversScreen } from "./LeftoversScreen";
 import { DetailedInvoice } from "./DetailedInvoice";
 import { EveryInvoice } from "./EveryInvoice";
-import { EveryInvoiceHistoryScreen } from "./EveryInvoiceHistoryScreen";
 import UserInfo from "../components/UserInfo";
 import { StoreSpendingScreen } from "./StoreSpendingScreen";
+import { SoldProductScreen } from "./SoldProductScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -63,23 +63,15 @@ export const Navigation = () => {
             <Stack.Screen
               name="Shipment"
               component={MyShipmentScreen}
-              options={({ route }) => ({
-                headerRight: () => <>{route.params?.invoiceDate}</>,
-              })}
+              // options={({ route }) => ({
+              //   headerRight: () => <>{route.params?.invoiceDate}</>,
+              // })}
             />
-            {/* <Stack.Screen
-              name="everyInvoiceHistoryScreen"
-              component={EveryInvoiceHistoryScreen}
-            /> */}
-            {/* <Stack.Screen
-              name="everyInvoice"
-              component={EveryInvoice}
-              options={({ route }) => ({
-                headerRight: () => (
-                  <Text style={styles.date}>{route.params?.invoiceDate}</Text>
-                ),
-              })}
-            /> */}
+            <Stack.Screen
+              name="SoldProduct"
+              component={SoldProductScreen} /// список проданных товаров
+              options={{ title: "Список продаж" }}
+            />
             {/* /////////////////////// траты /////////////////////// */}
             <Stack.Screen
               name="Spending"

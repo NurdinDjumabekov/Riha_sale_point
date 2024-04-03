@@ -1,11 +1,16 @@
-import { Dimensions, SafeAreaView, StyleSheet, Text } from "react-native";
+import {
+  Dimensions,
+  RefreshControl,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+} from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import {
   changeLeftovers,
-  getCategoryTT,
   getMyLeftovers,
 } from "../store/reducers/requestSlice";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Table, Row, Rows, TableWrapper } from "react-native-table-component";
 import { ScrollView } from "react-native";
 
@@ -13,7 +18,7 @@ export const LeftoversScreen = ({ route }) => {
   const dispatch = useDispatch();
   const { id, name } = route?.params;
 
-  const { listCategoryTA, listLeftovers } = useSelector(
+  const { preloader, listLeftovers } = useSelector(
     (state) => state.requestSlice
   );
 
@@ -29,36 +34,21 @@ export const LeftoversScreen = ({ route }) => {
     await dispatch(getMyLeftovers(seller_guid));
   };
 
-  // console.log(listLeftovers, "listLeftovers");
-
-  const select = {
-    height: 50,
-    width: 250,
-    backgroundColor: "#fff",
-    // borderWidth: 2,
-    // borderColor: "rgb(217 223 232)",
-    borderRadius: 6,
-    // paddingLeft: 10,
-    marginLeft: 5,
-    marginBottom: 15,
-    // fontSize: 13,
-    paddingTop: 0,
-  };
-
   const windowWidth = Dimensions.get("window").width;
   const arrWidth = [35, 19, 14, 14, 18]; //  проценты %
   const resultWidths = arrWidth.map(
     (percentage) => (percentage / 100) * windowWidth
   );
 
-  const [date, setDate] = useState(new Date());
-  const [showDatePicker, setShowDatePicker] = useState(false);
-
-  const onChange = (event, selectedDate) => {
-    const currentDate = selectedDate || date;
-    setShowDatePicker(false);
-    setDate(currentDate);
+  const handleScroll = (event) => {
+    const offsetY = event.nativeEvent.contentOffset.y;
+    if (offsetY <= 0) {
+      // Если скролл достиг верхней границы
+      getData();
+    }
   };
+
+  // console.log(listLeftovers, "listLeftovers");
 
   const textStyles = {
     margin: 6,
@@ -69,29 +59,15 @@ export const LeftoversScreen = ({ route }) => {
 
   return (
     <>
-      <ScrollView style={styles.container}>
+      <ScrollView
+        style={styles.container}
+        onScroll={handleScroll}
+        scrollEventThrottle={400}
+        refreshControl={
+          <RefreshControl refreshing={preloader} onRefresh={getData} />
+        }
+      >
         <SafeAreaView>
-          {/* <View style={styles.sortBlock}>
-            <View style={select}>
-              <RNPickerSelect
-                onValueChange={(value) => console.log(value)}
-                items={listCategoryTA}
-                // placeholder={{ label: "Все", value: 0 }}
-                placeholder={{ label: "Все", value: null }}
-                // style={{
-                //   inputIOS: select,
-                //   inputAndroid: select,
-                // }}
-                // useNativeAndroidPickerStyle={false}
-              />
-            </View>
-            <ViewButton
-              onclick={() => setShowDatePicker(true)}
-              styles={styles.date}
-            >
-              Сортировать по дате
-            </ViewButton>
-          </View> */}
           {listLeftovers?.length === 0 ? (
             <Text style={styles.noneData}>Остатков нет...</Text>
           ) : (
@@ -116,16 +92,6 @@ export const LeftoversScreen = ({ route }) => {
                 flexArr={resultWidths}
               />
               <TableWrapper style={{ flexDirection: "row" }}>
-                {/* <Rows
-                  data={listLeftovers}
-                  textStyle={{
-                    margin: 6,
-                    marginBottom: 8,
-                    marginTop: 8,
-                    fontSize: 12,
-                  }}
-                  flexArr={resultWidths}
-                /> */}
                 <Rows
                   data={listLeftovers.map((item) => [
                     item[0], // Товар
@@ -161,10 +127,10 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
   },
-  date: {
-    width: 200,
-    backgroundColor: "red",
-  },
+  // date: {
+  //   width: 200,
+  //   backgroundColor: "red",
+  // },
   head: {
     height: 65,
     backgroundColor: "rgba(199, 210, 254, 0.250)",

@@ -45,7 +45,7 @@ export const InputDifference = ({ guidProduct, guidInvoice }) => {
 const styles = StyleSheet.create({
   standartBox: {
     position: "relative",
-    width: 60,
+    width: 55,
     height: 30,
     borderWidth: 1,
     borderColor: "rgb(206 217 230)",
