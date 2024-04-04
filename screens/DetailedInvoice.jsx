@@ -103,6 +103,11 @@ export const DetailedInvoice = ({ route, navigation }) => {
     0
   );
 
+  const totalSum = everyInvoice?.list?.reduce(
+    (total, item) => +total + +item?.total,
+    0
+  );
+
   const isTrue =
     acceptConfirmInvoice?.products?.length === everyInvoice?.list?.length &&
     acceptConfirmInvoice?.products?.every(
@@ -113,7 +118,7 @@ export const DetailedInvoice = ({ route, navigation }) => {
       return changeValue !== 0 && changeValue !== "";
     });
 
-  // console.log(everyInvoice?.list, "everyInvoice");
+  console.log(everyInvoice?.list, "everyInvoice");
   // console.log(acceptConfirmInvoice, "acceptConfirmInvoice");
 
   return (
@@ -144,15 +149,20 @@ export const DetailedInvoice = ({ route, navigation }) => {
         </Table>
         <View style={styles.divAction}>
           <View style={styles.divActionInner}>
-            <Text style={styles.totalItemCount}>Итого: {totalItemCount}</Text>
-            <TouchableOpacity onPress={changeAllCheckbox}>
-              <View style={styles.standartBox}>
-                <View style={styles.standartBox__inner}>
-                  <View style={styles.checkmark}></View>
-                </View>
-              </View>
-            </TouchableOpacity>
+            <View style={styles.blockTotal}>
+              <Text style={styles.totalItemCount}>Сумма: {totalSum} сом</Text>
+              <Text style={styles.totalItemCount}>
+                Кол-во: {totalItemCount}
+              </Text>
+            </View>
           </View>
+          <TouchableOpacity onPress={changeAllCheckbox}>
+            <View style={styles.standartBox}>
+              <View style={styles.standartBox__inner}>
+                <View style={styles.checkmark}></View>
+              </View>
+            </View>
+          </TouchableOpacity>
         </View>
         {isTrue && (
           <ViewButton styles={styles.sendBtn} onclick={clickOkay}>
@@ -202,27 +212,31 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     alignItems: "flex-end",
-    justifyContent: "flex-end",
-    gap: 2,
+    justifyContent: "space-between",
+    gap: 5,
     width: "100%",
     paddingRight: 20,
-    paddingLeft: 20,
+    paddingLeft: 10,
     marginTop: 10,
   },
 
+  blockTotal: {
+    // backgroundColor: "red",
+    paddingTop: 10,
+  },
   divActionInner: {
     // backgroundColor: "red",
-    display: "flex",
-    gap: 15,
-    flexDirection: "row",
-    alignItems: "flex-end",
+    // display: "flex",
+    // gap: 15,
+    // flexDirection: "row",
+    // alignItems: "flex-end",
   },
 
   totalItemCount: {
     // backgroundColor: "red",
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: "500",
-    color: "#383838",
+    color: "rgba(47, 71, 190, 0.991)",
   },
 
   /////// checkbox

@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Riha",
-    "slug": "Riha",
+    "slug": "riha-torgovaya-tochka",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -29,7 +29,7 @@
     },
     "extra": {
       "eas": {
-        "projectId": "8664f5a7-05e7-420f-a408-5dcb3600b3e5"
+        "projectId": "cc0ce941-c7ad-43d8-bc21-0cfbaac083e8"
       }
     }
   }

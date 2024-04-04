@@ -36,7 +36,7 @@ export const MyApplicationScreen = ({ navigation, route }) => {
     return () => dispatch(changeListInvoices([]));
   }, []);
 
-  console.log(listMyInvoice, "listMyInvoice");
+  // console.log(listMyInvoice, "listMyInvoice");
   return (
     <SafeAreaView>
       {listMyInvoice?.length === 0 ? (

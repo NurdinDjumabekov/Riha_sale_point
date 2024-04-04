@@ -11,7 +11,6 @@ import { MyShipmentScreen } from "./MyShipmentScreen";
 import { LogOut } from "../components/LogOut";
 import { LeftoversScreen } from "./LeftoversScreen";
 import { DetailedInvoice } from "./DetailedInvoice";
-import { EveryInvoice } from "./EveryInvoice";
 import UserInfo from "../components/UserInfo";
 import { StoreSpendingScreen } from "./StoreSpendingScreen";
 import { SoldProductScreen } from "./SoldProductScreen";

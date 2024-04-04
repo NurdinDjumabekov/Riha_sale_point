@@ -160,10 +160,8 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     lineHeight: 17,
     color: "rgba(47, 71, 190, 0.672)",
-    width: "85%",
-    // backgroundColor: "red",
-    overflow: "hidden",
-    height: 18,
+    width: "60%",
+    // height: 18,
   },
 
   totalPrice: {
@@ -179,7 +177,7 @@ const styles = StyleSheet.create({
   mainData: {
     display: "flex",
     flexDirection: "row",
-    alignItems: "center",
+    alignItems: "flex-start",
     gap: 5,
   },
 

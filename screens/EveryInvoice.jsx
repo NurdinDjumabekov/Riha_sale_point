@@ -58,6 +58,8 @@ export const EveryInvoice = ({ navigation }) => {
   // console.log(listProductTA, "listProductTA");
   // console.log(infoKassa, "infoKassa");
 
+  
+
   const checkLength = listProductTA?.length <= 4;
 
   const widthMax = { minWidth: "100%", width: "100%" };

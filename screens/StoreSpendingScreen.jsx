@@ -7,10 +7,10 @@ import {
   getExpense,
   getSelectExpense,
 } from "../store/reducers/requestSlice";
-import RNPickerSelect from "react-native-picker-select";
 import { ViewButton } from "../customsTags/ViewButton";
 import { ListExpense } from "../components/ListExpense";
 import { Alert } from "react-native";
+import RNPickerSelect from 'react-native-picker-select';
 
 export const StoreSpendingScreen = ({ navigation }) => {
   const dispatch = useDispatch();
