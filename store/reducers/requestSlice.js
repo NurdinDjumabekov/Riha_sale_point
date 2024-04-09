@@ -44,6 +44,27 @@ export const logInAccount = createAsyncThunk(
   }
 );
 
+/// getBalance
+/// для получения баланса
+export const getBalance = createAsyncThunk(
+  "getBalance",
+  async function (seller_guid, { dispatch, rejectWithValue }) {
+    try {
+      const response = await axios({
+        method: "GET",
+        url: `${API}/ta/get_debt?seller_guid=${seller_guid}`,
+      });
+      if (response.status >= 200 && response.status < 300) {
+        return response?.data?.debt;
+      } else {
+        throw Error(`Error: ${response.status}`);
+      }
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
 /// getMyInvoice
 export const getMyInvoice = createAsyncThunk(
   "getMyInvoice",
@@ -52,7 +73,7 @@ export const getMyInvoice = createAsyncThunk(
     try {
       const response = await axios({
         method: "GET",
-        url: `${API}/tt/get_invoices?seller_guid=${seller_guid}`,
+        url: `${API}/tt/get_invoices?seller_guid=${seller_guid}&invoice_status=1`,
       });
       if (response.status >= 200 && response.status < 300) {
         return response?.data;
@@ -433,6 +454,7 @@ export const getExpense = createAsyncThunk(
 const initialState = {
   preloader: false,
   chech: "",
+  balance: 0,
   listMyInvoice: [],
   everyInvoice: {},
   listSellersPoints: [],
@@ -463,6 +485,20 @@ const requestSlice = createSlice({
     builder.addCase(logInAccount.pending, (state, action) => {
       state.preloader = true;
     });
+
+    ///// getBalance
+    builder.addCase(getBalance.fulfilled, (state, action) => {
+      state.preloader = false;
+      state.balance = action.payload;
+    });
+    builder.addCase(getBalance.rejected, (state, action) => {
+      state.error = action.payload;
+      state.preloader = false;
+    });
+    builder.addCase(getBalance.pending, (state, action) => {
+      state.preloader = true;
+    });
+
     //// getMyInvoice
     builder.addCase(getMyInvoice.fulfilled, (state, action) => {
       state.preloader = false;
@@ -475,6 +511,7 @@ const requestSlice = createSlice({
     builder.addCase(getMyInvoice.pending, (state, action) => {
       state.preloader = true;
     });
+
     //// getMyEveryInvoice
     builder.addCase(getMyEveryInvoice.fulfilled, (state, action) => {
       state.preloader = false;
@@ -487,6 +524,7 @@ const requestSlice = createSlice({
     builder.addCase(getMyEveryInvoice.pending, (state, action) => {
       state.preloader = true;
     });
+
     ///// acceptInvoiceTA
     builder.addCase(acceptInvoiceTA.fulfilled, (state, action) => {
       state.preloader = false;
@@ -500,6 +538,7 @@ const requestSlice = createSlice({
     builder.addCase(acceptInvoiceTA.pending, (state, action) => {
       state.preloader = true;
     });
+
     //// createInvoiceTT
     builder.addCase(createInvoiceTT.fulfilled, (state, action) => {
       const { codeid, guid } = action.payload;
@@ -517,6 +556,7 @@ const requestSlice = createSlice({
     builder.addCase(createInvoiceTT.pending, (state, action) => {
       state.preloader = true;
     });
+
     /////// getCategoryTT
     builder.addCase(getCategoryTT.fulfilled, (state, action) => {
       state.preloader = false;
@@ -540,6 +580,7 @@ const requestSlice = createSlice({
     builder.addCase(getCategoryTT.pending, (state, action) => {
       state.preloader = true;
     });
+
     ////// getProductTA
     builder.addCase(getProductTA.fulfilled, (state, action) => {
       state.preloader = false;
@@ -552,6 +593,7 @@ const requestSlice = createSlice({
     builder.addCase(getProductTA.pending, (state, action) => {
       state.preloader = true;
     });
+
     //////// getMyLeftovers
     builder.addCase(getMyLeftovers.fulfilled, (state, action) => {
       state.preloader = false;
