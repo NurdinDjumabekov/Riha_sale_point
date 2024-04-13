@@ -2,8 +2,8 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   dataLogin: {
-    login: "",
-    password: "",
+    login: "tttt",
+    password: "123",
   },
   acceptConfirmInvoice: {
     invoice_guid: "",
@@ -23,6 +23,28 @@ const initialState = {
     comment: "",
     amount: "",
   }, /// данные суммы расходов каждой ТТ
+
+  temporaryDataPay: {
+    comment: "",
+    amount: "",
+    seller_guid: "",
+    agent_guid: "",
+    debit: 0,
+  }, //// данные, которые будут отправлены с оплатой ТТ (оплата ревизору)
+
+  createReturnInvoice: {
+    /// для создания накладной возврата товара
+    oper_guid: "",
+    agent_guid: "",
+    comment: "",
+    stateModal: false,
+  },
+
+  returnProducts: {
+    //// для возврата списка товаров
+    invoice_guid: "",
+    products: [],
+  },
 };
 
 const stateSlice = createSlice({
@@ -34,8 +56,8 @@ const stateSlice = createSlice({
     },
     clearLogin: (state) => {
       state.dataLogin = {
-        login: "",
-        password: "",
+        login: "tttt",
+        password: "123",
       };
     },
     changeAcceptInvoiceTA: (state, action) => {
@@ -88,6 +110,35 @@ const stateSlice = createSlice({
         amount: "",
       };
     },
+
+    changeTempDataPay: (state, action) => {
+      state.temporaryDataPay = action.payload;
+    },
+    clearTempGDataPay: (state, action) => {
+      state.temporaryDataPay = {
+        comment: "",
+        amount: "",
+        seller_guid: "",
+        agent_guid: "",
+        debit: 0,
+      };
+    },
+
+    changeReturnInvoice: (state, action) => {
+      state.createReturnInvoice = action.payload;
+    },
+
+    cleareReturnInvoice: (state, action) => {
+      state.createReturnInvoice = {
+        oper_guid: "",
+        agent_guid: "",
+        comment: "",
+        stateModal: false,
+      };
+    },
+    changeReturnProd: (state, action) => {
+      state.returnProducts = action.payload;
+    },
   },
 });
 export const {
@@ -106,6 +157,11 @@ export const {
   changeStateForCategory,
   changeExpense,
   clearExpense,
+  changeTempDataPay,
+  clearTempGDataPay,
+  changeReturnInvoice,
+  cleareReturnInvoice,
+  changeReturnProd,
 } = stateSlice.actions;
 
 export default stateSlice.reducer;

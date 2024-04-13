@@ -19,6 +19,8 @@ import ConfirmationModal from "../components/ConfirmationModal";
 import { ViewButton } from "../customsTags/ViewButton";
 import { InputDifference } from "../components/InputDifference";
 import { changeAcceptInvoiceTA } from "../store/reducers/stateSlice";
+import { listTableForAcceptInvoice } from "../helpers/Data";
+import { formatCount } from "../helpers/formatCount";
 
 const Div = styled.View`
   display: flex;
@@ -118,8 +120,8 @@ export const DetailedInvoice = ({ route, navigation }) => {
       return changeValue !== 0 && changeValue !== "";
     });
 
-  console.log(everyInvoice?.list, "everyInvoice");
-  // console.log(acceptConfirmInvoice, "acceptConfirmInvoice");
+  // console.log(everyInvoice?.list, "everyInvoice");
+  console.log(acceptConfirmInvoice, "acceptConfirmInvoice");
 
   return (
     <ScrollView>
@@ -131,7 +133,7 @@ export const DetailedInvoice = ({ route, navigation }) => {
         </Div>
         <Table>
           <Row
-            data={[" Продукт", "Цена", "Вес (кол-во)", "Вес принято", "  ...."]}
+            data={listTableForAcceptInvoice}
             style={styles.head}
             textStyle={styles.textTitle}
             widthArr={resultWidths}
@@ -140,19 +142,17 @@ export const DetailedInvoice = ({ route, navigation }) => {
             data={listData}
             textStyle={styles.text}
             widthArr={resultWidths}
-            style={{
-              borderBottomWidth: 1,
-              borderBottomColor: "rgba(199, 210, 254, 0.718)",
-              paddingLeft: 2,
-            }}
+            style={styled.rowStyle}
           />
         </Table>
         <View style={styles.divAction}>
-          <View style={styles.divActionInner}>
+          <View>
             <View style={styles.blockTotal}>
-              <Text style={styles.totalItemCount}>Сумма: {totalSum} сом</Text>
               <Text style={styles.totalItemCount}>
-                Кол-во: {totalItemCount}
+                Сумма: {formatCount(totalSum)} сом
+              </Text>
+              <Text style={styles.totalItemCount}>
+                Кол-во: {formatCount(totalItemCount)}
               </Text>
             </View>
           </View>
@@ -194,6 +194,7 @@ const styles = StyleSheet.create({
   },
   head: { height: 65, backgroundColor: "rgba(199, 210, 254, 0.250)" },
   text: { margin: 6, marginBottom: 8, marginTop: 8 },
+
   titleDate: {
     fontSize: 20,
     fontWeight: "500",
@@ -202,9 +203,7 @@ const styles = StyleSheet.create({
   textTitle: {
     fontSize: 14,
     fontWeight: "600",
-    // paddingTop: 10,
     paddingRight: 0,
-    // paddingBottom: 15,
     paddingLeft: 5,
     color: "#383838",
   },
@@ -221,19 +220,16 @@ const styles = StyleSheet.create({
   },
 
   blockTotal: {
-    // backgroundColor: "red",
     paddingTop: 10,
   },
-  divActionInner: {
-    // backgroundColor: "red",
-    // display: "flex",
-    // gap: 15,
-    // flexDirection: "row",
-    // alignItems: "flex-end",
+
+  rowStyle: {
+    borderBottomWidth: 1,
+    borderBottomColor: "rgba(199, 210, 254, 0.718)",
+    paddingLeft: 2,
   },
 
   totalItemCount: {
-    // backgroundColor: "red",
     fontSize: 18,
     fontWeight: "500",
     color: "rgba(47, 71, 190, 0.991)",

@@ -5,7 +5,7 @@ import styled from "styled-components/native";
 const ViewTextInput = styled.TextInput`
   min-width: 100%;
   height: 50px;
-  border-radius: 10px;
+  border-radius: 5px;
   margin: 10px auto;
   background-color: #fff;
   padding: 0 12px;
@@ -14,7 +14,7 @@ const ViewTextInput = styled.TextInput`
 `;
 
 const TextLabel = styled.Text`
-  padding: 0 5px;
+  padding: 0 2px;
   font-size: 20px;
   text-align: left;
 `;

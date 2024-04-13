@@ -8,20 +8,28 @@ import {
 } from "../store/reducers/stateSlice";
 import { EveryInvoice } from "./EveryInvoice";
 import { transformDate } from "../helpers/transformDate";
+import { getLocalDataUser } from "../helpers/returnDataUser";
+import { changeLocalData } from "../store/reducers/saveDataSlice";
 
 export const MyShipmentScreen = ({ navigation }) => {
   const dispatch = useDispatch();
 
   const { infoKassa } = useSelector((state) => state.requestSlice);
-  const seller_guid = "e7458a29-6f7f-4364-a96d-ed878812f0cf";
+  // const seller_guid = "e7458a29-6f7f-4364-a96d-ed878812f0cf";
+  const { data } = useSelector((state) => state.saveDataSlice);
 
   useEffect(() => {
     defaultFN();
     navigation.setOptions({
       title: `${transformDate(new Date())}`,
     });
-    dispatch(createInvoiceTT(seller_guid));
+    getData();
   }, []);
+
+  const getData = async () => {
+    await getLocalDataUser({ changeLocalData, dispatch });
+    await dispatch(createInvoiceTT(data?.seller_guid));
+  };
 
   const defaultFN = () => {
     dispatch(changeTemporaryData({})); // очищаю активный продукт

@@ -12,26 +12,30 @@ import { useDispatch, useSelector } from "react-redux";
 import { getCategoryTT, getProductTA } from "../store/reducers/requestSlice";
 import { EveryProduct } from "../components/EveryProduct";
 import { EveryCategoryInner } from "../components/TAComponents/EveryCategoryInner";
+import { getLocalDataUser } from "../helpers/returnDataUser";
+import { changeLocalData } from "../store/reducers/saveDataSlice";
 
-export const EveryInvoice = ({ navigation }) => {
+export const EveryInvoice = () => {
   const dispatch = useDispatch();
   const { preloader, listCategoryTA, listProductTA, infoKassa } = useSelector(
     (state) => state.requestSlice
   );
+  const { data } = useSelector((state) => state.saveDataSlice);
   const [openKeyBoard, setOpenKeyBoard] = useState(false);
 
-  const seller_guid = "e7458a29-6f7f-4364-a96d-ed878812f0cf";
+  // const seller_guid = "e7458a29-6f7f-4364-a96d-ed878812f0cf";
 
   useEffect(() => {
     getData();
   }, [infoKassa?.guid]);
 
   const getData = async () => {
-    await dispatch(getCategoryTT(seller_guid));
+    await getLocalDataUser({ changeLocalData, dispatch });
+    await dispatch(getCategoryTT(data?.seller_guid));
     await dispatch(
       getProductTA({
         guid: "0",
-        seller_guid,
+        seller_guid: data?.seller_guid,
       })
     ); /// 0 - все продукты
   };
@@ -54,12 +58,6 @@ export const EveryInvoice = ({ navigation }) => {
     };
   }, []);
 
-  // console.log(openKeyBoard, "openKeyBoard");
-  // console.log(listProductTA, "listProductTA");
-  // console.log(infoKassa, "infoKassa");
-
-  
-
   const checkLength = listProductTA?.length <= 4;
 
   const widthMax = { minWidth: "100%", width: "100%" };
@@ -72,22 +70,12 @@ export const EveryInvoice = ({ navigation }) => {
               <Text style={styles.textCateg}>Категории</Text>
               <FlatList
                 contentContainerStyle={widthMax}
-                // data={[
-                //   ...listCategoryTA,
-                //   ...listCategoryTA,
-                //   ...listCategoryTA,
-                //   ...listCategoryTA,
-                //   ...listCategoryTA,
-                //   ...listCategoryTA,
-                //   ...listCategoryTA,
-                //   ...listCategoryTA,
-                // ]}
                 data={listCategoryTA}
                 renderItem={({ item }) => <EveryCategoryInner obj={item} />}
                 keyExtractor={(item, ind) => `${item.guid}${ind}`}
-                refreshControl={
-                  <RefreshControl refreshing={preloader} onRefresh={getData} />
-                }
+                // refreshControl={
+                //   <RefreshControl refreshing={preloader} onRefresh={getData} />
+                // }
               />
             </View>
           </View>
@@ -100,16 +88,6 @@ export const EveryInvoice = ({ navigation }) => {
           >
             <FlatList
               contentContainerStyle={widthMax}
-              // data={[
-              //   ...listProductTA,
-              //   ...listProductTA,
-              //   ...listProductTA,
-              //   ...listProductTA,
-              //   ...listProductTA,
-              //   ...listProductTA,
-              //   ...listProductTA,
-              //   ...listProductTA,
-              // ]}
               data={listProductTA}
               renderItem={({ item, index }) => (
                 <EveryProduct obj={item} index={index} />

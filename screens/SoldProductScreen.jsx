@@ -4,7 +4,6 @@ import {
   StyleSheet,
   Text,
   View,
-  Image,
   TouchableOpacity,
   RefreshControl,
 } from "react-native";
@@ -13,14 +12,12 @@ import {
   deleteSoldProd,
   getListSoldProd,
 } from "../store/reducers/requestSlice";
-import imgDel from "../assets/icons/del.png";
 import ConfirmationModal from "../components/ConfirmationModal";
 
 export const SoldProductScreen = ({ route }) => {
   //// список проданных продуктов
   const dispatch = useDispatch();
   const { navigation, guidInvoice } = route.params;
-  const seller_guid = "e7458a29-6f7f-4364-a96d-ed878812f0cf";
   const [modalItemGuid, setModalItemGuid] = useState(null); // Состояние для идентификатора элемента, для которого открывается модальное окно
 
   const { preloader, listSoldProd } = useSelector(
@@ -28,8 +25,12 @@ export const SoldProductScreen = ({ route }) => {
   );
 
   useEffect(() => {
-    dispatch(getListSoldProd(guidInvoice));
+    getData();
   }, [guidInvoice]);
+
+  const getData = () => {
+    dispatch(getListSoldProd(guidInvoice));
+  };
 
   const del = (guid) => {
     dispatch(deleteSoldProd({ guid, guidInvoice }));
@@ -44,25 +45,21 @@ export const SoldProductScreen = ({ route }) => {
         {listSoldProd?.length === 0 ? (
           <Text style={styles.noneData}>Список пустой</Text>
         ) : (
-          <>
-            <View style={{ paddingBottom: 200 }}>
-              <FlatList
-                contentContainerStyle={{
-                  width: "100%",
-                  paddingTop: 8,
-                }}
-                data={listSoldProd}
-                renderItem={({ item, index }) => (
-                  <View style={styles.container}>
+          <View style={{ paddingBottom: 200 }}>
+            <FlatList
+              contentContainerStyle={styles.flatList}
+              data={listSoldProd}
+              renderItem={({ item }) => (
+                <View style={styles.container}>
+                  <View style={styles.parentBlock}>
                     <View style={styles.innerBlock}>
+                      <Text style={styles.titleDate}>{item.date || "..."}</Text>
+
                       <View style={styles.mainData}>
                         <Text style={styles.titleNum}>{item.codeid} </Text>
                         <View>
                           <Text style={[styles.titleDate, styles.role]}>
                             {item?.product_name}
-                          </Text>
-                          <Text style={styles.titleDate}>
-                            {item.date || "..."}
                           </Text>
                         </View>
                       </View>
@@ -70,36 +67,37 @@ export const SoldProductScreen = ({ route }) => {
                     <View style={styles.mainDataArrow}>
                       <View>
                         <Text style={styles.status}>Продано</Text>
-                        <Text style={styles.totalPrice}>
+                        <Text style={styles.price}>
                           {item?.product_price} сом
                         </Text>
                       </View>
                       <TouchableOpacity
-                        style={styles.arrow}
+                        style={styles.krest}
                         onPress={() => setModalItemGuid(item?.guid)}
                       >
-                        <Image source={imgDel} style={styles.imgDel} />
+                        <View style={[styles.line, styles.deg]} />
+                        <View style={[styles.line, styles.degMinus]} />
                       </TouchableOpacity>
                     </View>
-                    <ConfirmationModal
-                      visible={modalItemGuid === item.guid}
-                      message="Отменить продажу ?"
-                      onYes={() => del(item.guid)}
-                      onNo={() => setModalItemGuid(null)}
-                      onClose={() => setModalItemGuid(null)}
-                    />
                   </View>
-                )}
-                keyExtractor={(item) => item?.codeid}
-                refreshControl={
-                  <RefreshControl
-                    refreshing={preloader}
-                    onRefresh={() => dispatch(getListSoldProd(guidInvoice))}
+                  <Text style={styles.totalPrice}>
+                    {item?.product_price} х {item?.count} = {item?.total} сом
+                  </Text>
+                  <ConfirmationModal
+                    visible={modalItemGuid === item.guid}
+                    message="Отменить продажу ?"
+                    onYes={() => del(item.guid)}
+                    onNo={() => setModalItemGuid(null)}
+                    onClose={() => setModalItemGuid(null)}
                   />
-                }
-              />
-            </View>
-          </>
+                </View>
+              )}
+              keyExtractor={(item) => item?.codeid}
+              refreshControl={
+                <RefreshControl refreshing={preloader} onRefresh={getData} />
+              }
+            />
+          </View>
         )}
       </View>
     </>
@@ -111,10 +109,13 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(162, 178, 238, 0.102)",
     minWidth: "100%",
     padding: 8,
-    paddingTop: 15,
-    paddingBottom: 15,
+    paddingTop: 10,
+    paddingBottom: 10,
     borderBottomWidth: 1,
     borderColor: "rgba(47, 71, 190, 0.287)",
+  },
+
+  parentBlock: {
     display: "flex",
     flexDirection: "row",
     alignItems: "center",
@@ -143,10 +144,7 @@ const styles = StyleSheet.create({
   titleDate: {
     fontSize: 14,
     fontWeight: "500",
-    // color: "#2fce8e53",
-    // backgroundColor: "rgba(12, 169, 70, 0.1)",
     borderRadius: 5,
-    // padding: 5,
     lineHeight: 17,
   },
 
@@ -161,12 +159,18 @@ const styles = StyleSheet.create({
     lineHeight: 17,
     color: "rgba(47, 71, 190, 0.672)",
     width: "60%",
-    // height: 18,
+  },
+
+  price: {
+    fontSize: 15,
+    fontWeight: "400",
   },
 
   totalPrice: {
-    fontSize: 15,
-    fontWeight: "400",
+    fontSize: 17,
+    fontWeight: "500",
+    marginTop: 15,
+    color: "rgba(12, 169, 70, 0.9)",
   },
 
   comments: {
@@ -191,11 +195,6 @@ const styles = StyleSheet.create({
   },
 
   arrow: {
-    // borderTopWidth: 3,
-    // borderRightWidth: 3,
-    // borderColor: "rgba(162, 178, 238, 0.439)",
-    // borderRadius: 3,
-    // transform: [{ rotate: "45deg" }],
     height: 26,
     width: 26,
   },
@@ -213,4 +212,23 @@ const styles = StyleSheet.create({
     color: "#222",
     height: "100%",
   },
+
+  flatList: { width: "100%", paddingTop: 8 },
+
+  //////////////////// krestik
+  krest: {
+    width: 25,
+    height: 25,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  line: {
+    position: "absolute",
+    width: "100%",
+    height: 2,
+    backgroundColor: "red",
+  },
+
+  deg: { transform: [{ rotate: "45deg" }] },
+  degMinus: { transform: [{ rotate: "-45deg" }] },
 });

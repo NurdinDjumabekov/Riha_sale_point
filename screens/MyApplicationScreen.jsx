@@ -5,74 +5,98 @@ import {
   RefreshControl,
   StyleSheet,
   Text,
+  TouchableOpacity,
+  View,
 } from "react-native";
-import styled from "styled-components/native";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  getMyInvoice,
-  changeListInvoices,
-} from "../store/reducers/requestSlice";
+import { getMyInvoice } from "../store/reducers/requestSlice";
 import { EveryMyInvoice } from "../components/EveryMyInvoice";
+import { getLocalDataUser } from "../helpers/returnDataUser";
+import { changeLocalData } from "../store/reducers/saveDataSlice";
 
 export const MyApplicationScreen = ({ navigation, route }) => {
   /// загрузки
+  const dispatch = useDispatch();
+
   const { preloader, listMyInvoice } = useSelector(
     (state) => state.requestSlice
   );
-  const dispatch = useDispatch();
+  const { data } = useSelector((state) => state.saveDataSlice);
 
-  const ParentDiv = styled.View`
-    min-width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-  `;
-
-  const seller_guid = "e7458a29-6f7f-4364-a96d-ed878812f0cf";
+  // const seller_guid = "e7458a29-6f7f-4364-a96d-ed878812f0cf";
 
   useEffect(() => {
-    dispatch(getMyInvoice(seller_guid));
-    return () => dispatch(changeListInvoices([]));
+    getData();
   }, []);
 
-  // console.log(listMyInvoice, "listMyInvoice");
+  const getData = async () => {
+    await getLocalDataUser({ changeLocalData, dispatch });
+    await dispatch(getMyInvoice(data?.seller_guid));
+  };
+
+  const getHistory = () => {
+    navigation.navigate("InvoiceHistory");
+  };
+
+  const widthMax = { minWidth: "100%", width: "100%" };
+
   return (
     <SafeAreaView>
-      {listMyInvoice?.length === 0 ? (
-        <Text style={styles.noneData}>Список пустой</Text>
-      ) : (
-        <ParentDiv>
-          <FlatList
-            contentContainerStyle={{
-              minWidth: "100%",
-              width: "100%",
-            }}
-            data={listMyInvoice}
-            renderItem={({ item }) => (
-              <EveryMyInvoice obj={item} navigation={navigation} />
-            )}
-            keyExtractor={(item) => item.guid}
-            refreshControl={
-              <RefreshControl
-                refreshing={preloader}
-                onRefresh={() => dispatch(getMyInvoice(seller_guid))}
-              />
-            }
-          />
-        </ParentDiv>
-      )}
+      <TouchableOpacity onPress={getHistory} style={styles.arrow}>
+        <Text style={styles.textBtn}>Список принятых накладных</Text>
+        <View style={styles.arrowInner}></View>
+      </TouchableOpacity>
+      <View style={styles.parentBlock}>
+        <FlatList
+          contentContainerStyle={widthMax}
+          data={listMyInvoice}
+          renderItem={({ item }) => (
+            <EveryMyInvoice obj={item} navigation={navigation} />
+          )}
+          keyExtractor={(item) => item.guid}
+          refreshControl={
+            <RefreshControl refreshing={preloader} onRefresh={getData} />
+          }
+        />
+      </View>
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
-  noneData: {
-    paddingTop: 250,
-    textAlign: "center",
-    fontSize: 20,
+  parentBlock: {
+    minWidth: "100%",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    width: "100%",
+    paddingBottom: 110,
+  },
+
+  arrow: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    padding: 10,
+    paddingTop: 12,
+    paddingBottom: 12,
+    backgroundColor: "rgba(47, 71, 190, 0.287)",
+    marginBottom: 0,
+  },
+  arrowInner: {
+    borderTopWidth: 3,
+    borderRightWidth: 3,
+    borderColor: "#fff",
+    height: 15,
+    width: 15,
+    borderRadius: 3,
+    transform: [{ rotate: "45deg" }],
+    marginRight: 20,
+    marginTop: 5,
+  },
+  textBtn: {
+    fontSize: 18,
     fontWeight: "500",
-    color: "#222",
-    height: "100%",
+    color: "#fff",
   },
 });

@@ -14,6 +14,12 @@ import { DetailedInvoice } from "./DetailedInvoice";
 import UserInfo from "../components/UserInfo";
 import { StoreSpendingScreen } from "./StoreSpendingScreen";
 import { SoldProductScreen } from "./SoldProductScreen";
+import { AcceptInvoiceHistory } from "../components/InvoiceTT/AcceptInvoiceHistory";
+import { EveryInvoiceAcceptScreen } from "./EveryInvoiceAcceptScreen";
+import { PayMoneyScreen } from "./PayMoneyScreen";
+import { ReturnScreen } from "./ReturnScreen";
+import { ReturnProdScreen } from "./ReturnProdScreen";
+import { EveryListInvoiceReturn } from "../components/ReturnProducts/EveryListInvoiceReturn";
 
 const Stack = createNativeStackNavigator();
 
@@ -23,16 +29,11 @@ export const Navigation = () => {
       <NavigationContainer>
         <Preloader />
         <Stack.Navigator
-          screenOptions={{
-            headerStyle: {
-              backgroundColor: "#fff", /// f2f2f2
-            },
-          }}
+          screenOptions={{ headerStyle: { backgroundColor: "#fff" } }}
         >
           <Stack.Screen
             name="Login"
             component={LoginScreen}
-            // options={{ title: "Вход" }}
             options={{ headerShown: false }}
           />
           <>
@@ -52,6 +53,15 @@ export const Navigation = () => {
               options={{ title: "Список накладных" }}
             />
             <Stack.Screen name="detailedInvoice" component={DetailedInvoice} />
+            <Stack.Screen
+              name="InvoiceHistory"
+              component={AcceptInvoiceHistory}
+              options={{ title: "Список принятых накладных" }}
+            />
+            <Stack.Screen
+              name="EveryInvoiceHistory"
+              component={EveryInvoiceAcceptScreen}
+            />
             {/* /////////////////////// Остатки ///////////////////////*/}
             <Stack.Screen
               name="Leftovers"
@@ -59,13 +69,7 @@ export const Navigation = () => {
               options={{ title: "Остатки" }}
             />
             {/* /////////////////////// Продажа ///////////////////////*/}
-            <Stack.Screen
-              name="Shipment"
-              component={MyShipmentScreen}
-              // options={({ route }) => ({
-              //   headerRight: () => <>{route.params?.invoiceDate}</>,
-              // })}
-            />
+            <Stack.Screen name="Shipment" component={MyShipmentScreen} />
             <Stack.Screen
               name="SoldProduct"
               component={SoldProductScreen} /// список проданных товаров
@@ -77,7 +81,23 @@ export const Navigation = () => {
               component={StoreSpendingScreen}
               options={{ title: "Расходы" }}
             />
-            {/* /////////////////////// траты /////////////////////// */}
+            {/* /////////////////////// оплата ТТ /////////////////////// */}
+            <Stack.Screen
+              name="PayMoney"
+              component={PayMoneyScreen}
+              options={{ title: "Оплата" }}
+            />
+            {/* /////////////////////// ReturnScreen /////////////////////// */}
+            <Stack.Screen
+              name="ReturnInvoice"
+              component={ReturnScreen}
+              options={{ title: "Возврат товара" }}
+            />
+            <Stack.Screen name="ReturnProd" component={ReturnProdScreen} />
+            <Stack.Screen
+              name="listReturnProd"
+              component={EveryListInvoiceReturn}
+            />
           </>
         </Stack.Navigator>
         <StatusBar theme="auto" />

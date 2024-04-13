@@ -7,21 +7,24 @@ import {
   getCategoryTT,
   getProductTA,
 } from "../../store/reducers/requestSlice";
+import { getLocalDataUser } from "../../helpers/returnDataUser";
+import { changeLocalData } from "../../store/reducers/saveDataSlice";
 
 export const AddProductsTA = ({ productGuid }) => {
   //// для добавления продуктов в список
   const dispatch = useDispatch();
-  const seller_guid = "e7458a29-6f7f-4364-a96d-ed878812f0cf";
+  // const seller_guid = "e7458a29-6f7f-4364-a96d-ed878812f0cf";
+  const { data } = useSelector((state) => state.saveDataSlice);
 
   const { dataInputsInv } = useSelector((state) => state.stateSlice);
   const { infoKassa } = useSelector((state) => state.requestSlice);
 
   const addInInvoice = () => {
     if (
-      dataInputsInv.price === "" ||
-      dataInputsInv.ves === "" ||
-      dataInputsInv.price == 0 ||
-      dataInputsInv.ves == 0
+      dataInputsInv?.price === "" ||
+      dataInputsInv?.ves === "" ||
+      dataInputsInv?.price == 0 ||
+      dataInputsInv?.ves == 0
     ) {
       Alert.alert("Введите цену и вес (кол-во)!");
     } else {
@@ -32,21 +35,19 @@ export const AddProductsTA = ({ productGuid }) => {
         invoice_guid: infoKassa?.guid,
       };
       dispatch(addProductInvoiceTT({ data, getData }));
-      // console.log(data,"data");
     }
   };
 
   const getData = async () => {
-    await dispatch(getCategoryTT(seller_guid));
+    await getLocalDataUser({ changeLocalData, dispatch });
+    await dispatch(getCategoryTT(data?.seller_guid));
     await dispatch(
       getProductTA({
         guid: "0",
-        seller_guid,
+        seller_guid: data?.seller_guid,
       })
     ); /// 0 - все продукты
   }; /// для вызова категорий и продуктов
-
-  // console.log(dataInputsInv, "dataInputsInv");
 
   return (
     <View style={styles.addDataBlock}>
@@ -61,7 +62,7 @@ export const AddProductsTA = ({ productGuid }) => {
       />
       <TextInput
         style={styles.input}
-        value={dataInputsInv.ves}
+        value={dataInputsInv?.ves}
         onChangeText={(text) =>
           dispatch(changeDataInputsInv({ ...dataInputsInv, ves: text }))
         }

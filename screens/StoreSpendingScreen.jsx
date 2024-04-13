@@ -10,25 +10,28 @@ import {
 import { ViewButton } from "../customsTags/ViewButton";
 import { ListExpense } from "../components/ListExpense";
 import { Alert } from "react-native";
-import RNPickerSelect from 'react-native-picker-select';
+import RNPickerSelect from "react-native-picker-select";
+import { getLocalDataUser } from "../helpers/returnDataUser";
+import { changeLocalData } from "../store/reducers/saveDataSlice";
 
 export const StoreSpendingScreen = ({ navigation }) => {
   const dispatch = useDispatch();
-  //   console.log(navigation, "navigation");
+  const { data } = useSelector((state) => state.saveDataSlice);
+  const { expense } = useSelector((state) => state.stateSlice);
+  const { listCategExpense } = useSelector((state) => state.requestSlice);
 
-  const seller_guid = "e7458a29-6f7f-4364-a96d-ed878812f0cf";
+  // const seller_guid = "e7458a29-6f7f-4364-a96d-ed878812f0cf";
 
   useEffect(() => {
     getData();
   }, []);
 
-  const getData = async () => {
-    await dispatch(getSelectExpense()); ///  список селекта расходов ТТ(их траты)
-    await dispatch(getExpense(seller_guid)); /// список расходов ТТ(их траты)
-  };
 
-  const { expense } = useSelector((state) => state.stateSlice);
-  const { listCategExpense } = useSelector((state) => state.requestSlice);
+  const getData = async () => {
+    await getLocalDataUser({ changeLocalData, dispatch });
+    await dispatch(getSelectExpense()); ///  список селекта расходов ТТ(их траты)
+    await dispatch(getExpense(data?.seller_guid)); /// список расходов ТТ(их траты)
+  };
 
   const addExpense = () => {
     if (expense.amount === "" || expense.amount == "0") {
@@ -37,8 +40,8 @@ export const StoreSpendingScreen = ({ navigation }) => {
       if (expense.expense_type == null || expense.expense_type == "") {
         Alert.alert("Выберите категорию!");
       } else {
-        const data = { ...expense, seller_guid };
-        dispatch(addExpenseTT({ data, getData }));
+        const dataSend = { ...expense, seller_guid: data?.seller_guid };
+        dispatch(addExpenseTT({ dataSend, getData }));
       }
     }
   };
@@ -63,8 +66,6 @@ export const StoreSpendingScreen = ({ navigation }) => {
     }
   };
 
-  // console.log(expense, "expense");
-  // console.log(listCategExpense, "listCategExpense");
   return (
     <View style={styles.parentBlock}>
       <View style={styles.inputBlock}>

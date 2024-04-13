@@ -6,30 +6,34 @@ import {
   StyleSheet,
   Text,
 } from "react-native";
+import { useFocusEffect } from "@react-navigation/native";
 import { ViewContainer } from "../customsTags/ViewContainer";
 import { dataCategory } from "../helpers/Data";
 import { EveryCategory } from "../components/EveryCategory";
 import { useDispatch, useSelector } from "react-redux";
-import { useFocusEffect } from "@react-navigation/native";
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import { getBalance } from "../store/reducers/requestSlice";
+import { getLocalDataUser } from "../helpers/returnDataUser";
+import { changeLocalData } from "../store/reducers/saveDataSlice";
 
 export const MainScreen = ({ navigation }) => {
   const dispatch = useDispatch();
 
-  const { token } = useSelector((state) => state.saveDataSlice);
+  const { data } = useSelector((state) => state.saveDataSlice);
   const { preloader, balance } = useSelector((state) => state.requestSlice);
 
-  const seller_guid = "e7458a29-6f7f-4364-a96d-ed878812f0cf";
+  // const seller_guid = "e7458a29-6f7f-4364-a96d-ed878812f0cf";
 
   useFocusEffect(
     useCallback(() => {
       getData();
+      console.log("restartBalance");
     }, [])
   );
 
-  const getData = () => {
-    dispatch(getBalance(seller_guid));
+  const getData = async () => {
+    await getLocalDataUser({ changeLocalData, dispatch });
+    await dispatch(getBalance(data?.seller_guid));
   };
 
   return (
@@ -42,7 +46,7 @@ export const MainScreen = ({ navigation }) => {
                 <Text style={styles.balanceText}>Баланс</Text>
                 <View style={styles.arrow}></View>
               </View>
-              <Text style={styles.balanceNum}>{balance} сом</Text>
+              <Text style={styles.balanceNum}>{balance || 0} сом</Text>
             </View>
             <Text style={styles.balanceHistory}>История</Text>
           </View>

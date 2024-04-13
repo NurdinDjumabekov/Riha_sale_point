@@ -1,40 +1,15 @@
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { clearAcceptInvoiceTA } from "../store/reducers/stateSlice";
 import { useDispatch } from "react-redux";
-import { changePreloader } from "../store/reducers/requestSlice";
 
-export const EveryMyInvoice = ({ obj, navigation }) => {
-  //// status - 0(накладные только для просмотра),
-  //// 1(не принятые накладные),
-  //// 2(принятые накладные)
-  //// список загрузок(накладных)
+export const EveryInvoiceReturn = ({ obj, navigation }) => {
+  //// каждый возврат накладной типо истории
   const dispatch = useDispatch();
 
-  const objType = {
-    0: { text: "На складе", color: "#222" },
-    1: { text: "Отгружено", color: "red" },
-    2: { text: "Принято", color: "green" },
-  };
-
-  const statusInfo = objType[obj?.status];
-
   const lookInvoice = () => {
-    if (+obj?.status === 1 || +obj?.status === 0) {
-      /// if накладная отгружена для ТА
-      navigation.navigate("detailedInvoice", {
-        date: obj?.date,
-        guid: obj?.guid,
-        status: obj?.status,
-      });
-      dispatch(clearAcceptInvoiceTA());
-      dispatch(changePreloader(true)); /// чтобы вначале не показывался пустой массив
-    } else if (+obj?.status === 2) {
-      /// if накладная уже принята
-      navigation.navigate("EveryInvoiceHistory", {
-        codeid: obj?.codeid,
-        guid: obj?.guid, /// guid - накладной 
-      });
-    }
+    navigation?.navigate("listReturnProd", {
+      obj,
+      title: `Накладная №${obj?.codeid}`,
+    });
   };
 
   return (
@@ -43,7 +18,7 @@ export const EveryMyInvoice = ({ obj, navigation }) => {
         <View style={styles.mainData}>
           <Text style={styles.titleNum}>{obj.codeid} </Text>
           <View>
-            <Text style={[styles.titleDate, styles.role]}>{obj?.agent}</Text>
+            <Text style={[styles.titleDate, styles.role]}>{obj?.operator}</Text>
             <Text style={styles.titleDate}>{obj.date}</Text>
           </View>
         </View>
@@ -55,7 +30,11 @@ export const EveryMyInvoice = ({ obj, navigation }) => {
       </View>
       <View style={styles.mainDataArrow}>
         <View>
-          <Text style={{ color: statusInfo?.color }}>{statusInfo?.text}</Text>
+          {+obj?.status ? (
+            <Text style={styles.statusGood}>Подтверждён</Text>
+          ) : (
+            <Text style={styles.statusReload}>Ожидание</Text>
+          )}
           <Text style={styles.totalPrice}>{obj?.total_price} сом</Text>
         </View>
         <View style={styles.arrow}></View>
@@ -81,7 +60,7 @@ const styles = StyleSheet.create({
 
   innerBlock: {
     display: "flex",
-    width: "60%",
+    width: "58%",
     gap: 5,
   },
 
@@ -105,32 +84,24 @@ const styles = StyleSheet.create({
     lineHeight: 17,
   },
 
+  statusGood: {
+    color: "rgba(12, 169, 70, 0.9)",
+  },
+
+  statusReload: {
+    color: "red",
+  },
+
   role: {
     fontSize: 14,
     fontWeight: "500",
     borderRadius: 5,
     lineHeight: 17,
     color: "rgba(47, 71, 190, 0.672)",
-  },
-
-  status: {
-    color: "rgba(205, 70, 92, 0.756)",
-  },
-
-  totalPrice: {
-    fontSize: 16,
-    fontWeight: "400",
-  },
-
-  comments: {
-    maxWidth: 230,
-  },
-
-  mainData: {
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 10,
+    width: "85%",
+    // backgroundColor: "red",
+    overflow: "hidden",
+    height: 18,
   },
 
   mainDataArrow: {
@@ -139,7 +110,27 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     paddingRight: 15,
-    width: "35%",
+    width: "38%",
+    // overflow: "hidden",
+    // maxWidth: "40%",
+  },
+
+  totalPrice: {
+    fontSize: 16,
+    fontWeight: "400",
+    maxWidth: 110,
+  },
+
+  comments: {
+    maxWidth: 230,
+    fontSize: 12,
+  },
+
+  mainData: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 5,
   },
 
   arrow: {

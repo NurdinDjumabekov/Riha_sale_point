@@ -36,4 +36,44 @@ export const dataCategory = [
     // img:"https://img.freepik.com/free-vector/finance-department-employees-are-calculating-expenses-company-s-business_1150-41782.jpg?t=st=1711965120~exp=1711968720~hmac=96a672de3602a7397d6e0b7452abfa17eaa700d42fd08a2a3e244eb154b7bd30&w=1380",
     pathApi: "",
   },
+
+  {
+    codeid: 5,
+    name: "Оплата",
+    link: "PayMoney",
+    img: "https://img.freepik.com/free-vector/euro-coins-concept-illustration_114360-15485.jpg?t=st=1710925698~exp=1710929298~hmac=4fb3746133437b6b0ca94daa3d06c8c634817a0562bb3e4ac1df5e613f3512bd&w=740",
+    pathApi: "PayMoney",
+  },
+
+  {
+    codeid: 6,
+    name: "Возврат",
+    link: "ReturnInvoice",
+    img: "https://img.freepik.com/free-vector/courier-delivering-order-customer-door-man-getting-parcel-box-package-flat-vector-illustration-postman-shipping-service_74855-8309.jpg?w=1380",
+    pathApi: "ReturnInvoice",
+  },
+];
+
+export const listTableLeftoverst = [
+  "Товар",
+  "Остаток на начало",
+  "Приход",
+  "Расход",
+  "Остаток на конец",
+];
+
+export const listTableForAcceptInvoice = [
+  " Продукт",
+  "Цена",
+  "Вес с усушкой",
+  "Вес принято",
+  "  ....",
+];
+
+export const listTableForReturnProd = [
+  " Товар",
+  " Цена",
+  "В наличии",
+  "Возврат",
+  " ....",
 ];

@@ -1,7 +1,6 @@
 import { StyleSheet, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { changeDataLogin, clearLogin } from "../store/reducers/stateSlice";
-import { changeToken } from "../store/reducers/saveDataSlice";
 import { ViewInput } from "../customsTags/ViewInput";
 import { ViewContainer } from "../customsTags/ViewContainer";
 import { ViewButton } from "../customsTags/ViewButton";
@@ -24,29 +23,23 @@ export const LoginScreen = ({ navigation }) => {
     dispatch(changeDataLogin({ ...dataLogin, password: text }));
   };
 
-  const sendLogin = async () => {
+  const sendLogin = () => {
     if (dataLogin?.login && dataLogin?.password) {
       dispatch(logInAccount({ dataLogin, navigation }));
-      // dispatch(changeToken(dataLogin?.login));
-      // navigation.navigate("Main");
     } else {
       alert("Введите логин и пароль!");
     }
   };
 
   useEffect(() => {
-    // dispatch(clearLogin());
-    //     dispatch(changeToken(""));
+    dispatch(clearLogin());
+    // dispatch(changeSellerGuid(""));
   }, []);
 
-  const link = "https://riha.kg/wp-content/themes/h/redesign/images/logo.png";
+  const link = "http://riha-operator.333.kg/image/rikha.png";
 
   return (
-    <View
-      styles={{
-        position: "relative",
-      }}
-    >
+    <View styles={{ position: "relative" }}>
       <ViewContainer>
         <View>
           <ViewImg
@@ -64,13 +57,13 @@ export const LoginScreen = ({ navigation }) => {
           />
           <ViewInput
             text="Введите логин"
-            value={dataLogin.login}
+            value={dataLogin?.login}
             onChangeText={onChangeLogin}
             placeholder="Ваш логин"
           />
           <ViewInput
             text="Введите пароль"
-            value={dataLogin.password}
+            value={dataLogin?.password}
             onChangeText={onChangePassword}
             placeholder="Ваш пароль"
             typePassword={true}
@@ -87,6 +80,7 @@ export const LoginScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   loginBtn: {
     backgroundColor: "rgba(47, 71, 190, 0.591)",
+    backgroundColor: "#e5322d",
     position: "absolute",
     bottom: 30,
     left: 10,
