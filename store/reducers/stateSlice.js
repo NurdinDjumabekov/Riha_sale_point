@@ -2,17 +2,13 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   dataLogin: {
-    login: "tttt",
-    password: "123",
+    login: "",
+    password: "",
   },
   acceptConfirmInvoice: {
     invoice_guid: "",
     products: [],
   }, // для подтверждения и принятия товаров ТА
-
-  createEveryInvoiceTA: {
-    seller_guid: "e7458a29-6f7f-4364-a96d-ed878812f0cf", /// delete
-  }, // для создания каждой накладной ТА
 
   temporaryData: {}, ///// временные данные(после добавления сюда, они добавляются в список(listProductForTT))
   dataInputsInv: { price: "", ves: "" },
@@ -34,7 +30,7 @@ const initialState = {
 
   createReturnInvoice: {
     /// для создания накладной возврата товара
-    oper_guid: "",
+    seller_guid: "",
     agent_guid: "",
     comment: "",
     stateModal: false,
@@ -56,23 +52,15 @@ const stateSlice = createSlice({
     },
     clearLogin: (state) => {
       state.dataLogin = {
-        login: "tttt",
-        password: "123",
+        login: "",
+        password: "",
       };
     },
-    changeAcceptInvoiceTA: (state, action) => {
+    changeAcceptInvoiceTT: (state, action) => {
       state.acceptConfirmInvoice = action.payload;
     },
-    clearAcceptInvoiceTA: (state) => {
+    clearAcceptInvoiceTT: (state) => {
       state.acceptConfirmInvoice = { invoice_guid: "", products: [] };
-    },
-    changeEveryInvoiceTA: (state, action) => {
-      state.createEveryInvoiceTA = action.payload;
-    },
-    clearEveryInvoiceTA: (state, action) => {
-      state.createEveryInvoiceTA = {
-        seller_guid: "e7458a29-6f7f-4364-a96d-ed878812f0cf",
-      };
     },
     changeTemporaryData: (state, action) => {
       state.temporaryData = action.payload;
@@ -130,7 +118,7 @@ const stateSlice = createSlice({
 
     cleareReturnInvoice: (state, action) => {
       state.createReturnInvoice = {
-        oper_guid: "",
+        seller_guid: "",
         agent_guid: "",
         comment: "",
         stateModal: false,
@@ -144,10 +132,8 @@ const stateSlice = createSlice({
 export const {
   changeDataLogin,
   clearLogin,
-  changeAcceptInvoiceTA,
-  clearAcceptInvoiceTA,
-  changeEveryInvoiceTA,
-  clearEveryInvoiceTA,
+  changeAcceptInvoiceTT,
+  clearAcceptInvoiceTT,
   changeTemporaryData,
   changeListProductForTT,
   addListProductForTT,

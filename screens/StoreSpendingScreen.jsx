@@ -26,7 +26,6 @@ export const StoreSpendingScreen = ({ navigation }) => {
     getData();
   }, []);
 
-
   const getData = async () => {
     await getLocalDataUser({ changeLocalData, dispatch });
     await dispatch(getSelectExpense()); ///  список селекта расходов ТТ(их траты)
@@ -34,10 +33,10 @@ export const StoreSpendingScreen = ({ navigation }) => {
   };
 
   const addExpense = () => {
-    if (expense.amount === "" || expense.amount == "0") {
+    if (expense?.amount === "" || expense?.amount == "0") {
       Alert.alert("Заполните сумму");
     } else {
-      if (expense.expense_type == null || expense.expense_type == "") {
+      if (expense?.expense_type == null || expense?.expense_type == "") {
         Alert.alert("Выберите категорию!");
       } else {
         const dataSend = { ...expense, seller_guid: data?.seller_guid };
@@ -164,9 +163,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     fontSize: 16,
     width: "20%",
-    // color: "rgba(47, 71, 190, 0.591)",
-    // fontWeight: "500",
   },
+
   width100: {
     width: "100%",
   },
@@ -183,6 +181,7 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(12, 169, 70, 0.9)",
     color: "#fff",
   },
+
   mainTitle: {
     fontSize: 20,
     fontWeight: "600",

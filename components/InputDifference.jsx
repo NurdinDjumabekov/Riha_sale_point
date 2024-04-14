@@ -1,6 +1,6 @@
 import { View, StyleSheet, TextInput } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import { changeAcceptInvoiceTA } from "../store/reducers/stateSlice";
+import { changeAcceptInvoiceTT } from "../store/reducers/stateSlice";
 
 export const InputDifference = ({ guidProduct, guidInvoice }) => {
   const { acceptConfirmInvoice } = useSelector((state) => state.stateSlice);
@@ -9,7 +9,7 @@ export const InputDifference = ({ guidProduct, guidInvoice }) => {
   const checkInput = (text) => {
     if (/^\d*\.?\d*$/.test(text) || text === "") {
       dispatch(
-        changeAcceptInvoiceTA({
+        changeAcceptInvoiceTT({
           ...acceptConfirmInvoice,
           invoice_guid: guidInvoice,
           products: acceptConfirmInvoice?.products?.map((i) => ({

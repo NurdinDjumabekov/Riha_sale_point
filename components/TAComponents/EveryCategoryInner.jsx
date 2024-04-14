@@ -1,6 +1,6 @@
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import { getProductTA } from "../../store/reducers/requestSlice";
+import { getProductTT } from "../../store/reducers/requestSlice";
 import {
   changeStateForCategory,
   changeTemporaryData,
@@ -18,7 +18,7 @@ export const EveryCategoryInner = ({ obj, index }) => {
   const changeSelect = async () => {
     await getLocalDataUser({ changeLocalData, dispatch });
     await dispatch(
-      getProductTA({ guid: obj?.value, seller_guid: data?.seller_guid })
+      getProductTT({ guid: obj?.value, seller_guid: data?.seller_guid })
     );
     await dispatch(changeStateForCategory(obj?.value));
     await dispatch(changeTemporaryData({}));

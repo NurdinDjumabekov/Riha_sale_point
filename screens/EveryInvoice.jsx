@@ -9,7 +9,7 @@ import {
   View,
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import { getCategoryTT, getProductTA } from "../store/reducers/requestSlice";
+import { getCategoryTT, getProductTT } from "../store/reducers/requestSlice";
 import { EveryProduct } from "../components/EveryProduct";
 import { EveryCategoryInner } from "../components/TAComponents/EveryCategoryInner";
 import { getLocalDataUser } from "../helpers/returnDataUser";
@@ -17,7 +17,7 @@ import { changeLocalData } from "../store/reducers/saveDataSlice";
 
 export const EveryInvoice = () => {
   const dispatch = useDispatch();
-  const { preloader, listCategoryTA, listProductTA, infoKassa } = useSelector(
+  const { preloader, listCategory, listProductTT, infoKassa } = useSelector(
     (state) => state.requestSlice
   );
   const { data } = useSelector((state) => state.saveDataSlice);
@@ -33,7 +33,7 @@ export const EveryInvoice = () => {
     await getLocalDataUser({ changeLocalData, dispatch });
     await dispatch(getCategoryTT(data?.seller_guid));
     await dispatch(
-      getProductTA({
+      getProductTT({
         guid: "0",
         seller_guid: data?.seller_guid,
       })
@@ -58,48 +58,54 @@ export const EveryInvoice = () => {
     };
   }, []);
 
-  const checkLength = listProductTA?.length <= 4;
+  const checkLength = listProductTT?.length <= 4;
+
+  const emptyData = listCategory?.length >= 1 && listProductTT?.length === 0;
 
   const widthMax = { minWidth: "100%", width: "100%" };
   return (
     <>
-      <View style={styles.container}>
-        <SafeAreaView style={styles.parentBlock}>
-          <View style={styles.parentSelectBlock}>
-            <View style={styles.selectBlock}>
-              <Text style={styles.textCateg}>Категории</Text>
+      {emptyData ? (
+        <Text style={styles.noneData}>Список пустой</Text>
+      ) : (
+        <View style={styles.container}>
+          <SafeAreaView style={styles.parentBlock}>
+            <View style={styles.parentSelectBlock}>
+              <View style={styles.selectBlock}>
+                <Text style={styles.textCateg}>Категории</Text>
+                <FlatList
+                  contentContainerStyle={widthMax}
+                  data={listCategory}
+                  renderItem={({ item }) => <EveryCategoryInner obj={item} />}
+                  keyExtractor={(item, ind) => `${item.guid}${ind}`}
+                  // refreshControl={
+                  //   <RefreshControl refreshing={preloader} onRefresh={getData} />
+                  // }
+                />
+              </View>
+            </View>
+            <Text style={[styles.textCateg, styles.textTovar]}>Товары</Text>
+            <View
+              style={[
+                styles.blockSelectProd,
+                openKeyBoard && checkLength && styles.paddingB50,
+              ]}
+            >
               <FlatList
                 contentContainerStyle={widthMax}
-                data={listCategoryTA}
-                renderItem={({ item }) => <EveryCategoryInner obj={item} />}
+                data={listProductTT}
+                renderItem={({ item, index }) => (
+                  <EveryProduct obj={item} index={index} />
+                )}
                 keyExtractor={(item, ind) => `${item.guid}${ind}`}
-                // refreshControl={
-                //   <RefreshControl refreshing={preloader} onRefresh={getData} />
-                // }
+                refreshControl={
+                  <RefreshControl refreshing={preloader} onRefresh={getData} />
+                }
               />
             </View>
-          </View>
-          <Text style={[styles.textCateg, styles.textTovar]}>Товары</Text>
-          <View
-            style={[
-              styles.blockSelectProd,
-              openKeyBoard && checkLength && styles.paddingB50,
-            ]}
-          >
-            <FlatList
-              contentContainerStyle={widthMax}
-              data={listProductTA}
-              renderItem={({ item, index }) => (
-                <EveryProduct obj={item} index={index} />
-              )}
-              keyExtractor={(item, ind) => `${item.guid}${ind}`}
-              refreshControl={
-                <RefreshControl refreshing={preloader} onRefresh={getData} />
-              }
-            />
-          </View>
-        </SafeAreaView>
-      </View>
+          </SafeAreaView>
+        </View>
+      )}
     </>
   );
 };
@@ -163,5 +169,14 @@ const styles = StyleSheet.create({
   },
   paddingB50: {
     // paddingBottom: 95,
+  },
+
+  noneData: {
+    paddingTop: 250,
+    textAlign: "center",
+    fontSize: 20,
+    fontWeight: "500",
+    color: "#222",
+    height: "100%",
   },
 });

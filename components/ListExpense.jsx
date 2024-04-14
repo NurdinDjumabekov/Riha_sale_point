@@ -6,43 +6,54 @@ import { RefreshControl } from "react-native";
 export const ListExpense = ({ getData }) => {
   const { preloader, listExpense } = useSelector((state) => state.requestSlice);
 
-  // console.log(listExpense, "listExpense");
+  const emptyData = listExpense?.length === 0;
 
   return (
-    <View style={styles.parentBlock}>
-      <FlatList
-        contentContainerStyle={styles.flatlist}
-        data={listExpense}
-        renderItem={({ item }) => (
-          <View style={styles.everyProd}>
-            <View style={styles.everyProdInner}>
-              <View style={styles.blockTitle}>
-                <Text style={styles.title}>
-                  {item?.seller_fio} ({item.name})
-                </Text>
-                <Text style={styles.comment}>
-                  {item.comment ? item.comment : "..."}
-                </Text>
+    <>
+      {emptyData ? (
+        <Text style={styles.noneData}>Список пустой</Text>
+      ) : (
+        <View style={styles.parentBlock}>
+          <FlatList
+            contentContainerStyle={styles.flatlist}
+            data={listExpense}
+            renderItem={({ item }) => (
+              <View style={styles.everyProd}>
+                <View style={styles.everyProdInner}>
+                  <View style={styles.blockTitle}>
+                    <Text style={styles.title}>
+                      {item?.seller_fio} ({item.name})
+                    </Text>
+                    <Text style={styles.comment}>
+                      {item.comment ? item.comment : "..."}
+                    </Text>
+                  </View>
+                  <View>
+                    <Text style={item?.status ? styles.noo : styles.good}>
+                      {item?.status ? "Отменено админом" : "Одобрено"}
+                    </Text>
+                    <Text style={styles.date}>{item.date_system}</Text>
+                    <Text style={styles.sum}>{item.amount} сом</Text>
+                  </View>
+                </View>
+                {item?.cancel_comment && (
+                  <Text style={styles.commentAdmin}>
+                    {item?.cancel_comment}
+                  </Text>
+                )}
               </View>
-              <View>
-                <Text style={item?.status ? styles.noo : styles.good}>
-                  {item?.status ? "Отменено админом" : "Одобрено"}
-                </Text>
-                <Text style={styles.date}>{item.date_system}</Text>
-                <Text style={styles.sum}>{item.amount} сом</Text>
-              </View>
-            </View>
-            {item?.cancel_comment && (
-              <Text style={styles.commentAdmin}>{item?.cancel_comment}</Text>
             )}
-          </View>
-        )}
-        keyExtractor={(item) => item.guid}
-        refreshControl={
-          <RefreshControl refreshing={preloader} onRefresh={() => getData()} />
-        }
-      />
-    </View>
+            keyExtractor={(item) => item.guid}
+            refreshControl={
+              <RefreshControl
+                refreshing={preloader}
+                onRefresh={() => getData()}
+              />
+            }
+          />
+        </View>
+      )}
+    </>
   );
 };
 
@@ -52,6 +63,7 @@ const styles = StyleSheet.create({
     minHeight: "100%",
     paddingBottom: 180,
   },
+
   everyProd: {
     padding: 15,
     backgroundColor: "rgba(212, 223, 238, 0.47)",
@@ -66,6 +78,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     flexDirection: "row",
   },
+
   title: {
     fontSize: 15,
     fontWeight: "500",
@@ -98,5 +111,14 @@ const styles = StyleSheet.create({
   commentAdmin: {
     fontSize: 16,
     marginTop: 10,
+  },
+
+  noneData: {
+    paddingTop: 250,
+    textAlign: "center",
+    fontSize: 20,
+    fontWeight: "500",
+    color: "#222",
+    height: "100%",
   },
 });

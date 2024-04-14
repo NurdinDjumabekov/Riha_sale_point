@@ -13,28 +13,31 @@ import { CheckVes } from "../components/ReturnProducts/CheckVes";
 import { changeReturnProd } from "../store/reducers/stateSlice";
 import { ViewButton } from "../customsTags/ViewButton";
 import ConfirmationModal from "../components/ConfirmationModal";
-import { formatCount } from "../helpers/formatCount";
+import { getLocalDataUser } from "../helpers/returnDataUser";
+import { changeLocalData } from "../store/reducers/saveDataSlice";
+import { totalCountReturns, totalSumReturns } from "../helpers/amounts";
 
 export const ReturnProdScreen = ({ route, navigation }) => {
-  const { invoice_guid, codeid } = route.params;
+  const { invoice_guid } = route.params;
   //// возрат товара
   const dispatch = useDispatch();
   const [listData, setListData] = useState([]);
   const [modalSend, setModalSend] = useState(false);
 
-  const agent_guid = "B3120F36-3FCD-4CA0-8346-484881974846";
-
   const { listLeftoversForReturn } = useSelector((state) => state.requestSlice);
   const { returnProducts } = useSelector((state) => state.stateSlice);
+  const { data } = useSelector((state) => state.saveDataSlice);
 
   useEffect(() => {
-    dispatch(getMyLeftovers(agent_guid));
+    getData();
   }, []);
 
+  const getData = async () => {
+    await getLocalDataUser({ changeLocalData, dispatch });
+    await dispatch(getMyLeftovers(data?.seller_guid));
+  };
+
   useEffect(() => {
-    navigation.setOptions({
-      title: `Накладная для возврата`,
-    });
     if (listLeftoversForReturn) {
       const tableDataList = listLeftoversForReturn?.map((item) => {
         return [
@@ -67,29 +70,18 @@ export const ReturnProdScreen = ({ route, navigation }) => {
   const closeModal = () => setModalSend(false);
 
   const sendData = () => {
-    dispatch(returnListProduct({ data: returnProducts, navigation }));
-    closeModal();
+    // dispatch(returnListProduct({ data: returnProducts, navigation }));
+    console.log(returnProducts, "returnProducts");
+    // closeModal();
   };
 
-  const totalSum = returnProducts?.products?.reduce(
-    (total, item) => total + +item?.price * +item?.count,
-    0
-  );
-
-  const totalCount = returnProducts?.products?.reduce(
-    (total, item) => +total + +item?.count,
-    0
-  );
-
   const windowWidth = Dimensions.get("window").width;
-  // const arrWidth = [40, 13, 19, 17, 13]; //  проценты %
   const arrWidth = [47, 13, 20, 20]; //  проценты %
   // Преобразуем проценты в абсолютные значения ширины
   const resultWidths = arrWidth.map(
     (percentage) => (percentage / 100) * windowWidth
   );
 
-  console.log(returnProducts);
   return (
     <ScrollView>
       <View style={styles.container}>
@@ -122,10 +114,10 @@ export const ReturnProdScreen = ({ route, navigation }) => {
         <View style={styles.divAction}>
           <View style={styles.blockTotal}>
             <Text style={styles.totalItemCount}>
-              Сумма: {formatCount(totalSum) || 0} сом
+              Сумма: {totalSumReturns(returnProducts) || 0} сом
             </Text>
             <Text style={styles.totalItemCount}>
-              Кол-во: {formatCount(totalCount) || 0}
+              Кол-во: {totalCountReturns(returnProducts) || 0}
             </Text>
           </View>
         </View>

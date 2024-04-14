@@ -14,6 +14,7 @@ const Container = styled.View`
   background-color: #fff;
   padding: 20px 50px;
   border-radius: 10px;
+  max-width: 90%;
 `;
 
 const ButtonContainer = styled.View`

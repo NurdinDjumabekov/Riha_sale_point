@@ -8,10 +8,10 @@ import { StatusBar } from "expo-status-bar";
 import { Preloader } from "../components/Preloader";
 import { MyApplicationScreen } from "./MyApplicationScreen";
 import { MyShipmentScreen } from "./MyShipmentScreen";
-import { LogOut } from "../components/LogOut";
+import { LogOut } from "../components/Header/LogOut";
 import { LeftoversScreen } from "./LeftoversScreen";
 import { DetailedInvoice } from "./DetailedInvoice";
-import UserInfo from "../components/UserInfo";
+import UserInfo from "../components/Header/UserInfo";
 import { StoreSpendingScreen } from "./StoreSpendingScreen";
 import { SoldProductScreen } from "./SoldProductScreen";
 import { AcceptInvoiceHistory } from "../components/InvoiceTT/AcceptInvoiceHistory";
@@ -93,10 +93,14 @@ export const Navigation = () => {
               component={ReturnScreen}
               options={{ title: "Возврат товара" }}
             />
-            <Stack.Screen name="ReturnProd" component={ReturnProdScreen} />
             <Stack.Screen
               name="listReturnProd"
               component={EveryListInvoiceReturn}
+            />
+            <Stack.Screen
+              name="ReturnProd"
+              component={ReturnProdScreen}
+              options={{ title: "Накладная для возврата" }}
             />
           </>
         </Stack.Navigator>

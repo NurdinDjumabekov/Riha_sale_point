@@ -37,70 +37,57 @@ export const SoldProductScreen = ({ route }) => {
     setModalItemGuid(null);
   };
 
-  console.log(listSoldProd, "listSoldProd12222");
-
   return (
-    <>
-      <View>
-        {listSoldProd?.length === 0 ? (
-          <Text style={styles.noneData}>Список пустой</Text>
-        ) : (
-          <View style={{ paddingBottom: 200 }}>
-            <FlatList
-              contentContainerStyle={styles.flatList}
-              data={listSoldProd}
-              renderItem={({ item }) => (
-                <View style={styles.container}>
-                  <View style={styles.parentBlock}>
-                    <View style={styles.innerBlock}>
+    <View>
+      {listSoldProd?.length === 0 ? (
+        <Text style={styles.noneData}>Список пустой</Text>
+      ) : (
+        <View style={{ paddingBottom: 200 }}>
+          <FlatList
+            contentContainerStyle={styles.flatList}
+            data={listSoldProd}
+            renderItem={({ item }) => (
+              <View style={styles.container}>
+                <View style={styles.parentBlock}>
+                  <View style={styles.mainData}>
+                    <Text style={styles.titleNum}>{item.codeid} </Text>
+                    <View>
                       <Text style={styles.titleDate}>{item.date || "..."}</Text>
-
-                      <View style={styles.mainData}>
-                        <Text style={styles.titleNum}>{item.codeid} </Text>
-                        <View>
-                          <Text style={[styles.titleDate, styles.role]}>
-                            {item?.product_name}
-                          </Text>
-                        </View>
-                      </View>
-                    </View>
-                    <View style={styles.mainDataArrow}>
-                      <View>
-                        <Text style={styles.status}>Продано</Text>
-                        <Text style={styles.price}>
-                          {item?.product_price} сом
-                        </Text>
-                      </View>
-                      <TouchableOpacity
-                        style={styles.krest}
-                        onPress={() => setModalItemGuid(item?.guid)}
-                      >
-                        <View style={[styles.line, styles.deg]} />
-                        <View style={[styles.line, styles.degMinus]} />
-                      </TouchableOpacity>
+                      <Text style={styles.totalPrice}>
+                        {item?.product_price} х {item?.count} = {item?.total}{" "}
+                        сом
+                      </Text>
                     </View>
                   </View>
-                  <Text style={styles.totalPrice}>
-                    {item?.product_price} х {item?.count} = {item?.total} сом
-                  </Text>
-                  <ConfirmationModal
-                    visible={modalItemGuid === item.guid}
-                    message="Отменить продажу ?"
-                    onYes={() => del(item.guid)}
-                    onNo={() => setModalItemGuid(null)}
-                    onClose={() => setModalItemGuid(null)}
-                  />
+                  <TouchableOpacity
+                    style={styles.krest}
+                    onPress={() => setModalItemGuid(item?.guid)}
+                  >
+                    <View style={[styles.line, styles.deg]} />
+                    <View style={[styles.line, styles.degMinus]} />
+                  </TouchableOpacity>
                 </View>
-              )}
-              keyExtractor={(item) => item?.codeid}
-              refreshControl={
-                <RefreshControl refreshing={preloader} onRefresh={getData} />
-              }
-            />
-          </View>
-        )}
-      </View>
-    </>
+                <View>
+                  <Text style={styles.title}>{item?.product_name}</Text>
+                </View>
+
+                <ConfirmationModal
+                  visible={modalItemGuid === item.guid}
+                  message="Отменить продажу ?"
+                  onYes={() => del(item.guid)}
+                  onNo={() => setModalItemGuid(null)}
+                  onClose={() => setModalItemGuid(null)}
+                />
+              </View>
+            )}
+            keyExtractor={(item) => item?.codeid}
+            refreshControl={
+              <RefreshControl refreshing={preloader} onRefresh={getData} />
+            }
+          />
+        </View>
+      )}
+    </View>
   );
 };
 
@@ -118,14 +105,7 @@ const styles = StyleSheet.create({
   parentBlock: {
     display: "flex",
     flexDirection: "row",
-    alignItems: "center",
     justifyContent: "space-between",
-  },
-
-  innerBlock: {
-    display: "flex",
-    width: "60%",
-    gap: 5,
   },
 
   titleNum: {
@@ -145,20 +125,21 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: "500",
     borderRadius: 5,
-    lineHeight: 17,
+    lineHeight: 16,
+    color: "rgba(47, 71, 190, 0.672)",
   },
 
-  status: {
-    color: "rgba(12, 169, 70, 0.9)",
-  },
+  // status: {
+  //   color: "rgba(12, 169, 70, 0.9)",
+  // },
 
-  role: {
-    fontSize: 14,
+  title: {
+    fontSize: 15,
     fontWeight: "500",
     borderRadius: 5,
     lineHeight: 17,
-    color: "rgba(47, 71, 190, 0.672)",
-    width: "60%",
+    color: "#222",
+    marginTop: 10,
   },
 
   price: {
@@ -167,15 +148,10 @@ const styles = StyleSheet.create({
   },
 
   totalPrice: {
-    fontSize: 17,
+    fontSize: 14,
     fontWeight: "500",
-    marginTop: 15,
+    // marginTop: 15,
     color: "rgba(12, 169, 70, 0.9)",
-  },
-
-  comments: {
-    maxWidth: 230,
-    fontSize: 12,
   },
 
   mainData: {
@@ -183,25 +159,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "flex-start",
     gap: 5,
-  },
-
-  mainDataArrow: {
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    paddingRight: 15,
-    width: "35%",
-  },
-
-  arrow: {
-    height: 26,
-    width: 26,
-  },
-
-  imgDel: {
-    width: "100%",
-    height: "100%",
   },
 
   noneData: {
@@ -217,11 +174,13 @@ const styles = StyleSheet.create({
 
   //////////////////// krestik
   krest: {
-    width: 25,
-    height: 25,
+    width: 22,
+    height: 22,
     justifyContent: "center",
     alignItems: "center",
+    marginRight: 15,
   },
+
   line: {
     position: "absolute",
     width: "100%",

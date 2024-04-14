@@ -11,7 +11,7 @@ import { ViewContainer } from "../customsTags/ViewContainer";
 import { dataCategory } from "../helpers/Data";
 import { EveryCategory } from "../components/EveryCategory";
 import { useDispatch, useSelector } from "react-redux";
-import { useCallback, useEffect } from "react";
+import { useCallback } from "react";
 import { getBalance } from "../store/reducers/requestSlice";
 import { getLocalDataUser } from "../helpers/returnDataUser";
 import { changeLocalData } from "../store/reducers/saveDataSlice";
@@ -27,7 +27,7 @@ export const MainScreen = ({ navigation }) => {
   useFocusEffect(
     useCallback(() => {
       getData();
-      console.log("restartBalance");
+      // console.log("restartBalance");
     }, [])
   );
 

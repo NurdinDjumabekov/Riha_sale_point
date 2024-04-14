@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import {
   StyleSheet,
   Text,
@@ -14,31 +13,25 @@ import {
 import { Modal } from "react-native";
 import { ViewButton } from "../../customsTags/ViewButton";
 import { FlatList } from "react-native";
-import { createInvoiceReturnTA } from "../../store/reducers/requestSlice";
+import { createInvoiceReturnTT } from "../../store/reducers/requestSlice";
 import { Alert } from "react-native";
 
 export const ModalChoiceReturn = ({ navigation }) => {
   //// модалка создания накладной для возрата товара
   const dispatch = useDispatch();
 
-  const agent_guid = "B3120F36-3FCD-4CA0-8346-484881974846";
-
-  const { listAdmins } = useSelector((state) => state.requestSlice);
+  const { listRevizors } = useSelector((state) => state.requestSlice);
   const { createReturnInvoice } = useSelector((state) => state.stateSlice);
 
-  useEffect(() => {}, []);
-
-  const closeModal = () => {
-    dispatch(cleareReturnInvoice());
-  };
+  const closeModal = () => dispatch(cleareReturnInvoice());
 
   const openModal = () => {
     dispatch(changeReturnInvoice({ ...createReturnInvoice, stateModal: true }));
   };
 
-  const changeSelect = (oper_guid) => {
-    dispatch(changeReturnInvoice({ ...createReturnInvoice, oper_guid }));
-  };
+  // const changeSelect = (oper_guid) => {
+  //   dispatch(changeReturnInvoice({ ...createReturnInvoice, oper_guid }));
+  // };
 
   const changeComm = (text) => {
     dispatch(
@@ -50,15 +43,13 @@ export const ModalChoiceReturn = ({ navigation }) => {
   };
 
   const createInvoiceReturn = () => {
-    if (createReturnInvoice?.oper_guid === "") {
-      Alert.alert("Выберите админа!");
-    } else {
-      const { stateModal, ...data } = createReturnInvoice;
-      dispatch(createInvoiceReturnTA({ data, navigation, closeModal }));
-    }
+    // if (createReturnInvoice?.oper_guid === "") {
+    //   Alert.alert("Выберите админа!");
+    // } else {
+    // }
+    const { stateModal, ...data } = createReturnInvoice;
+    dispatch(createInvoiceReturnTT({ data, navigation, closeModal }));
   };
-
-  // console.log(createReturnInvoice, "createReturnInvoice");
 
   const widthMax = { minWidth: "100%", width: "100%" };
 
@@ -66,7 +57,7 @@ export const ModalChoiceReturn = ({ navigation }) => {
     <Modal
       animationType="fade"
       transparent={true}
-      visible={createReturnInvoice.stateModal}
+      visible={createReturnInvoice?.stateModal}
       onRequestClose={closeModal}
     >
       <TouchableOpacity
@@ -75,11 +66,11 @@ export const ModalChoiceReturn = ({ navigation }) => {
         onPress={closeModal}
       >
         <View style={styles.modalInner} onPress={openModal}>
-          <Text style={styles.titleSelect}>Выберите админа</Text>
-          <View style={styles.selectBlock}>
+          {/* <Text style={styles.titleSelect}>Выберите админа</Text> */}
+          {/* <View style={styles.selectBlock}>
             <FlatList
               contentContainerStyle={widthMax}
-              data={listAdmins}
+              data={listRevizors}
               renderItem={({ item }) => (
                 <TouchableOpacity
                   style={[
@@ -101,10 +92,10 @@ export const ModalChoiceReturn = ({ navigation }) => {
                 </TouchableOpacity>
               )}
             />
-          </View>
+          </View> */}
           <TextInput
             style={styles.inputComm}
-            value={createReturnInvoice.comment}
+            value={createReturnInvoice?.comment}
             onChangeText={changeComm}
             placeholder="Ваш комментарий"
             multiline={true}

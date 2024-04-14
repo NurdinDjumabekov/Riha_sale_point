@@ -5,7 +5,7 @@ import { changeDataInputsInv } from "../../store/reducers/stateSlice";
 import {
   addProductInvoiceTT,
   getCategoryTT,
-  getProductTA,
+  getProductTT,
 } from "../../store/reducers/requestSlice";
 import { getLocalDataUser } from "../../helpers/returnDataUser";
 import { changeLocalData } from "../../store/reducers/saveDataSlice";
@@ -42,7 +42,7 @@ export const AddProductsTA = ({ productGuid }) => {
     await getLocalDataUser({ changeLocalData, dispatch });
     await dispatch(getCategoryTT(data?.seller_guid));
     await dispatch(
-      getProductTA({
+      getProductTT({
         guid: "0",
         seller_guid: data?.seller_guid,
       })

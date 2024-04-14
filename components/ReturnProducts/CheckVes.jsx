@@ -2,7 +2,8 @@ import { View, StyleSheet, TextInput } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { changeReturnProd } from "../../store/reducers/stateSlice";
 
-export const CheckVes = ({ guidProduct, invoice_guid }) => {
+export const CheckVes = ({ guidProduct }) => {
+  ///// изменение веса для в0врата накладной
   const { returnProducts } = useSelector((state) => state.stateSlice);
   const dispatch = useDispatch();
 
@@ -23,10 +24,6 @@ export const CheckVes = ({ guidProduct, invoice_guid }) => {
   const changeCount = returnProducts?.products?.filter(
     (item) => item?.guid === guidProduct
   );
-
-  // console.log(changeCount?.[0]?.change);
-  //   console.log(returnProducts, "returnProductssss");
-  //   console.log(changeCount, "changeCount");
 
   return (
     <View style={styles.standartBox}>

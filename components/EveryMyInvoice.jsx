@@ -1,5 +1,5 @@
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { clearAcceptInvoiceTA } from "../store/reducers/stateSlice";
+import { clearAcceptInvoiceTT } from "../store/reducers/stateSlice";
 import { useDispatch } from "react-redux";
 import { changePreloader } from "../store/reducers/requestSlice";
 
@@ -26,16 +26,18 @@ export const EveryMyInvoice = ({ obj, navigation }) => {
         guid: obj?.guid,
         status: obj?.status,
       });
-      dispatch(clearAcceptInvoiceTA());
+      dispatch(clearAcceptInvoiceTT());
       dispatch(changePreloader(true)); /// чтобы вначале не показывался пустой массив
     } else if (+obj?.status === 2) {
       /// if накладная уже принята
       navigation.navigate("EveryInvoiceHistory", {
         codeid: obj?.codeid,
-        guid: obj?.guid, /// guid - накладной 
+        guid: obj?.guid, /// guid - накладной
       });
     }
   };
+
+  console.log(obj, "obj");
 
   return (
     <TouchableOpacity style={styles.container} onPress={lookInvoice}>

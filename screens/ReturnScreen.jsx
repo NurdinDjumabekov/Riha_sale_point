@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { RefreshControl, StyleSheet, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import { getAllAdmins, getHistoryReturn } from "../store/reducers/requestSlice";
+import { getHistoryReturn } from "../store/reducers/requestSlice";
 import { ViewButton } from "../customsTags/ViewButton";
 import { FlatList } from "react-native";
 import { ModalChoiceReturn } from "../components/ReturnProducts/ModalChoiceReturn";
@@ -9,6 +9,7 @@ import { changeReturnInvoice } from "../store/reducers/stateSlice";
 import { EveryInvoiceReturn } from "../components/ReturnProducts/EveryInvoiceReturn";
 import { Text } from "react-native";
 import { changeLocalData } from "../store/reducers/saveDataSlice";
+import { getLocalDataUser } from "../helpers/returnDataUser";
 
 export const ReturnScreen = ({ navigation }) => {
   //// возрат товара
@@ -25,16 +26,20 @@ export const ReturnScreen = ({ navigation }) => {
   }, []);
 
   const getData = async () => {
-    await dispatch(getHistoryReturn(data?.seller_guid));
-    //// await  dispatch(getAllAdmins());
     await getLocalDataUser({ changeLocalData, dispatch });
+    //// await  dispatch(getListRevizors()); //// chechchech
+    await dispatch(getHistoryReturn(data?.seller_guid));
   };
+
+  const agent_guid = "B3120F36-3FCD-4CA0-8346-484881974846"; //// checkcheck
+  ///// над получить guid агента c бэка
 
   const createInvoice = () => {
     dispatch(
       changeReturnInvoice({
         ...createReturnInvoice,
         stateModal: true,
+        seller_guid: data?.seller_guid,
         agent_guid,
       })
     );

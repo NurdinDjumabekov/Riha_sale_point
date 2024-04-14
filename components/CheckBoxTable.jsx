@@ -1,6 +1,6 @@
 import { View, StyleSheet, TouchableOpacity } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import { changeAcceptInvoiceTA } from "../store/reducers/stateSlice";
+import { changeAcceptInvoiceTT } from "../store/reducers/stateSlice";
 
 export const CheckBoxTable = ({ guidProduct, guidInvoice }) => {
   const { acceptConfirmInvoice } = useSelector((state) => state.stateSlice);
@@ -12,7 +12,7 @@ export const CheckBoxTable = ({ guidProduct, guidInvoice }) => {
   );
   const checkGuid = () => {
     dispatch(
-      changeAcceptInvoiceTA({
+      changeAcceptInvoiceTT({
         ...acceptConfirmInvoice,
         invoice_guid: guidInvoice,
         products: acceptConfirmInvoice?.products?.map((i) => ({

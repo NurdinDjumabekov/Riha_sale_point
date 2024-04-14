@@ -1,4 +1,4 @@
-package com.anonymous.Riha;
+package com.anonymous.RihaTT;
 
 import android.os.Build;
 import android.os.Bundle;

@@ -1,9 +1,9 @@
 import { StyleSheet, Image, View } from "react-native";
-import userImg from "../assets/icons/user.png";
+import userImg from "../../assets/icons/user.png";
 import { Text } from "react-native";
-import { getLocalDataUser } from "../helpers/returnDataUser";
+import { getLocalDataUser } from "../../helpers/returnDataUser";
 import { useEffect } from "react";
-import { changeLocalData } from "../store/reducers/saveDataSlice";
+import { changeLocalData } from "../../store/reducers/saveDataSlice";
 import { useDispatch, useSelector } from "react-redux";
 
 const UserInfo = () => {

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Row, Rows, Table } from "react-native-table-component";
 import {
   Dimensions,
   ScrollView,
@@ -7,20 +8,27 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import styled from "styled-components/native";
+
 import { useDispatch, useSelector } from "react-redux";
-import {
-  acceptInvoiceTA,
-  getMyEveryInvoice,
-} from "../store/reducers/requestSlice";
-import { Row, Rows, Table } from "react-native-table-component";
+
+///components
 import { CheckBoxTable } from "../components/CheckBoxTable";
 import ConfirmationModal from "../components/ConfirmationModal";
 import { ViewButton } from "../customsTags/ViewButton";
 import { InputDifference } from "../components/InputDifference";
-import { changeAcceptInvoiceTA } from "../store/reducers/stateSlice";
+
+///states
+import { changeAcceptInvoiceTT } from "../store/reducers/stateSlice";
+import {
+  acceptInvoiceTT,
+  getMyEveryInvoice,
+} from "../store/reducers/requestSlice";
+
+////helpers
 import { listTableForAcceptInvoice } from "../helpers/Data";
-import { formatCount } from "../helpers/formatCount";
+import { totalCountAccept, totalSumAccept } from "../helpers/amounts";
+
+import styled from "styled-components/native";
 
 const Div = styled.View`
   display: flex;
@@ -45,7 +53,7 @@ export const DetailedInvoice = ({ route, navigation }) => {
   };
 
   const changeModalApplication = () => {
-    dispatch(acceptInvoiceTA({ data: acceptConfirmInvoice, navigation }));
+    dispatch(acceptInvoiceTT({ data: acceptConfirmInvoice, navigation }));
     setModalVisibleOk(false);
   };
 
@@ -55,7 +63,7 @@ export const DetailedInvoice = ({ route, navigation }) => {
       is_checked: !isChecked, // Инвертируем значение is_checked
     }));
     dispatch(
-      changeAcceptInvoiceTA({
+      changeAcceptInvoiceTT({
         invoice_guid: acceptConfirmInvoice?.invoice_guid,
         products: newData,
       })
@@ -100,16 +108,6 @@ export const DetailedInvoice = ({ route, navigation }) => {
     (percentage) => (percentage / 100) * windowWidth
   );
 
-  const totalItemCount = acceptConfirmInvoice?.products?.reduce(
-    (total, item) => +total + +item?.change,
-    0
-  );
-
-  const totalSum = everyInvoice?.list?.reduce(
-    (total, item) => +total + +item?.total,
-    0
-  );
-
   const isTrue =
     acceptConfirmInvoice?.products?.length === everyInvoice?.list?.length &&
     acceptConfirmInvoice?.products?.every(
@@ -119,9 +117,6 @@ export const DetailedInvoice = ({ route, navigation }) => {
       const changeValue = product?.change;
       return changeValue !== 0 && changeValue !== "";
     });
-
-  // console.log(everyInvoice?.list, "everyInvoice");
-  console.log(acceptConfirmInvoice, "acceptConfirmInvoice");
 
   return (
     <ScrollView>
@@ -149,10 +144,10 @@ export const DetailedInvoice = ({ route, navigation }) => {
           <View>
             <View style={styles.blockTotal}>
               <Text style={styles.totalItemCount}>
-                Сумма: {formatCount(totalSum)} сом
+                Сумма: {totalSumAccept(everyInvoice)} сом
               </Text>
               <Text style={styles.totalItemCount}>
-                Кол-во: {formatCount(totalItemCount)}
+                Кол-во: {totalCountAccept(acceptConfirmInvoice)}
               </Text>
             </View>
           </View>
