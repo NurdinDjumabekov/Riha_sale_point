@@ -63,11 +63,13 @@ export const listTableLeftoverst = [
 ];
 
 export const listTableForAcceptInvoice = [
+  " №",
   " Продукт",
   "Цена",
-  "Вес с усушкой",
-  "Вес принято",
-  "  ....",
+  "Вес",
+  // "Вес с усушкой",
+  // "Вес принято",
+  // "  ....",
 ];
 
 export const listTableForReturnProd = [

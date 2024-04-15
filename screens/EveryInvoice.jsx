@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   FlatList,
   Keyboard,
@@ -14,6 +14,7 @@ import { EveryProduct } from "../components/EveryProduct";
 import { EveryCategoryInner } from "../components/TAComponents/EveryCategoryInner";
 import { getLocalDataUser } from "../helpers/returnDataUser";
 import { changeLocalData } from "../store/reducers/saveDataSlice";
+import { useFocusEffect } from "@react-navigation/native";
 
 export const EveryInvoice = () => {
   const dispatch = useDispatch();
@@ -23,11 +24,15 @@ export const EveryInvoice = () => {
   const { data } = useSelector((state) => state.saveDataSlice);
   const [openKeyBoard, setOpenKeyBoard] = useState(false);
 
-  // const seller_guid = "e7458a29-6f7f-4364-a96d-ed878812f0cf";
+  // useEffect(() => {
+  //   getData();
+  // }, [infoKassa?.guid]);
 
-  useEffect(() => {
-    getData();
-  }, [infoKassa?.guid]);
+  useFocusEffect(
+    useCallback(() => {
+      getData();
+    }, [])
+  );
 
   const getData = async () => {
     await getLocalDataUser({ changeLocalData, dispatch });

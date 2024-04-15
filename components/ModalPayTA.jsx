@@ -87,7 +87,7 @@ export const ModalPayTA = ({ modalState, setModalState }) => {
           numberOfLines={4}
         />
         <ViewButton styles={styles.sendBtn} onclick={sendMoney}>
-          Принять оплату
+          Оплатить
         </ViewButton>
       </View>
     </TouchableOpacity>

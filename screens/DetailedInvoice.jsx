@@ -52,7 +52,7 @@ export const DetailedInvoice = ({ route, navigation }) => {
     setModalVisibleOk(true);
   };
 
-  const changeModalApplication = () => {
+  const sendData = () => {
     dispatch(acceptInvoiceTT({ data: acceptConfirmInvoice, navigation }));
     setModalVisibleOk(false);
   };
@@ -80,20 +80,25 @@ export const DetailedInvoice = ({ route, navigation }) => {
       title: `Накладная №${everyInvoice?.codeid}`,
     });
     if (everyInvoice && everyInvoice.list) {
-      const tableDataList = everyInvoice?.list?.map((item) => {
+      const tableDataList = everyInvoice?.list?.map((item, index) => {
         return [
-          `${item?.codeid}. ${item?.product_name}`,
+          ` ${item?.codeid}`,
+          `${item?.product_name}`,
           `${item?.product_price}`,
           `${item?.count}`,
-          <InputDifference
-            guidProduct={item?.guid}
-            guidInvoice={everyInvoice?.guid}
-            item={item}
-          />,
-          <CheckBoxTable
-            guidProduct={item?.guid}
-            guidInvoice={everyInvoice?.guid}
-          />,
+          // ` ${item?.codeid}}`,
+          // `${item?.codeid}. ${item?.product_name}`,
+          // `${item?.product_price}`,
+          // `${item?.count}`,
+          // <InputDifference
+          //   guidProduct={item?.guid}
+          //   guidInvoice={everyInvoice?.guid}
+          //   item={item}
+          // />,
+          // <CheckBoxTable
+          //   guidProduct={item?.guid}
+          //   guidInvoice={everyInvoice?.guid}
+          // />,
         ];
       });
       setListData(tableDataList);
@@ -101,7 +106,8 @@ export const DetailedInvoice = ({ route, navigation }) => {
   }, [everyInvoice]);
 
   const windowWidth = Dimensions.get("window").width;
-  const arrWidth = [40, 14, 17, 17, 12]; //  проценты %
+  // const arrWidth = [40, 14, 17, 17, 12]; //  проценты %
+  const arrWidth = [8, 61, 16, 15]; //  проценты %
 
   // Преобразуем проценты в абсолютные значения ширины
   const resultWidths = arrWidth.map(
@@ -117,6 +123,8 @@ export const DetailedInvoice = ({ route, navigation }) => {
       const changeValue = product?.change;
       return changeValue !== 0 && changeValue !== "";
     });
+
+  // console.log(acceptConfirmInvoice, "acceptConfirmInvoice");
 
   return (
     <ScrollView>
@@ -151,24 +159,24 @@ export const DetailedInvoice = ({ route, navigation }) => {
               </Text>
             </View>
           </View>
-          <TouchableOpacity onPress={changeAllCheckbox}>
+          {/* <TouchableOpacity onPress={changeAllCheckbox}>
             <View style={styles.standartBox}>
               <View style={styles.standartBox__inner}>
                 <View style={styles.checkmark}></View>
               </View>
             </View>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
-        {isTrue && (
-          <ViewButton styles={styles.sendBtn} onclick={clickOkay}>
-            Принять накладную
-          </ViewButton>
-        )}
+        <ViewButton styles={styles.sendBtn} onclick={clickOkay}>
+          Принять накладную
+        </ViewButton>
+        {/* {isTrue && (
+        )} */}
       </View>
       <ConfirmationModal
         visible={modalVisibleOk}
         message="Принять накладную ?"
-        onYes={changeModalApplication}
+        onYes={sendData}
         onNo={() => setModalVisibleOk(false)}
         onClose={() => setModalVisibleOk(false)}
       />
@@ -187,8 +195,15 @@ const styles = StyleSheet.create({
     paddingBottom: 102,
     paddingTop: 5,
   },
+
   head: { height: 65, backgroundColor: "rgba(199, 210, 254, 0.250)" },
-  text: { margin: 6, marginBottom: 8, marginTop: 8 },
+  text: {
+    margin: 6,
+    marginBottom: 8,
+    marginTop: 8,
+    fontSize: 14,
+    fontWeight: "400",
+  },
 
   titleDate: {
     fontSize: 20,
@@ -196,8 +211,8 @@ const styles = StyleSheet.create({
     color: "#222",
   },
   textTitle: {
-    fontSize: 14,
-    fontWeight: "600",
+    fontSize: 15,
+    fontWeight: "700",
     paddingRight: 0,
     paddingLeft: 5,
     color: "#383838",

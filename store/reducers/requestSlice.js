@@ -63,6 +63,27 @@ export const getBalance = createAsyncThunk(
   }
 );
 
+/// getHistoryBalance
+/// для получения баланса
+export const getHistoryBalance = createAsyncThunk(
+  "getHistoryBalance",
+  async function (seller_guid, { dispatch, rejectWithValue }) {
+    try {
+      const response = await axios({
+        method: "GET",
+        url: `${API}/tt/get_transactions?seller_guid=${seller_guid}`,
+      });
+      if (response.status >= 200 && response.status < 300) {
+        return response?.data;
+      } else {
+        throw Error(`Error: ${response.status}`);
+      }
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
 /// getMyInvoice
 export const getMyInvoice = createAsyncThunk(
   "getMyInvoice",
@@ -140,7 +161,6 @@ export const getMyEveryInvoice = createAsyncThunk(
       });
       if (response.status >= 200 && response.status < 300) {
         const data = response?.data?.[0];
-        // console.log(data, "sadas");
         dispatch(
           changeAcceptInvoiceTT({
             invoice_guid: data?.guid,
@@ -635,6 +655,7 @@ const initialState = {
   preloader: false,
   chech: "",
   balance: 0,
+  listHistoryBalance: [], //// список историй платежей ТТ
   listMyInvoice: [],
   listAcceptInvoice: [], /// список накладных , принятых ТT (история)
   listAcceptInvoiceProd: [], /// список продуктов накладных , принятых ТT (история)
@@ -685,6 +706,19 @@ const requestSlice = createSlice({
     });
     builder.addCase(getBalance.pending, (state, action) => {
       // state.preloader = true;
+    });
+
+    ///// getHistoryBalance
+    builder.addCase(getHistoryBalance.fulfilled, (state, action) => {
+      state.preloader = false;
+      state.listHistoryBalance = action.payload;
+    });
+    builder.addCase(getHistoryBalance.rejected, (state, action) => {
+      state.error = action.payload;
+      state.preloader = false;
+    });
+    builder.addCase(getHistoryBalance.pending, (state, action) => {
+      state.preloader = true;
     });
 
     //// getMyInvoice

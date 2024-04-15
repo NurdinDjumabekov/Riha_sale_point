@@ -20,6 +20,7 @@ import { PayMoneyScreen } from "./PayMoneyScreen";
 import { ReturnScreen } from "./ReturnScreen";
 import { ReturnProdScreen } from "./ReturnProdScreen";
 import { EveryListInvoiceReturn } from "../components/ReturnProducts/EveryListInvoiceReturn";
+import { HistoryBalance } from "./HistoryBalance";
 
 const Stack = createNativeStackNavigator();
 
@@ -45,6 +46,13 @@ export const Navigation = () => {
                 headerLeft: () => <UserInfo />,
                 headerRight: () => <LogOut navigation={navigation} />,
               })}
+            />
+
+            {/* /////////////////////// HistoryBalance ///////////////////////*/}
+            <Stack.Screen
+              name="HistoryBalance"
+              component={HistoryBalance}
+              options={{ title: "История баланса" }}
             />
             {/* /////////////////////// Main ///////////////////////*/}
             <Stack.Screen

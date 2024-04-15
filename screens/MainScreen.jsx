@@ -5,6 +5,7 @@ import {
   View,
   StyleSheet,
   Text,
+  TouchableOpacity,
 } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
 import { ViewContainer } from "../customsTags/ViewContainer";
@@ -36,11 +37,15 @@ export const MainScreen = ({ navigation }) => {
     await dispatch(getBalance(data?.seller_guid));
   };
 
+  console.log(data,"data");
+
+  const goPage = () => navigation.navigate("HistoryBalance");
+
   return (
     <ViewContainer>
       <SafeAreaView>
         <View style={styles.parentBlock}>
-          <View style={styles.balance}>
+          <TouchableOpacity style={styles.balance} onPress={goPage}>
             <View>
               <View style={styles.balanceInner}>
                 <Text style={styles.balanceText}>Баланс</Text>
@@ -49,7 +54,7 @@ export const MainScreen = ({ navigation }) => {
               <Text style={styles.balanceNum}>{balance || 0} сом</Text>
             </View>
             <Text style={styles.balanceHistory}>История</Text>
-          </View>
+          </TouchableOpacity>
           <FlatList
             contentContainerStyle={styles.flatList}
             data={dataCategory}
