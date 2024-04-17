@@ -37,7 +37,7 @@ export const EveryMyInvoice = ({ obj, navigation }) => {
     }
   };
 
-  console.log(obj, "obj");
+  // console.log(obj, "obj");
 
   return (
     <TouchableOpacity style={styles.container} onPress={lookInvoice}>

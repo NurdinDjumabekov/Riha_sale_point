@@ -8,6 +8,13 @@ export const dataCategory = [
     pathApi: "Application",
   },
   {
+    codeid: 10,
+    name: "Сопутка",
+    link: "Soputka",
+    img: "https://img.freepik.com/premium-vector/budget-planning-flat-illustration-is-scalable-and-easy-to-use_203633-7957.jpg?w=900",
+    pathApi: "Soputka",
+  },
+  {
     codeid: 2,
     name: "Остатки",
     link: "Leftovers",
@@ -26,7 +33,7 @@ export const dataCategory = [
     // img: "https://img.freepik.com/free-vector/completed-steps-concept-illustration_114360-5441.jpg?size=626&ext=jpg&ga=GA1.1.712878996.1706520692&semt=ais",
     // img: "https://img.freepik.com/free-vector/flat-university-concept_23-2148184535.jpg?t=st=1710925750~exp=1710929350~hmac=69394729219cd3ff08fc08714f54ac8b04644046299d520ab2fd1003d3b779b6&w=740",
     img: "https://img.freepik.com/free-vector/finance-department-employees-are-calculating-expenses-company-s-business_1150-41782.jpg?t=st=1711965120~exp=1711968720~hmac=96a672de3602a7397d6e0b7452abfa17eaa700d42fd08a2a3e244eb154b7bd30&w=1380",
-    pathApi: "",
+    pathApi: "Shipment",
   },
   {
     codeid: 4,
@@ -34,7 +41,7 @@ export const dataCategory = [
     link: "Spending",
     img: "https://img.freepik.com/free-vector/balance-sheet-cartoon-web-icon-accounting-process-finance-analyst-calculating-tools-financial-consulting-idea-bookkeeping-service_335657-2313.jpg?t=st=1711965019~exp=1711968619~hmac=635d5b94c27cf917e8532dfd722c44aba43db051d262065031cdac53408da1ab&w=900",
     // img:"https://img.freepik.com/free-vector/finance-department-employees-are-calculating-expenses-company-s-business_1150-41782.jpg?t=st=1711965120~exp=1711968720~hmac=96a672de3602a7397d6e0b7452abfa17eaa700d42fd08a2a3e244eb154b7bd30&w=1380",
-    pathApi: "",
+    pathApi: "Spending",
   },
 
   {
@@ -49,7 +56,7 @@ export const dataCategory = [
     codeid: 6,
     name: "Возврат",
     link: "ReturnInvoice",
-    img: "https://img.freepik.com/free-vector/courier-delivering-order-customer-door-man-getting-parcel-box-package-flat-vector-illustration-postman-shipping-service_74855-8309.jpg?w=1380",
+    img: "https://img.freepik.com/premium-vector/teamwork-web-concept-with-character-scene-man-woman-work-together-construct-cubes-developing-project-people-situation-flat-design-vector-illustration-social-media-marketing-material_9209-12505.jpg?w=1380",
     pathApi: "ReturnInvoice",
   },
 ];

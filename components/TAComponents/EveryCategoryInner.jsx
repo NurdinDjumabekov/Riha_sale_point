@@ -9,12 +9,11 @@ import { changeLocalData } from "../../store/reducers/saveDataSlice";
 import { getLocalDataUser } from "../../helpers/returnDataUser";
 
 export const EveryCategoryInner = ({ obj, index }) => {
-  //// список категорий(для сортироваки данных ТА)
+  //// список категорий(для сортироваки данных ТT)
   const dispatch = useDispatch();
   const { data } = useSelector((state) => state.saveDataSlice);
   const { stateForCategory } = useSelector((state) => state.stateSlice);
 
-  // const seller_guid = "e7458a29-6f7f-4364-a96d-ed878812f0cf";
   const changeSelect = async () => {
     await getLocalDataUser({ changeLocalData, dispatch });
     await dispatch(
@@ -23,8 +22,6 @@ export const EveryCategoryInner = ({ obj, index }) => {
     await dispatch(changeStateForCategory(obj?.value));
     await dispatch(changeTemporaryData({}));
   };
-
-  // console.log(obj, "obj");
 
   const isTrue = stateForCategory === obj?.value;
 

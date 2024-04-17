@@ -1,32 +1,27 @@
 import { useCallback, useEffect, useState } from "react";
-import {
-  FlatList,
-  Keyboard,
-  RefreshControl,
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import { FlatList, Keyboard, RefreshControl } from "react-native";
+import { SafeAreaView, StyleSheet, Text, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { getCategoryTT, getProductTT } from "../store/reducers/requestSlice";
 import { EveryProduct } from "../components/EveryProduct";
 import { EveryCategoryInner } from "../components/TAComponents/EveryCategoryInner";
 import { getLocalDataUser } from "../helpers/returnDataUser";
 import { changeLocalData } from "../store/reducers/saveDataSlice";
-import { useFocusEffect } from "@react-navigation/native";
+import { useFocusEffect, useRoute } from "@react-navigation/native";
 
-export const EveryInvoice = () => {
+export const EveryInvoice = ({ navigation, forAddTovar }) => {
   const dispatch = useDispatch();
-  const { preloader, listCategory, listProductTT, infoKassa } = useSelector(
+  const route = useRoute();
+
+  /////////////////////////////////////////////////
+  const checkComponent = route.name === "Shipment";
+  /////////////////////////////////////////////////
+
+  const { preloader, listCategory, listProductTT } = useSelector(
     (state) => state.requestSlice
   );
   const { data } = useSelector((state) => state.saveDataSlice);
   const [openKeyBoard, setOpenKeyBoard] = useState(false);
-
-  // useEffect(() => {
-  //   getData();
-  // }, [infoKassa?.guid]);
 
   useFocusEffect(
     useCallback(() => {
@@ -68,6 +63,9 @@ export const EveryInvoice = () => {
   const emptyData = listCategory?.length >= 1 && listProductTT?.length === 0;
 
   const widthMax = { minWidth: "100%", width: "100%" };
+
+  const chechSt = openKeyBoard && checkLength;
+
   return (
     <>
       {emptyData ? (
@@ -83,24 +81,23 @@ export const EveryInvoice = () => {
                   data={listCategory}
                   renderItem={({ item }) => <EveryCategoryInner obj={item} />}
                   keyExtractor={(item, ind) => `${item.guid}${ind}`}
-                  // refreshControl={
-                  //   <RefreshControl refreshing={preloader} onRefresh={getData} />
-                  // }
                 />
               </View>
             </View>
             <Text style={[styles.textCateg, styles.textTovar]}>Товары</Text>
             <View
-              style={[
-                styles.blockSelectProd,
-                openKeyBoard && checkLength && styles.paddingB50,
-              ]}
+              style={[styles.blockSelectProd, chechSt && styles.paddingB50]}
             >
               <FlatList
                 contentContainerStyle={widthMax}
                 data={listProductTT}
                 renderItem={({ item, index }) => (
-                  <EveryProduct obj={item} index={index} />
+                  <EveryProduct
+                    obj={item}
+                    index={index}
+                    checkComponent={checkComponent}
+                    forAddTovar={forAddTovar}
+                  />
                 )}
                 keyExtractor={(item, ind) => `${item.guid}${ind}`}
                 refreshControl={

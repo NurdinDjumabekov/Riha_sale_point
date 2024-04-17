@@ -12,13 +12,15 @@ export const EveryInvoiceReturn = ({ obj, navigation }) => {
     });
   };
 
+  // console.log(obj, "obj");
+
   return (
     <TouchableOpacity style={styles.container} onPress={lookInvoice}>
       <View style={styles.innerBlock}>
         <View style={styles.mainData}>
           <Text style={styles.titleNum}>{obj.codeid} </Text>
           <View>
-            <Text style={[styles.titleDate, styles.role]}>{obj?.operator}</Text>
+            <Text style={[styles.titleDate, styles.role]}>{obj?.agent}</Text>
             <Text style={styles.titleDate}>{obj.date}</Text>
           </View>
         </View>

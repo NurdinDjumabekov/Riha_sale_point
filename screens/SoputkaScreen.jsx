@@ -1,29 +1,23 @@
 import { useEffect, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-// import { getListRevizors } from "../store/reducers/requestSlice";
 import { SafeAreaView } from "react-native";
 import { FlatList } from "react-native";
 import { RefreshControl } from "react-native";
-import { TouchableOpacity } from "react-native";
-import { changeTempDataPay } from "../store/reducers/stateSlice";
 import { getLocalDataUser } from "../helpers/returnDataUser";
 import { changeLocalData } from "../store/reducers/saveDataSlice";
-import { ModalPayTA } from "../components/ModalPayTA";
 import { ViewButton } from "../customsTags/ViewButton";
 import { getHistoryBalance } from "../store/reducers/requestSlice";
+import { ModalCreateSoputka } from "../components/Soputka/ModalCreateSoputka";
 
-export const PayMoneyScreen = ({ navigation }) => {
-  //// оплата ТА (принятие денег ТА)
+export const SoputkaScreen = ({ navigation }) => {
+  //// Сопутка
   const dispatch = useDispatch();
   const [modalState, setModalState] = useState(false);
 
-  // const seller_guid = "B3120F36-3FCD-4CA0-8346-484881974846";
-
   const { data } = useSelector((state) => state.saveDataSlice);
 
-  const { temporaryDataPay } = useSelector((state) => state.stateSlice);
-  const { preloader, listRevizors, listHistoryBalance } = useSelector(
+  const { preloader, listHistoryBalance } = useSelector(
     (state) => state.requestSlice
   );
 
@@ -36,33 +30,16 @@ export const PayMoneyScreen = ({ navigation }) => {
     await dispatch(getHistoryBalance(data?.seller_guid));
   };
 
-  const choiceSelect = (obj) => {
-    const { value, debit } = obj;
-    dispatch(
-      changeTempDataPay({
-        ...temporaryDataPay,
-        seller_guid: value,
-        agent_guid,
-        amount: debit,
-      })
-    ); //// ложу guid рквиз0ра
-    setModalState(true);
-  };
-
-  const widthMax = { minWidth: "100%", width: "100%" };
-
-  // console.log(listRevizors);
-
   return (
     <>
       <SafeAreaView style={styles.container}>
         <View style={styles.payBlock}>
           <ViewButton styles={styles.pay} onclick={() => setModalState(true)}>
-            + Произвести оплату
+            + Создать накладную
           </ViewButton>
         </View>
         <View style={styles.selectBlock}>
-          <Text style={styles.title}>История оплат</Text>
+          <Text style={styles.title}>История сопутки</Text>
           <FlatList
             data={listHistoryBalance}
             renderItem={({ item, index }) => (
@@ -73,10 +50,12 @@ export const PayMoneyScreen = ({ navigation }) => {
                       <Text style={styles.titleNum}>{index + 1} </Text>
                       <Text style={styles.date}>{item?.date_system}</Text>
                     </View>
-                    <Text style={styles.comment}>{item.comment || "..."}</Text>
+                    {item.comment && (
+                      <Text style={styles.comment}>{item?.comment}</Text>
+                    )}
                   </View>
                   <View style={styles.status}>
-                    <Text style={styles.good}>Успешно</Text>
+                    <Text style={styles.good}>Принято</Text>
                     <Text style={styles.sum}>{item.total} сом</Text>
                   </View>
                 </View>
@@ -89,7 +68,7 @@ export const PayMoneyScreen = ({ navigation }) => {
           />
         </View>
       </SafeAreaView>
-      <ModalPayTA
+      <ModalCreateSoputka
         modalState={modalState}
         setModalState={setModalState}
         navigation={navigation}
@@ -107,6 +86,7 @@ const styles = StyleSheet.create({
     paddingTop: 10,
     backgroundColor: "rgba(47, 71, 190, 0.591)",
     color: "#fff",
+    marginBottom: 5,
   },
 
   everyPoint: {
@@ -162,7 +142,7 @@ const styles = StyleSheet.create({
     color: "#fff",
     minWidth: "95%",
     paddingTop: 10,
-    borderRadius: 10,
+    borderRadius: 8,
     fontWeight: 600,
     backgroundColor: "rgba(97 ,100, 239,0.7)",
     marginTop: 20,
@@ -173,7 +153,7 @@ const styles = StyleSheet.create({
     padding: 15,
     paddingVertical: 10,
     backgroundColor: "rgba(212, 223, 238, 0.47)",
-    marginBottom: 10,
+    marginBottom: 5,
     borderRadius: 6,
     borderWidth: 1,
     borderColor: "rgba(47, 71, 190, 0.107)",

@@ -139,7 +139,7 @@ export const getAcceptProdInvoice = createAsyncThunk(
         url: `${API}/tt/get_invoice?invoice_guid=${guidInvoice}`,
       });
       if (response.status >= 200 && response.status < 300) {
-        return response?.data?.[0]?.list;
+        return response?.data;
       } else {
         throw Error(`Error: ${response.status}`);
       }
@@ -280,7 +280,6 @@ export const getProductTT = createAsyncThunk(
         url: `${API}/tt/get_product?categ_guid=${guid}&seller_guid=${seller_guid}`,
       });
       if (response.status >= 200 && response.status < 300) {
-        // console.log(response?.data, "response?.data");
         return response?.data;
       } else {
         throw Error(`Error: ${response.status}`);
@@ -513,6 +512,33 @@ export const getExpense = createAsyncThunk(
   }
 );
 
+/////////////////////////////// pay
+///////////////////////////////////////////////////////
+
+/// acceptMoney
+export const acceptMoney = createAsyncThunk(
+  /// Отплата ТТ
+  "acceptMoney",
+  async function (props, { dispatch, rejectWithValue }) {
+    const { data, closeModal, navigation } = props;
+    try {
+      const response = await axios({
+        method: "POST",
+        url: `${API}/tt/point_oplata`,
+        data,
+      });
+      if (response.status >= 200 && response.status < 300) {
+        closeModal();
+        navigation?.navigate("Main");
+      } else {
+        throw Error(`Error: ${response.status}`);
+      }
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
 /////////////////////////////// return
 ///////////////////////////////////////////////////////
 
@@ -595,9 +621,12 @@ export const createInvoiceReturnTT = createAsyncThunk(
         data,
       });
       if (response.status >= 200 && response.status < 300) {
-        const { guid } = response?.data;
+        const { guid, agent_invoice_guid } = response?.data;
         closeModal();
-        navigation?.navigate("ReturnProd", { invoice_guid: guid });
+        navigation?.navigate("ReturnProd", {
+          invoice_guid: guid,
+          agent_invoice_guid,
+        });
         return response?.data;
       } else {
         throw Error(`Error: ${response.status}`);
@@ -651,6 +680,108 @@ export const getReturnHistory = createAsyncThunk(
   }
 );
 
+/////////////////////////////// soputka ////////////////
+
+/// createInvoiceSoputkaTT
+/// Создания накладной для сопутки товара
+export const createInvoiceSoputkaTT = createAsyncThunk(
+  "createInvoiceSoputkaTT",
+  async function (props, { dispatch, rejectWithValue }) {
+    const { data, navigation } = props;
+    try {
+      const response = await axios({
+        method: "POST",
+        url: `${API}/tt/create_invoice_soputka`,
+        data,
+      });
+      if (response.status >= 200 && response.status < 300) {
+        navigation?.navigate("AddProdSoputkaSrceen", {
+          forAddTovar: response?.data,
+        });
+        return response?.data;
+      } else {
+        throw Error(`Error: ${response.status}`);
+      }
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+/// addProductSoputkaTT
+export const addProductSoputkaTT = createAsyncThunk(
+  /// добавление продукта(по одному) в накладную в сопуттку накладной
+  "addProductSoputkaTT",
+  async function (props, { dispatch, rejectWithValue }) {
+    const { obj, getData } = props;
+    console.log(obj);
+    const { guid, count, price, oper_invoice_guid, agent_invoice_guid } = obj;
+    try {
+      const response = await axios({
+        method: "POST",
+        url: `${API}/tt/create_invoice_soputka_product`,
+        data: { guid, count, price, oper_invoice_guid, agent_invoice_guid },
+      });
+      if (response.status >= 200 && response.status < 300) {
+        dispatch(clearDataInputsInv());
+        dispatch(changeTemporaryData({})); // очищаю активный продукт
+        dispatch(changeStateForCategory("0")); /// категория будет "все"
+        +response?.data?.result === 1 && getData();
+        return response?.data?.result;
+      } else {
+        throw Error(`Error: ${response.status}`);
+      }
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+//// getListSoputkaProd
+export const getListSoputkaProd = createAsyncThunk(
+  /// список  товаров сопутки
+  "getListSoputkaProd",
+  async function (guidInvoice, { dispatch, rejectWithValue }) {
+    try {
+      const response = await axios({
+        method: "GET",
+        url: `${API}/tt/get_invoice_soputka_product?invoice_guid=${guidInvoice}`,
+      });
+      if (response.status >= 200 && response.status < 300) {
+        return response?.data?.[0]?.list;
+      } else {
+        throw Error(`Error: ${response.status}`);
+      }
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+//// deleteSoputkaProd
+export const deleteSoputkaProd = createAsyncThunk(
+  /// удаление данных из списока сопутки товаров
+  "deleteSoputkaProd",
+  async function ({ guid, guidInvoice }, { dispatch, rejectWithValue }) {
+    try {
+      const response = await axios({
+        method: "POST",
+        url: `${API}/tt/********************`,
+        data: { product_guid: guid },
+      });
+      if (response.status >= 200 && response.status < 300) {
+        setTimeout(() => {
+          dispatch(getListSoputkaProd(guidInvoice));
+        }, 200);
+      } else {
+        throw Error(`Error: ${response.status}`);
+      }
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
 const initialState = {
   preloader: false,
   chech: "",
@@ -676,6 +807,9 @@ const initialState = {
   listLeftoversForReturn: [], // список остатков (переделанный мною)
   listRevizors: [], //// список ревизоров
   listProdReturn: [], //// список возвращенных от ТT
+
+  /////// soputka
+  listProdSoputka: [],
 };
 
 const requestSlice = createSlice({
@@ -854,7 +988,9 @@ const requestSlice = createSlice({
         `${item.outcome}`,
         `${item.end_outcome}`,
       ]);
-      state.listLeftoversForReturn = action.payload;
+      state.listLeftoversForReturn = action.payload?.filter(
+        (item) => item?.end_outcome !== 0
+      ); ////// проверяю на наличие, если end_outcome === 0 (остаток товара), то не добалять ег ов массив для в0зврата товара
     });
     builder.addCase(getMyLeftovers.rejected, (state, action) => {
       state.error = action.payload;
@@ -1032,6 +1168,91 @@ const requestSlice = createSlice({
       Alert.alert("Упс, что-то пошло не так! Не удалось загрузить данные");
     });
     builder.addCase(getHistoryReturn.pending, (state, action) => {
+      state.preloader = true;
+    });
+
+    //////// returnListProduct
+    builder.addCase(returnListProduct.fulfilled, (state, action) => {
+      state.preloader = false;
+    });
+    builder.addCase(returnListProduct.rejected, (state, action) => {
+      state.error = action.payload;
+      state.preloader = false;
+      Alert.alert(
+        "Упс, что-то пошло не так! Не удалось сделать возврат накладной"
+      );
+    });
+    builder.addCase(returnListProduct.pending, (state, action) => {
+      state.preloader = true;
+    });
+
+    //////// acceptMoney
+    builder.addCase(acceptMoney.fulfilled, (state, action) => {
+      state.preloader = false;
+    });
+    builder.addCase(acceptMoney.rejected, (state, action) => {
+      state.error = action.payload;
+      state.preloader = false;
+      Alert.alert("Упс, что-то пошло не так! Не удалось оплатить");
+    });
+    builder.addCase(acceptMoney.pending, (state, action) => {
+      state.preloader = true;
+    });
+
+    ////////////////getReturnHistory
+    builder.addCase(getReturnHistory.fulfilled, (state, action) => {
+      state.preloader = false;
+      state.listProdReturn = action.payload;
+    });
+    builder.addCase(getReturnHistory.rejected, (state, action) => {
+      state.error = action.payload;
+      state.preloader = false;
+      Alert.alert("Упс, что-то пошло не так! Не удалось оплатить");
+    });
+    builder.addCase(getReturnHistory.pending, (state, action) => {
+      state.preloader = true;
+    });
+
+    ////////////////createInvoiceSoputkaTT
+    builder.addCase(createInvoiceSoputkaTT.fulfilled, (state, action) => {
+      state.preloader = false;
+    });
+    builder.addCase(createInvoiceSoputkaTT.rejected, (state, action) => {
+      state.error = action.payload;
+      state.preloader = false;
+      Alert.alert("Упс, что-то пошло не так! Не удалось создать накладную");
+    });
+    builder.addCase(createInvoiceSoputkaTT.pending, (state, action) => {
+      state.preloader = true;
+    });
+
+    ////////////////addProductSoputkaTT
+    builder.addCase(addProductSoputkaTT.fulfilled, (state, action) => {
+      state.preloader = false;
+    });
+    builder.addCase(addProductSoputkaTT.rejected, (state, action) => {
+      state.error = action.payload;
+      state.preloader = false;
+      Alert.alert("Упс, что-то пошло не так! Не удалось добавить товар");
+    });
+    builder.addCase(addProductSoputkaTT.pending, (state, action) => {
+      state.preloader = true;
+    });
+
+    /////// getListSoputkaProd
+    builder.addCase(getListSoputkaProd.fulfilled, (state, action) => {
+      state.preloader = false;
+      state.listProdSoputka = action.payload;
+    });
+    builder.addCase(getListSoputkaProd.rejected, (state, action) => {
+      state.error = action.payload;
+      state.preloader = false;
+      state.listProdSoputka = [];
+      Alert.alert(
+        "Упс, что-то пошло не так! Попробуйте перезайти в приложение..."
+      );
+    });
+    builder.addCase(getListSoputkaProd.pending, (state, action) => {
       state.preloader = true;
     });
   },

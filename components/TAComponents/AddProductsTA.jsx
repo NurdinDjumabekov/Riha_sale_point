@@ -4,20 +4,26 @@ import { ViewButton } from "../../customsTags/ViewButton";
 import { changeDataInputsInv } from "../../store/reducers/stateSlice";
 import {
   addProductInvoiceTT,
+  addProductSoputkaTT,
   getCategoryTT,
   getProductTT,
 } from "../../store/reducers/requestSlice";
 import { getLocalDataUser } from "../../helpers/returnDataUser";
 import { changeLocalData } from "../../store/reducers/saveDataSlice";
 
-export const AddProductsTA = ({ productGuid }) => {
+export const AddProductsTA = ({ productGuid, checkComponent, forAddTovar }) => {
   //// для добавления продуктов в список
   const dispatch = useDispatch();
-  // const seller_guid = "e7458a29-6f7f-4364-a96d-ed878812f0cf";
   const { data } = useSelector((state) => state.saveDataSlice);
 
   const { dataInputsInv } = useSelector((state) => state.stateSlice);
   const { infoKassa } = useSelector((state) => state.requestSlice);
+
+  const onChange = (name, text) => {
+    if (/^\d*\.?\d*$/.test(text)) {
+      dispatch(changeDataInputsInv({ ...dataInputsInv, [name]: text }));
+    }
+  };
 
   const addInInvoice = () => {
     if (
@@ -34,7 +40,15 @@ export const AddProductsTA = ({ productGuid }) => {
         price: dataInputsInv?.price,
         invoice_guid: infoKassa?.guid,
       };
-      dispatch(addProductInvoiceTT({ data, getData }));
+      if (checkComponent) {
+        /// продажа
+        dispatch(addProductInvoiceTT({ data, getData }));
+      } else {
+        /// сопутка
+        dispatch(
+          addProductSoputkaTT({ obj: { ...data, ...forAddTovar }, getData })
+        );
+      }
     }
   };
 
@@ -54,20 +68,18 @@ export const AddProductsTA = ({ productGuid }) => {
       <TextInput
         style={styles.input}
         value={dataInputsInv?.price?.toString()}
-        onChangeText={(text) =>
-          dispatch(changeDataInputsInv({ ...dataInputsInv, price: text }))
-        }
+        onChangeText={(text) => onChange("price", text)}
         keyboardType="numeric"
         placeholder="Цена"
+        maxLength={8}
       />
       <TextInput
         style={styles.input}
         value={dataInputsInv?.ves}
-        onChangeText={(text) =>
-          dispatch(changeDataInputsInv({ ...dataInputsInv, ves: text }))
-        }
+        onChangeText={(text) => onChange("ves", text)}
         keyboardType="numeric"
         placeholder="Вес"
+        maxLength={8}
       />
       <ViewButton styles={styles.btnAdd} onclick={addInInvoice}>
         Добавить

@@ -8,12 +8,14 @@ import { Modal } from "react-native";
 import { TouchableOpacity } from "react-native";
 import { TextInput } from "react-native";
 import { ViewButton } from "../customsTags/ViewButton";
+import { acceptMoney } from "../store/reducers/requestSlice";
 
-export const ModalPayTA = ({ modalState, setModalState }) => {
+export const ModalPayTA = ({ modalState, setModalState, navigation }) => {
   //// модалка для принятия ТА оплаты каждой ТТ
   const dispatch = useDispatch();
 
   const { temporaryDataPay } = useSelector((state) => state.stateSlice);
+  const { data } = useSelector((state) => state.saveDataSlice);
 
   const closeModal = () => {
     setModalState(false);
@@ -45,8 +47,13 @@ export const ModalPayTA = ({ modalState, setModalState }) => {
     if (!temporaryDataPay?.amount) {
       Alert.alert("Введите сумму");
     } else {
-      // dispatch(acceptMoney({ data: temporaryDataPay, closeModal }));
-      setModalState(false);
+      dispatch(
+        acceptMoney({
+          data: { ...temporaryDataPay, seller_guid: data?.seller_guid },
+          closeModal,
+          navigation,
+        })
+      );
       // if (temporaryGuidPoint?.debit < temporaryGuidPoint?.amount) {
       //   Alert.alert("Введенная вами сумма больше зарабатка торговой точки!");
       // } else {
@@ -57,57 +64,57 @@ export const ModalPayTA = ({ modalState, setModalState }) => {
   // console.log(temporaryGuidPoint, "temporaryGuidPoint");
 
   return (
-    // <Modal
-    //   animationType="fade"
-    //   transparent={true}
-    //   visible={modalState}
-    //   onRequestClose={closeModal}
-    // >
-    <TouchableOpacity
-      style={styles.modalOuter}
-      activeOpacity={1}
-      onPress={closeModal} // Закрыть модальное окно
+    <Modal
+      animationType="fade"
+      transparent={true}
+      visible={modalState}
+      onRequestClose={closeModal}
     >
-      <View style={styles.modalInner} onPress={() => setModalState(true)}>
-        <TextInput
-          style={styles.inputNum}
-          value={temporaryDataPay?.amount?.toString()}
-          onChangeText={changeNum}
-          placeholder="Сумма"
-          keyboardType="numeric"
-          maxLength={8}
-        />
+      <TouchableOpacity
+        style={styles.modalOuter}
+        activeOpacity={1}
+        onPress={closeModal} // Закрыть модальное окно
+      >
+        <View style={styles.modalInner} onPress={() => setModalState(true)}>
+          <TextInput
+            style={styles.inputNum}
+            value={temporaryDataPay?.amount?.toString()}
+            onChangeText={changeNum}
+            placeholder="Сумма"
+            keyboardType="numeric"
+            maxLength={8}
+          />
 
-        <TextInput
-          style={styles.inputComm}
-          value={temporaryDataPay.comment}
-          onChangeText={changeComm}
-          placeholder="Ваш комментарий"
-          multiline={true}
-          numberOfLines={4}
-        />
-        <ViewButton styles={styles.sendBtn} onclick={sendMoney}>
-          Оплатить
-        </ViewButton>
-      </View>
-    </TouchableOpacity>
-    // </Modal>
+          <TextInput
+            style={styles.inputComm}
+            value={temporaryDataPay.comment}
+            onChangeText={changeComm}
+            placeholder="Ваш комментарий"
+            multiline={true}
+            numberOfLines={4}
+          />
+          <ViewButton styles={styles.sendBtn} onclick={sendMoney}>
+            Оплатить
+          </ViewButton>
+        </View>
+      </TouchableOpacity>
+    </Modal>
   );
 };
 
 const styles = StyleSheet.create({
   modalOuter: {
-    // flex: 1,
-    // justifyContent: "center",
-    // alignItems: "center",
-    // backgroundColor: "rgba(0, 0, 0, 0.5)",
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
   },
 
   modalInner: {
     backgroundColor: "#ebeef2",
     padding: 15,
     borderRadius: 10,
-    width: "100%",
+    width: "95%",
   },
 
   inputNum: {

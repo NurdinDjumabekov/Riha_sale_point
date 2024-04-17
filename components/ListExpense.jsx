@@ -28,9 +28,9 @@ export const ListExpense = ({ getData }) => {
                       {item.comment ? item.comment : "..."}
                     </Text>
                   </View>
-                  <View>
+                  <View style={styles.blockTitle}>
                     <Text style={item?.status ? styles.noo : styles.good}>
-                      {item?.status ? "Отменено админом" : "Одобрено"}
+                      {+item?.status === 1 ? "Отменено админом" : "Одобрено"}
                     </Text>
                     <Text style={styles.date}>{item.date_system}</Text>
                     <Text style={styles.sum}>{item.amount} сом</Text>

@@ -28,9 +28,9 @@ export const totalLidtCountReturns = (list) => {
 
 /////////////////////////////// DetailedInvoice
 
-export const totalCountAccept = (list) => {
-  const totalItemCount = list?.products?.reduce(
-    (total, item) => +total + +item?.change,
+export const totalCountAccept = (data) => {
+  const totalItemCount = data?.list?.reduce(
+    (total, item) => +total + +item?.count,
     0
   );
 
@@ -39,7 +39,7 @@ export const totalCountAccept = (list) => {
 
 export const totalSumAccept = (data) => {
   const totalSum = data?.list?.reduce(
-    (total, item) => +total + +item?.total,
+    (total, item) => +item?.count * +item?.price + +total,
     0
   );
 

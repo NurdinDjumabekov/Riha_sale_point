@@ -33,7 +33,6 @@ export const LoginScreen = ({ navigation }) => {
 
   useEffect(() => {
     dispatch(clearLogin());
-    // dispatch(changeSellerGuid(""));
   }, []);
 
   const link = "http://riha-operator.333.kg/image/rikha.png";

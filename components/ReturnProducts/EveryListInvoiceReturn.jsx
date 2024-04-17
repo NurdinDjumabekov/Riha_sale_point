@@ -19,22 +19,24 @@ export const EveryListInvoiceReturn = ({ route, navigation }) => {
     });
   }, []);
 
+  console.log(listProdReturn?.[0]?.list, "listProdReturn");
+
   return (
     <>
-      {listProdReturn?.length === 0 ? (
+      {listProdReturn?.[0]?.list?.length === 0 ? (
         <Text style={styles.noneData}>Данные отсутствуют</Text>
       ) : (
         <View style={styles.parentBlock}>
           <FlatList
             contentContainerStyle={styles.flatListStyle}
-            data={listProdReturn}
+            data={listProdReturn?.[0]?.list}
             renderItem={({ item, index }) => (
               <RenderResult item={item} index={index} />
             )}
             keyExtractor={(item) => item.codeid}
           />
           <Text style={styles.result}>
-            Итого: {totalLidtCountReturns(listProdReturn)} сом
+            Итого: {totalLidtCountReturns(listProdReturn?.[0]?.list)} сом
           </Text>
         </View>
       )}

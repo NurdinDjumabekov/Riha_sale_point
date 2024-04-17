@@ -19,23 +19,25 @@ export const EveryInvoiceAcceptScreen = ({ route, navigation }) => {
     });
     dispatch(getAcceptProdInvoice(guid));
   }, []);
+  const newList = listAcceptInvoiceProd?.[0]?.list;
 
   return (
     <>
-      {listAcceptInvoiceProd?.length === 0 ? (
+      {newList?.length === 0 ? (
         <Text style={styles.noneData}>Данные отсутствуют</Text>
       ) : (
         <View style={styles.parent}>
           <FlatList
             contentContainerStyle={styles.flatList}
-            data={listAcceptInvoiceProd}
+            data={newList}
             renderItem={({ item, index }) => (
               <RenderResult item={item} index={index} />
             )}
             keyExtractor={(item) => item.codeid}
           />
           <Text style={styles.result}>
-            Итого: {totalSumEveryAccept(listAcceptInvoiceProd)} сом
+            {/* Итого: {totalSumEveryAccept(newList)} сом */}
+            Итого: {listAcceptInvoiceProd?.[0]?.total_price} сом
           </Text>
         </View>
       )}

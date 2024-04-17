@@ -1,12 +1,5 @@
-import {
-  SafeAreaView,
-  FlatList,
-  RefreshControl,
-  View,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-} from "react-native";
+import { SafeAreaView, FlatList, RefreshControl } from "react-native";
+import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
 import { ViewContainer } from "../customsTags/ViewContainer";
 import { dataCategory } from "../helpers/Data";
@@ -37,7 +30,7 @@ export const MainScreen = ({ navigation }) => {
     await dispatch(getBalance(data?.seller_guid));
   };
 
-  console.log(data,"data");
+  console.log(data, "data");
 
   const goPage = () => navigation.navigate("HistoryBalance");
 
@@ -81,12 +74,14 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     paddingBottom: 10,
   },
+
   flatList: {
     minWidth: "100%",
     alignItems: "center",
-    gap: 20,
+    gap: 10,
     paddingBottom: 10,
   },
+
   balance: {
     width: "97%",
     alignSelf: "center",

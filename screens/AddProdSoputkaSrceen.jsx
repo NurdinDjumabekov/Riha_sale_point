@@ -11,11 +11,11 @@ import { transformDate } from "../helpers/transformDate";
 import { getLocalDataUser } from "../helpers/returnDataUser";
 import { changeLocalData } from "../store/reducers/saveDataSlice";
 
-export const MyShipmentScreen = ({ navigation }) => {
+export const AddProdSoputkaSrceen = ({ navigation, route }) => {
   const dispatch = useDispatch();
+  const { forAddTovar } = route.params;
 
   const { infoKassa } = useSelector((state) => state.requestSlice);
-  // const seller_guid = "e7458a29-6f7f-4364-a96d-ed878812f0cf";
   const { data } = useSelector((state) => state.saveDataSlice);
 
   useEffect(() => {
@@ -37,19 +37,18 @@ export const MyShipmentScreen = ({ navigation }) => {
   };
 
   const listProdSale = () => {
-    navigation.navigate("SoldProduct", {
+    navigation.navigate("SoputkaProductScreen", {
       navigation,
-      guidInvoice: infoKassa?.guid,
+      guidInvoice: forAddTovar?.agent_invoice_guid,
     });
   };
-
   return (
     <View style={styles.parentBlock}>
       <TouchableOpacity onPress={listProdSale} style={styles.arrow}>
-        <Text style={styles.textBtn}>Список продаж</Text>
+        <Text style={styles.textBtn}>Список сопутствующих товаров</Text>
         <View style={styles.arrowInner}></View>
       </TouchableOpacity>
-      <EveryInvoice navigation={navigation} />
+      <EveryInvoice navigation={navigation} forAddTovar={forAddTovar} />
     </View>
   );
 };

@@ -82,7 +82,7 @@ export const DetailedInvoice = ({ route, navigation }) => {
     if (everyInvoice && everyInvoice.list) {
       const tableDataList = everyInvoice?.list?.map((item, index) => {
         return [
-          ` ${item?.codeid}`,
+          ` ${index + 1}`,
           `${item?.product_name}`,
           `${item?.product_price}`,
           `${item?.count}`,
@@ -124,6 +124,7 @@ export const DetailedInvoice = ({ route, navigation }) => {
       return changeValue !== 0 && changeValue !== "";
     });
 
+  console.log(everyInvoice, "everyInvoice");
   // console.log(acceptConfirmInvoice, "acceptConfirmInvoice");
 
   return (
@@ -152,10 +153,12 @@ export const DetailedInvoice = ({ route, navigation }) => {
           <View>
             <View style={styles.blockTotal}>
               <Text style={styles.totalItemCount}>
-                Сумма: {totalSumAccept(everyInvoice)} сом
+                {/* Сумма: {totalSumAccept(everyInvoice)} сом */}
+                Сумма: {everyInvoice?.total_price} сом
               </Text>
               <Text style={styles.totalItemCount}>
-                Кол-во: {totalCountAccept(acceptConfirmInvoice)}
+                {/* Кол-во: {totalCountAccept(everyInvoice)} */}
+                Кол-во: {everyInvoice?.total_weight}
               </Text>
             </View>
           </View>

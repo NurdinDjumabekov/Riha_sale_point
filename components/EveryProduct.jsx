@@ -6,7 +6,7 @@ import {
 } from "../store/reducers/stateSlice";
 import { AddProductsTA } from "./TAComponents/AddProductsTA";
 
-export const EveryProduct = ({ obj, index }) => {
+export const EveryProduct = ({ obj, index, checkComponent, forAddTovar }) => {
   const dispatch = useDispatch();
   const { temporaryData } = useSelector((state) => state.stateSlice);
 
@@ -39,7 +39,7 @@ export const EveryProduct = ({ obj, index }) => {
                 {obj?.product_name}
               </Text>
             </View>
-            {isCheck && (
+            {checkComponent && isCheck && (
               <Text style={styles.leftovers}>Остаток: {obj.end_outcome}</Text>
             )}
           </View>
@@ -47,7 +47,11 @@ export const EveryProduct = ({ obj, index }) => {
           {!isCheck && <View style={styles.arrow}></View>}
         </View>
         {Object.keys(temporaryData).length !== 0 && isCheck && (
-          <AddProductsTA productGuid={obj.guid} />
+          <AddProductsTA
+            productGuid={obj.guid}
+            checkComponent={checkComponent}
+            forAddTovar={forAddTovar}
+          />
         )}
       </TouchableOpacity>
     </>

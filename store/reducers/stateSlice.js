@@ -2,8 +2,8 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   dataLogin: {
-    login: "",
-    password: "",
+    login: "batyr",
+    password: "123",
   },
   acceptConfirmInvoice: {
     invoice_guid: "",
@@ -24,8 +24,6 @@ const initialState = {
     comment: "",
     amount: "",
     seller_guid: "",
-    agent_guid: "",
-    debit: 0,
   }, //// данные, которые будут отправлены с оплатой ТТ (оплата ревизору)
 
   createReturnInvoice: {
@@ -52,8 +50,8 @@ const stateSlice = createSlice({
     },
     clearLogin: (state) => {
       state.dataLogin = {
-        login: "",
-        password: "",
+        login: "batyr",
+        password: "123",
       };
     },
     changeAcceptInvoiceTT: (state, action) => {
@@ -107,8 +105,6 @@ const stateSlice = createSlice({
         comment: "",
         amount: "",
         seller_guid: "",
-        agent_guid: "",
-        debit: 0,
       };
     },
 

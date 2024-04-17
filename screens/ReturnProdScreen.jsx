@@ -18,7 +18,7 @@ import { changeLocalData } from "../store/reducers/saveDataSlice";
 import { totalCountReturns, totalSumReturns } from "../helpers/amounts";
 
 export const ReturnProdScreen = ({ route, navigation }) => {
-  const { invoice_guid } = route.params;
+  const { invoice_guid, agent_invoice_guid } = route.params;
   //// возрат товара
   const dispatch = useDispatch();
   const [listData, setListData] = useState([]);
@@ -70,9 +70,14 @@ export const ReturnProdScreen = ({ route, navigation }) => {
   const closeModal = () => setModalSend(false);
 
   const sendData = () => {
-    // dispatch(returnListProduct({ data: returnProducts, navigation }));
-    console.log(returnProducts, "returnProducts");
-    // closeModal();
+    dispatch(
+      returnListProduct({
+        data: { ...returnProducts, agent_invoice_guid },
+        navigation,
+      })
+    );
+    // console.log(returnProducts, "returnProducts");
+    closeModal();
   };
 
   const windowWidth = Dimensions.get("window").width;
