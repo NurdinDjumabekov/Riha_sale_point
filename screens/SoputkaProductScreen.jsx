@@ -1,24 +1,19 @@
 import { useEffect, useState } from "react";
-import {
-  FlatList,
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity,
-  RefreshControl,
-} from "react-native";
+import { FlatList, StyleSheet, Text } from "react-native";
+import { View, TouchableOpacity, RefreshControl } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  deleteSoldProd,
+  confirmSoputka,
   deleteSoputkaProd,
   getListSoputkaProd,
 } from "../store/reducers/requestSlice";
 import ConfirmationModal from "../components/ConfirmationModal";
+import { ViewButton } from "../customsTags/ViewButton";
 
-export const SoputkaProductScreen = ({ route }) => {
+export const SoputkaProductScreen = ({ route, navigation }) => {
   //// список проданных продуктов
   const dispatch = useDispatch();
-  const { guidInvoice } = route.params;
+  const { guidInvoice, forAddTovar } = route.params;
   const [modalItemGuid, setModalItemGuid] = useState(null); // Состояние для идентификатора элемента, для которого открывается модальное окно
 
   const { preloader, listProdSoputka } = useSelector(
@@ -37,18 +32,23 @@ export const SoputkaProductScreen = ({ route }) => {
     dispatch(deleteSoputkaProd({ guid, guidInvoice }));
     setModalItemGuid(null);
   };
+  const confirmBtn = () => {
+    dispatch(confirmSoputka({ forAddTovar, navigation }));
+  };
+
+  const none = listProdSoputka?.[0]?.list?.length === 0;
 
   return (
     <View>
-      {listProdSoputka?.length === 0 ? (
+      {none ? (
         <Text style={styles.noneData}>Список пустой</Text>
       ) : (
-        <View style={{ paddingBottom: 200 }}>
+        <View style={{ paddingBottom: 100 }}>
           <FlatList
             contentContainerStyle={styles.flatList}
-            data={listProdSoputka}
+            data={listProdSoputka?.data?.[0]?.list}
             renderItem={({ item }) => (
-              <View style={styles.container}>
+              <TouchableOpacity style={styles.container}>
                 <View style={styles.parentBlock}>
                   <View style={styles.mainData}>
                     <Text style={styles.titleNum}>{item.codeid} </Text>
@@ -81,13 +81,18 @@ export const SoputkaProductScreen = ({ route }) => {
                   onNo={() => setModalItemGuid(null)}
                   onClose={() => setModalItemGuid(null)}
                 />
-              </View>
+              </TouchableOpacity>
             )}
             keyExtractor={(item) => item?.codeid}
             refreshControl={
               <RefreshControl refreshing={preloader} onRefresh={getData} />
             }
           />
+          {none && (
+            <ViewButton styles={styles.sendBtn} onclick={confirmBtn}>
+              Подтвердить
+            </ViewButton>
+          )}
         </View>
       )}
     </View>
@@ -193,4 +198,18 @@ const styles = StyleSheet.create({
 
   deg: { transform: [{ rotate: "45deg" }] },
   degMinus: { transform: [{ rotate: "-45deg" }] },
+
+  sendBtn: {
+    backgroundColor: "#fff",
+    color: "#fff",
+    minWidth: "95%",
+    paddingTop: 10,
+    borderRadius: 10,
+    fontWeight: 600,
+    backgroundColor: "rgba(12, 169, 70, 0.9)",
+    borderWidth: 1,
+    borderColor: "rgb(217 223 232)",
+    marginTop: 20,
+    alignSelf: "center",
+  },
 });

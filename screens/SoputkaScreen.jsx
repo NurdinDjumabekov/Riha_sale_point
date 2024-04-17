@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { SafeAreaView } from "react-native";
 import { FlatList } from "react-native";
@@ -7,7 +7,7 @@ import { RefreshControl } from "react-native";
 import { getLocalDataUser } from "../helpers/returnDataUser";
 import { changeLocalData } from "../store/reducers/saveDataSlice";
 import { ViewButton } from "../customsTags/ViewButton";
-import { getHistoryBalance } from "../store/reducers/requestSlice";
+import { getHistorySoputka } from "../store/reducers/requestSlice";
 import { ModalCreateSoputka } from "../components/Soputka/ModalCreateSoputka";
 
 export const SoputkaScreen = ({ navigation }) => {
@@ -17,7 +17,7 @@ export const SoputkaScreen = ({ navigation }) => {
 
   const { data } = useSelector((state) => state.saveDataSlice);
 
-  const { preloader, listHistoryBalance } = useSelector(
+  const { preloader, listHistorySoputka } = useSelector(
     (state) => state.requestSlice
   );
 
@@ -27,28 +27,42 @@ export const SoputkaScreen = ({ navigation }) => {
 
   const getData = async () => {
     await getLocalDataUser({ changeLocalData, dispatch });
-    await dispatch(getHistoryBalance(data?.seller_guid));
+    await dispatch(getHistorySoputka(data?.seller_guid));
   };
+
+  const nav = (guidInvoice) =>
+    navigation.navigate("SoputkaProdHistoryScreen", { guidInvoice });
+
+  //   console.log(listHistorySoputka, "listHistorySoputka");
 
   return (
     <>
       <SafeAreaView style={styles.container}>
-        <View style={styles.payBlock}>
-          <ViewButton styles={styles.pay} onclick={() => setModalState(true)}>
+        <View style={styles.soputkaBlock}>
+          <ViewButton
+            styles={styles.soputka}
+            onclick={() => setModalState(true)}
+          >
             + Создать накладную
           </ViewButton>
         </View>
         <View style={styles.selectBlock}>
           <Text style={styles.title}>История сопутки</Text>
           <FlatList
-            data={listHistoryBalance}
+            data={listHistorySoputka}
             renderItem={({ item, index }) => (
-              <View style={styles.everyProd}>
+              <TouchableOpacity
+                style={styles.everyProd}
+                onPress={() => nav(item?.guid)}
+              >
                 <View style={styles.everyProdInner}>
                   <View style={styles.blockTitle}>
                     <View style={styles.blockTitleInner}>
                       <Text style={styles.titleNum}>{index + 1} </Text>
-                      <Text style={styles.date}>{item?.date_system}</Text>
+                      <View>
+                        <Text style={styles.date}>{item?.date}</Text>
+                        <Text style={styles.sum}>{item.total_price} сом</Text>
+                      </View>
                     </View>
                     {item.comment && (
                       <Text style={styles.comment}>{item?.comment}</Text>
@@ -56,10 +70,9 @@ export const SoputkaScreen = ({ navigation }) => {
                   </View>
                   <View style={styles.status}>
                     <Text style={styles.good}>Принято</Text>
-                    <Text style={styles.sum}>{item.total} сом</Text>
                   </View>
                 </View>
-              </View>
+              </TouchableOpacity>
             )}
             keyExtractor={(item) => item?.codeid}
             refreshControl={
@@ -79,7 +92,7 @@ export const SoputkaScreen = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   title: {
-    padding: 8,
+    padding: 12,
     fontSize: 18,
     fontWeight: "500",
     paddingBottom: 10,
@@ -103,12 +116,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
 
-  titleNum: {
-    fontSize: 16,
-    fontWeight: "500",
-    color: "rgba(47, 71, 190, 0.672)",
-  },
-
   activeCateg: {
     backgroundColor: "rgba(47, 71, 190, 0.672)",
     color: "#fff",
@@ -129,7 +136,11 @@ const styles = StyleSheet.create({
     borderColor: "#fff",
   },
 
-  payBlock: {
+  selectBlock: {
+    height: "88%",
+  },
+
+  soputkaBlock: {
     textAlign: "center",
     display: "flex",
     flexDirection: "row",
@@ -137,11 +148,12 @@ const styles = StyleSheet.create({
     minWidth: "100%",
   },
 
-  pay: {
-    fontSize: 16,
+  soputka: {
+    fontSize: 18,
     color: "#fff",
     minWidth: "95%",
-    paddingTop: 10,
+    paddingTop: 15,
+    paddingBottom: 15,
     borderRadius: 8,
     fontWeight: 600,
     backgroundColor: "rgba(97 ,100, 239,0.7)",
@@ -150,11 +162,10 @@ const styles = StyleSheet.create({
   },
 
   everyProd: {
-    padding: 15,
+    padding: 10,
     paddingVertical: 10,
     backgroundColor: "rgba(212, 223, 238, 0.47)",
     marginBottom: 5,
-    borderRadius: 6,
     borderWidth: 1,
     borderColor: "rgba(47, 71, 190, 0.107)",
   },
@@ -184,10 +195,17 @@ const styles = StyleSheet.create({
     borderColor: "rgba(47, 71, 190, 0.672)",
     borderWidth: 1,
     backgroundColor: "#d4dfee",
-    padding: 0,
+    padding: 4,
     paddingLeft: 7,
     paddingRight: 0,
     borderRadius: 5,
+  },
+
+  sum: {
+    fontSize: 16,
+    fontWeight: "500",
+    color: "rgba(12, 169, 70, 0.9)",
+    lineHeight: 15,
   },
 
   date: {
@@ -204,12 +222,6 @@ const styles = StyleSheet.create({
 
   status: {
     paddingRight: 20,
-  },
-
-  sum: {
-    fontSize: 15,
-    fontWeight: "400",
-    color: "rgba(12, 169, 70, 0.9)",
   },
 
   good: { color: "rgba(12, 169, 70, 0.9)", fontSize: 16, fontWeight: "500" },

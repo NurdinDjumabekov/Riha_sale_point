@@ -13,7 +13,7 @@ import { changeLocalData } from "../store/reducers/saveDataSlice";
 
 export const AddProdSoputkaSrceen = ({ navigation, route }) => {
   const dispatch = useDispatch();
-  const { forAddTovar } = route.params;
+  const { forAddTovar } = route.params; //// хранятся данные накладной сапутки
 
   const { infoKassa } = useSelector((state) => state.requestSlice);
   const { data } = useSelector((state) => state.saveDataSlice);
@@ -38,10 +38,11 @@ export const AddProdSoputkaSrceen = ({ navigation, route }) => {
 
   const listProdSale = () => {
     navigation.navigate("SoputkaProductScreen", {
-      navigation,
       guidInvoice: forAddTovar?.agent_invoice_guid,
+      forAddTovar,
     });
   };
+
   return (
     <View style={styles.parentBlock}>
       <TouchableOpacity onPress={listProdSale} style={styles.arrow}>

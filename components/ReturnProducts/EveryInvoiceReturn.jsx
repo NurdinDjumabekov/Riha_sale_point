@@ -1,9 +1,7 @@
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { useDispatch } from "react-redux";
 
 export const EveryInvoiceReturn = ({ obj, navigation }) => {
   //// каждый возврат накладной типо истории
-  const dispatch = useDispatch();
 
   const lookInvoice = () => {
     navigation?.navigate("listReturnProd", {
@@ -11,8 +9,6 @@ export const EveryInvoiceReturn = ({ obj, navigation }) => {
       title: `Накладная №${obj?.codeid}`,
     });
   };
-
-  // console.log(obj, "obj");
 
   return (
     <TouchableOpacity style={styles.container} onPress={lookInvoice}>

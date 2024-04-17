@@ -24,6 +24,7 @@ import UserInfo from "../components/Header/UserInfo";
 import { SoputkaScreen } from "./SoputkaScreen";
 import { AddProdSoputkaSrceen } from "./AddProdSoputkaSrceen";
 import { SoputkaProductScreen } from "./SoputkaProductScreen";
+import { SoputkaProdHistoryScreen } from "./SoputkaProdHistoryScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -84,12 +85,18 @@ export const Navigation = () => {
             <Stack.Screen
               name="AddProdSoputkaSrceen"
               component={AddProdSoputkaSrceen}
-              options={{ title: "Товары cопутки" }}
+              options={{ title: "Сопутствующие товары" }}
             />
             <Stack.Screen
               name="SoputkaProductScreen"
               component={SoputkaProductScreen}
-              options={{ title: "Товары cопутки" }}
+              options={{ title: "Сопутствующие товары" }}
+            />
+
+            <Stack.Screen
+              name="SoputkaProdHistoryScreen"
+              component={SoputkaProdHistoryScreen}
+              options={{ title: "Сопутствующие товары" }}
             />
 
             {/* /////////////////////// Остатки ///////////////////////*/}
