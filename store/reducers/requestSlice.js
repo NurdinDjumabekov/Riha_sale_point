@@ -207,16 +207,39 @@ export const acceptInvoiceTT = createAsyncThunk(
 
 /// getCategoryTT
 export const getCategoryTT = createAsyncThunk(
-  " response?.data",
-  /// для получения списка точек (магазинов)
-  async function (guid, { dispatch, rejectWithValue }) {
+  "getCategoryTT",
+  /// для получения катеогрий товаров ТТ
+  async function (props, { dispatch, rejectWithValue }) {
+    const { checkComponent, seller_guid } = props;
+    const urlLink = !checkComponent
+      ? `${API}/tt/get_category_all` //// для сопутки
+      : `${API}/tt/get_category?seller_guid=${seller_guid}`; //// для пр0дажи
     try {
-      const response = await axios({
-        method: "GET",
-        url: `${API}/tt/get_category?seller_guid=${guid}`,
-      });
+      const response = await axios(urlLink);
       if (response.status >= 200 && response.status < 300) {
-        console.log(response?.data, "getCategoryTT");
+        // console.log(response?.data, "getCategoryTT");
+        return response?.data;
+      } else {
+        throw Error(`Error: ${response.status}`);
+      }
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+/// getProductTT
+export const getProductTT = createAsyncThunk(
+  "getProductTT",
+  /// для получения продуктов
+  async function (props, { dispatch, rejectWithValue }) {
+    const { guid, seller_guid, checkComponent } = props;
+    const urlLink = !checkComponent
+      ? `${API}/tt/get_product_all` //// для сопутки
+      : `${API}/tt/get_product?categ_guid=${guid}&seller_guid=${seller_guid}`; //// для пр0дажи
+    try {
+      const response = await axios(urlLink);
+      if (response.status >= 200 && response.status < 300) {
         return response?.data;
       } else {
         throw Error(`Error: ${response.status}`);
@@ -261,27 +284,6 @@ export const createInvoiceTT = createAsyncThunk(
       if (response.status >= 200 && response.status < 300) {
         // console.log(response?.data);
         return { codeid: response?.data?.codeid, guid: response?.data?.guid };
-      } else {
-        throw Error(`Error: ${response.status}`);
-      }
-    } catch (error) {
-      return rejectWithValue(error.message);
-    }
-  }
-);
-
-/// getProductTT
-export const getProductTT = createAsyncThunk(
-  "getProductTT",
-  /// для получения продуктов
-  async function ({ guid, seller_guid }, { dispatch, rejectWithValue }) {
-    try {
-      const response = await axios({
-        method: "GET",
-        url: `${API}/tt/get_product?categ_guid=${guid}&seller_guid=${seller_guid}`,
-      });
-      if (response.status >= 200 && response.status < 300) {
-        return response?.data;
       } else {
         throw Error(`Error: ${response.status}`);
       }
@@ -622,11 +624,11 @@ export const createInvoiceReturnTT = createAsyncThunk(
         data,
       });
       if (response.status >= 200 && response.status < 300) {
-        const { guid, agent_invoice_guid } = response?.data;
+        const { agent_invoice_guid, oper_invoice_guid } = response?.data;
         closeModal();
         navigation?.navigate("ReturnProd", {
-          invoice_guid: guid,
           agent_invoice_guid,
+          oper_invoice_guid,
         });
         return response?.data;
       } else {
@@ -696,6 +698,7 @@ export const createInvoiceSoputkaTT = createAsyncThunk(
         data,
       });
       if (response.status >= 200 && response.status < 300) {
+        // console.log(response?.data, "response?.data");
         navigation?.navigate("AddProdSoputkaSrceen", {
           forAddTovar: response?.data,
         });
@@ -1303,6 +1306,19 @@ const requestSlice = createSlice({
       );
     });
     builder.addCase(getListSoputkaProd.pending, (state, action) => {
+      state.preloader = true;
+    });
+
+    /////// deleteSoputkaProd
+    builder.addCase(deleteSoputkaProd.fulfilled, (state, action) => {
+      state.preloader = false;
+    });
+    builder.addCase(deleteSoputkaProd.rejected, (state, action) => {
+      state.error = action.payload;
+      state.preloader = false;
+      Alert.alert("Упс, что-то пошло не так! Не удалось удалить ...");
+    });
+    builder.addCase(deleteSoputkaProd.pending, (state, action) => {
       state.preloader = true;
     });
 

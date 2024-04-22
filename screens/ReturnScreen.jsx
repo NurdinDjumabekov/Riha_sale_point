@@ -35,14 +35,13 @@ export const ReturnScreen = ({ navigation }) => {
   ///// над получить guid агента c бэка
 
   const createInvoice = () => {
-    dispatch(
-      changeReturnInvoice({
-        ...createReturnInvoice,
-        stateModal: true,
-        seller_guid: data?.seller_guid,
-        agent_guid,
-      })
-    );
+    const data = {
+      ...createReturnInvoice,
+      stateModal: true,
+      seller_guid: data?.seller_guid,
+      agent_guid,
+    };
+    dispatch(changeReturnInvoice(data));
   };
 
   const empty = listHistoryReturn?.length !== 0;

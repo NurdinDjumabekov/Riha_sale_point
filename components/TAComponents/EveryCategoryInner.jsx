@@ -8,7 +8,7 @@ import {
 import { changeLocalData } from "../../store/reducers/saveDataSlice";
 import { getLocalDataUser } from "../../helpers/returnDataUser";
 
-export const EveryCategoryInner = ({ obj, index }) => {
+export const EveryCategoryInner = ({ obj, checkComponent, index }) => {
   //// список категорий(для сортироваки данных ТT)
   const dispatch = useDispatch();
   const { data } = useSelector((state) => state.saveDataSlice);
@@ -17,11 +17,17 @@ export const EveryCategoryInner = ({ obj, index }) => {
   const changeSelect = async () => {
     await getLocalDataUser({ changeLocalData, dispatch });
     await dispatch(
-      getProductTT({ guid: obj?.value, seller_guid: data?.seller_guid })
+      getProductTT({
+        checkComponent,
+        guid: obj?.value,
+        seller_guid: data?.seller_guid,
+      })
     );
     await dispatch(changeStateForCategory(obj?.value));
     await dispatch(changeTemporaryData({}));
   };
+
+  console.log(checkComponent, "checkComponent - EveryCategoryInner");
 
   const isTrue = stateForCategory === obj?.value;
 

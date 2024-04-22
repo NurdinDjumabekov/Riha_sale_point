@@ -15,6 +15,7 @@ export const SoputkaProductScreen = ({ route, navigation }) => {
   const dispatch = useDispatch();
   const { guidInvoice, forAddTovar } = route.params;
   const [modalItemGuid, setModalItemGuid] = useState(null); // Состояние для идентификатора элемента, для которого открывается модальное окно
+  const [modalConfirm, setModalConfirm] = useState(false);
 
   const { preloader, listProdSoputka } = useSelector(
     (state) => state.requestSlice
@@ -31,22 +32,25 @@ export const SoputkaProductScreen = ({ route, navigation }) => {
   const del = (guid) => {
     dispatch(deleteSoputkaProd({ guid, guidInvoice }));
     setModalItemGuid(null);
+    ////// удаление продуктов сопутки
   };
   const confirmBtn = () => {
     dispatch(confirmSoputka({ forAddTovar, navigation }));
+    ///// подтверждение накладной сопутки
   };
 
   const none = listProdSoputka?.[0]?.list?.length === 0;
+  const moreOne = listProdSoputka?.[0]?.list?.length > 0;
 
   return (
     <View>
       {none ? (
         <Text style={styles.noneData}>Список пустой</Text>
       ) : (
-        <View style={{ paddingBottom: 100 }}>
+        <View style={{ paddingBottom: 150 }}>
           <FlatList
             contentContainerStyle={styles.flatList}
-            data={listProdSoputka?.data?.[0]?.list}
+            data={listProdSoputka?.[0]?.list}
             renderItem={({ item }) => (
               <TouchableOpacity style={styles.container}>
                 <View style={styles.parentBlock}>
@@ -88,13 +92,23 @@ export const SoputkaProductScreen = ({ route, navigation }) => {
               <RefreshControl refreshing={preloader} onRefresh={getData} />
             }
           />
-          {none && (
-            <ViewButton styles={styles.sendBtn} onclick={confirmBtn}>
+          {moreOne && (
+            <ViewButton
+              styles={styles.sendBtn}
+              onclick={() => setModalConfirm(true)}
+            >
               Подтвердить
             </ViewButton>
           )}
         </View>
       )}
+      <ConfirmationModal
+        visible={modalConfirm}
+        message="Подтвердить ?"
+        onYes={confirmBtn}
+        onNo={() => setModalConfirm(false)}
+        onClose={() => setModalConfirm(false)}
+      />
     </View>
   );
 };

@@ -2,8 +2,8 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   dataLogin: {
-    login: "batyr",
-    password: "123",
+    login: "",
+    password: "",
   },
   acceptConfirmInvoice: {
     invoice_guid: "",
@@ -50,8 +50,8 @@ const stateSlice = createSlice({
     },
     clearLogin: (state) => {
       state.dataLogin = {
-        login: "batyr",
-        password: "123",
+        login: "",
+        password: "",
       };
     },
     changeAcceptInvoiceTT: (state, action) => {

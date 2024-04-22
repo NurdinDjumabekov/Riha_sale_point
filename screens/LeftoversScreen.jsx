@@ -6,10 +6,7 @@ import {
   Text,
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  changeLeftovers,
-  getMyLeftovers,
-} from "../store/reducers/requestSlice";
+import { getMyLeftovers } from "../store/reducers/requestSlice";
 import { useEffect } from "react";
 import { Table, Row, Rows, TableWrapper } from "react-native-table-component";
 import { ScrollView } from "react-native";
@@ -35,7 +32,6 @@ export const LeftoversScreen = ({ route }) => {
   const getData = async () => {
     await getLocalDataUser({ changeLocalData, dispatch });
     await dispatch(getMyLeftovers(data?.seller_guid));
-    // await dispatch(getCategoryTT(data?.seller_guid));
   };
 
   const windowWidth = Dimensions.get("window").width;

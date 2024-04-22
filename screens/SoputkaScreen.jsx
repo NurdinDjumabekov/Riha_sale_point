@@ -33,7 +33,7 @@ export const SoputkaScreen = ({ navigation }) => {
   const nav = (guidInvoice) =>
     navigation.navigate("SoputkaProdHistoryScreen", { guidInvoice });
 
-  //   console.log(listHistorySoputka, "listHistorySoputka");
+  // console.log(listHistorySoputka, "listHistorySoputka");
 
   return (
     <>
@@ -61,15 +61,19 @@ export const SoputkaScreen = ({ navigation }) => {
                       <Text style={styles.titleNum}>{index + 1} </Text>
                       <View>
                         <Text style={styles.date}>{item?.date}</Text>
-                        <Text style={styles.sum}>{item.total_price} сом</Text>
+                        <Text style={styles.sum}>{item?.total_price} сом</Text>
                       </View>
                     </View>
-                    {item.comment && (
+                    {item?.comment && (
                       <Text style={styles.comment}>{item?.comment}</Text>
                     )}
                   </View>
                   <View style={styles.status}>
-                    <Text style={styles.good}>Принято</Text>
+                    {item?.status === 0 ? (
+                      <Text style={styles.bad}>Не подтверждено</Text>
+                    ) : (
+                      <Text style={styles.good}>Подтверждено</Text>
+                    )}
                   </View>
                 </View>
               </TouchableOpacity>
@@ -205,13 +209,14 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "500",
     color: "rgba(12, 169, 70, 0.9)",
-    lineHeight: 15,
+    lineHeight: 17,
   },
 
   date: {
     fontSize: 17,
     fontWeight: "500",
     color: "rgba(47, 71, 190, 0.687)",
+    lineHeight: 22,
   },
 
   comment: {
@@ -222,7 +227,16 @@ const styles = StyleSheet.create({
 
   status: {
     paddingRight: 20,
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "left",
   },
 
-  good: { color: "rgba(12, 169, 70, 0.9)", fontSize: 16, fontWeight: "500" },
+  good: {
+    color: "rgba(12, 169, 70, 0.9)",
+    fontSize: 12,
+    fontWeight: "500",
+    textAlign: "left",
+  },
+  bad: { color: "red", fontSize: 12, fontWeight: "500", textAlign: "left" },
 });

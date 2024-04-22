@@ -31,11 +31,14 @@ export const EveryInvoice = ({ navigation, forAddTovar }) => {
 
   const getData = async () => {
     await getLocalDataUser({ changeLocalData, dispatch });
-    await dispatch(getCategoryTT(data?.seller_guid));
+    await dispatch(
+      getCategoryTT({ checkComponent, seller_guid: data?.seller_guid })
+    );
     await dispatch(
       getProductTT({
         guid: "0",
         seller_guid: data?.seller_guid,
+        checkComponent,
       })
     ); /// 0 - все продукты
   };
@@ -79,7 +82,12 @@ export const EveryInvoice = ({ navigation, forAddTovar }) => {
                 <FlatList
                   contentContainerStyle={widthMax}
                   data={listCategory}
-                  renderItem={({ item }) => <EveryCategoryInner obj={item} />}
+                  renderItem={({ item }) => (
+                    <EveryCategoryInner
+                      obj={item}
+                      checkComponent={checkComponent}
+                    />
+                  )}
                   keyExtractor={(item, ind) => `${item.guid}${ind}`}
                 />
               </View>

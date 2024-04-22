@@ -19,7 +19,7 @@ export const EveryListInvoiceReturn = ({ route, navigation }) => {
     });
   }, []);
 
-  console.log(listProdReturn?.[0]?.list, "listProdReturn");
+  // console.log(listProdReturn?.[0]?.list, "listProdReturn");
 
   return (
     <>

@@ -13,6 +13,7 @@ import { changeLocalData } from "../../store/reducers/saveDataSlice";
 
 export const AddProductsTA = ({ productGuid, checkComponent, forAddTovar }) => {
   //// для добавления продуктов в список
+  ///  checkComponent - true значит сопутка
   const dispatch = useDispatch();
   const { data } = useSelector((state) => state.saveDataSlice);
 
@@ -54,11 +55,14 @@ export const AddProductsTA = ({ productGuid, checkComponent, forAddTovar }) => {
 
   const getData = async () => {
     await getLocalDataUser({ changeLocalData, dispatch });
-    await dispatch(getCategoryTT(data?.seller_guid));
+    await dispatch(
+      getCategoryTT({ checkComponent, seller_guid: data?.seller_guid })
+    );
     await dispatch(
       getProductTT({
         guid: "0",
         seller_guid: data?.seller_guid,
+        checkComponent,
       })
     ); /// 0 - все продукты
   }; /// для вызова категорий и продуктов

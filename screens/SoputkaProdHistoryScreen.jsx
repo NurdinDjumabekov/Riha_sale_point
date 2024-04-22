@@ -1,8 +1,12 @@
 import { useEffect } from "react";
 import { RefreshControl, StyleSheet, Text, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import { getListSoputkaProd } from "../store/reducers/requestSlice";
+import {
+  confirmSoputka,
+  getListSoputkaProd,
+} from "../store/reducers/requestSlice";
 import { FlatList } from "react-native";
+import { ViewButton } from "../customsTags/ViewButton";
 
 export const SoputkaProdHistoryScreen = ({ navigation, route }) => {
   //// история каждой накладной сапутки
@@ -23,6 +27,15 @@ export const SoputkaProdHistoryScreen = ({ navigation, route }) => {
   const getData = () => {
     dispatch(getListSoputkaProd(guidInvoice));
   };
+
+  const confirmBtn = () => {
+    const { oper_invoice_guid, agent_invoice_guid } = listProdSoputka;
+    const forAddTovar = { oper_invoice_guid, agent_invoice_guid };
+    dispatch(confirmSoputka({ forAddTovar, navigation }));
+    /// подтверждение накладной сопутки
+  };
+
+  const status = listProdSoputka?.[0]?.status === 0;
 
   return (
     <View style={styles.container}>
@@ -48,13 +61,18 @@ export const SoputkaProdHistoryScreen = ({ navigation, route }) => {
           <RefreshControl refreshing={preloader} onRefresh={getData} />
         }
       />
+      {status && (
+        <ViewButton styles={styles.sendBtn} onclick={confirmBtn}>
+          Подтвердить
+        </ViewButton>
+      )}
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    // flex: 1,
   },
 
   flatListStyle: {
@@ -107,5 +125,19 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "400",
     marginTop: 5,
+  },
+
+  sendBtn: {
+    backgroundColor: "#fff",
+    color: "#fff",
+    minWidth: "95%",
+    paddingTop: 10,
+    borderRadius: 10,
+    fontWeight: 600,
+    backgroundColor: "rgba(12, 169, 70, 0.9)",
+    borderWidth: 1,
+    borderColor: "rgb(217 223 232)",
+    marginTop: 20,
+    alignSelf: "center",
   },
 });

@@ -18,7 +18,7 @@ import { changeLocalData } from "../store/reducers/saveDataSlice";
 import { totalCountReturns, totalSumReturns } from "../helpers/amounts";
 
 export const ReturnProdScreen = ({ route, navigation }) => {
-  const { invoice_guid, agent_invoice_guid } = route.params;
+  const { agent_invoice_guid, oper_invoice_guid } = route.params;
   //// возрат товара
   const dispatch = useDispatch();
   const [listData, setListData] = useState([]);
@@ -46,7 +46,7 @@ export const ReturnProdScreen = ({ route, navigation }) => {
           `${item?.end_outcome}`,
           <CheckVes
             guidProduct={item?.product_guid}
-            invoice_guid={invoice_guid}
+            invoice_guid={agent_invoice_guid}
           />,
         ];
       });
@@ -55,7 +55,7 @@ export const ReturnProdScreen = ({ route, navigation }) => {
     dispatch(
       changeReturnProd({
         ...returnProducts,
-        invoice_guid,
+        invoice_guid: agent_invoice_guid,
         products: listLeftoversForReturn?.map((i) => {
           return {
             guid: i?.product_guid,
@@ -72,7 +72,7 @@ export const ReturnProdScreen = ({ route, navigation }) => {
   const sendData = () => {
     dispatch(
       returnListProduct({
-        data: { ...returnProducts, agent_invoice_guid },
+        data: { ...returnProducts, agent_invoice_guid, oper_invoice_guid },
         navigation,
       })
     );
