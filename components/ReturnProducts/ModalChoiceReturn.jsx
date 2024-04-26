@@ -41,6 +41,7 @@ export const ModalChoiceReturn = ({ navigation }) => {
       })
     );
   };
+  console.log(createReturnInvoice, "createReturnInvoice");
 
   const createInvoiceReturn = () => {
     // if (createReturnInvoice?.oper_guid === "") {

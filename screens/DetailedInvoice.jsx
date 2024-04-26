@@ -82,8 +82,7 @@ export const DetailedInvoice = ({ route, navigation }) => {
     if (everyInvoice && everyInvoice.list) {
       const tableDataList = everyInvoice?.list?.map((item, index) => {
         return [
-          ` ${index + 1}`,
-          `${item?.product_name}`,
+          `${index + 1}. ${item?.product_name}`,
           `${item?.product_price}`,
           `${item?.count}`,
           // ` ${item?.codeid}}`,
@@ -107,7 +106,7 @@ export const DetailedInvoice = ({ route, navigation }) => {
 
   const windowWidth = Dimensions.get("window").width;
   // const arrWidth = [40, 14, 17, 17, 12]; //  проценты %
-  const arrWidth = [8, 61, 16, 15]; //  проценты %
+  const arrWidth = [65, 20, 15]; //  проценты %
 
   // Преобразуем проценты в абсолютные значения ширины
   const resultWidths = arrWidth.map(
@@ -124,7 +123,7 @@ export const DetailedInvoice = ({ route, navigation }) => {
       return changeValue !== 0 && changeValue !== "";
     });
 
-  console.log(everyInvoice, "everyInvoice");
+  // console.log(everyInvoice, "everyInvoice");
   // console.log(acceptConfirmInvoice, "acceptConfirmInvoice");
 
   return (
@@ -278,9 +277,9 @@ const styles = StyleSheet.create({
   sendBtn: {
     backgroundColor: "#c2f8e2",
     color: "#1ab782",
-    width: "95%",
+    minWidth: "95%",
     alignSelf: "center",
-    position: "absolute",
-    bottom: -80,
+    // position: "absolute",
+    // bottom: -80,
   },
 });

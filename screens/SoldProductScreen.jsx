@@ -1,23 +1,18 @@
 import { useEffect, useState } from "react";
-import {
-  FlatList,
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity,
-  RefreshControl,
-} from "react-native";
+import { FlatList, StyleSheet, Text, View } from "react-native";
+import { TouchableOpacity, RefreshControl } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import {
   deleteSoldProd,
   getListSoldProd,
 } from "../store/reducers/requestSlice";
 import ConfirmationModal from "../components/ConfirmationModal";
+import { formatCount } from "../helpers/amounts";
 
 export const SoldProductScreen = ({ route }) => {
   //// список проданных продуктов
   const dispatch = useDispatch();
-  const { navigation, guidInvoice } = route.params;
+  const { guidInvoice } = route.params;
   const [modalItemGuid, setModalItemGuid] = useState(null); // Состояние для идентификатора элемента, для которого открывается модальное окно
 
   const { preloader, listSoldProd } = useSelector(
@@ -37,56 +32,53 @@ export const SoldProductScreen = ({ route }) => {
     setModalItemGuid(null);
   };
 
-  return (
-    <View>
-      {listSoldProd?.length === 0 ? (
-        <Text style={styles.noneData}>Список пустой</Text>
-      ) : (
-        <View style={{ paddingBottom: 200 }}>
-          <FlatList
-            contentContainerStyle={styles.flatList}
-            data={listSoldProd}
-            renderItem={({ item }) => (
-              <View style={styles.container}>
-                <View style={styles.parentBlock}>
-                  <View style={styles.mainData}>
-                    <Text style={styles.titleNum}>{item.codeid} </Text>
-                    <View>
-                      <Text style={styles.titleDate}>{item.date || "..."}</Text>
-                      <Text style={styles.totalPrice}>
-                        {item?.product_price} х {item?.count} = {item?.total}{" "}
-                        сом
-                      </Text>
-                    </View>
-                  </View>
-                  <TouchableOpacity
-                    style={styles.krest}
-                    onPress={() => setModalItemGuid(item?.guid)}
-                  >
-                    <View style={[styles.line, styles.deg]} />
-                    <View style={[styles.line, styles.degMinus]} />
-                  </TouchableOpacity>
-                </View>
-                <View>
-                  <Text style={styles.title}>{item?.product_name}</Text>
-                </View>
+  if (listSoldProd?.length === 0) {
+    return <Text style={styles.noneData}>Список пустой</Text>;
+  }
 
-                <ConfirmationModal
-                  visible={modalItemGuid === item.guid}
-                  message="Отменить продажу ?"
-                  onYes={() => del(item.guid)}
-                  onNo={() => setModalItemGuid(null)}
-                  onClose={() => setModalItemGuid(null)}
-                />
+  return (
+    <View style={{ paddingBottom: 200 }}>
+      <FlatList
+        contentContainerStyle={styles.flatList}
+        data={listSoldProd}
+        renderItem={({ item }) => (
+          <View style={styles.container}>
+            <View style={styles.parentBlock}>
+              <View style={styles.mainData}>
+                <Text style={styles.titleNum}>{item.codeid} </Text>
+                <View>
+                  <Text style={styles.titleDate}>{item.date || "..."}</Text>
+                  <Text style={styles.totalPrice}>
+                    {item?.product_price} х {item?.count} ={" "}
+                    {formatCount(item?.total)} сом
+                  </Text>
+                </View>
               </View>
-            )}
-            keyExtractor={(item) => item?.codeid}
-            refreshControl={
-              <RefreshControl refreshing={preloader} onRefresh={getData} />
-            }
-          />
-        </View>
-      )}
+              <TouchableOpacity
+                style={styles.krest}
+                onPress={() => setModalItemGuid(item?.guid)}
+              >
+                <View style={[styles.line, styles.deg]} />
+                <View style={[styles.line, styles.degMinus]} />
+              </TouchableOpacity>
+            </View>
+            <View>
+              <Text style={styles.title}>{item?.product_name}</Text>
+            </View>
+            <ConfirmationModal
+              visible={modalItemGuid === item.guid}
+              message="Отменить продажу ?"
+              onYes={() => del(item.guid)}
+              onNo={() => setModalItemGuid(null)}
+              onClose={() => setModalItemGuid(null)}
+            />
+          </View>
+        )}
+        keyExtractor={(item) => item?.codeid}
+        refreshControl={
+          <RefreshControl refreshing={preloader} onRefresh={getData} />
+        }
+      />
     </View>
   );
 };

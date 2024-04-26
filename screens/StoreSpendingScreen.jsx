@@ -173,13 +173,14 @@ const styles = StyleSheet.create({
     minWidth: "19%",
     fontSize: 26,
     lineHeight: 30,
-    paddingBottom: 6,
+    paddingBottom: 0,
     paddingTop: 8,
     marginTop: 0,
     marginLeft: 0,
     marginRight: 0,
     backgroundColor: "rgba(12, 169, 70, 0.9)",
     color: "#fff",
+    height: 45,
   },
 
   mainTitle: {

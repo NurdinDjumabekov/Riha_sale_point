@@ -1,19 +1,26 @@
 import { Alert, StyleSheet, TextInput, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { ViewButton } from "../../customsTags/ViewButton";
-import { changeDataInputsInv } from "../../store/reducers/stateSlice";
+import {
+  changeDataInputsInv,
+  changeTemporaryData,
+} from "../../store/reducers/stateSlice";
 import {
   addProductInvoiceTT,
   addProductSoputkaTT,
   getCategoryTT,
-  getProductTT,
 } from "../../store/reducers/requestSlice";
 import { getLocalDataUser } from "../../helpers/returnDataUser";
 import { changeLocalData } from "../../store/reducers/saveDataSlice";
+import { Modal } from "react-native";
+import { Text } from "react-native";
+import { TouchableWithoutFeedback } from "react-native";
 
-export const AddProductsTA = ({ productGuid, checkComponent, forAddTovar }) => {
+export const AddProductsTA = (props) => {
+  const { productGuid, checkComponent, forAddTovar, isCheck, obj } = props;
+
   //// для добавления продуктов в список
-  ///  checkComponent - true значит сопутка
+  ///  checkComponent - true значит сопутка false - продажа
   const dispatch = useDispatch();
   const { data } = useSelector((state) => state.saveDataSlice);
 
@@ -46,86 +53,115 @@ export const AddProductsTA = ({ productGuid, checkComponent, forAddTovar }) => {
         dispatch(addProductInvoiceTT({ data, getData }));
       } else {
         /// сопутка
-        dispatch(
-          addProductSoputkaTT({ obj: { ...data, ...forAddTovar }, getData })
-        );
+        const obj = { ...data, ...forAddTovar };
+        dispatch(addProductSoputkaTT({ obj, getData }));
       }
     }
   };
 
   const getData = async () => {
     await getLocalDataUser({ changeLocalData, dispatch });
-    await dispatch(
-      getCategoryTT({ checkComponent, seller_guid: data?.seller_guid })
-    );
-    await dispatch(
-      getProductTT({
-        guid: "0",
-        seller_guid: data?.seller_guid,
-        checkComponent,
-      })
-    ); /// 0 - все продукты
+    const dataObj = {
+      checkComponent,
+      seller_guid: data?.seller_guid,
+      type: "sale&&soputka",
+    };
+    await dispatch(getCategoryTT(dataObj));
   }; /// для вызова категорий и продуктов
 
+  const onClose = () => {
+    dispatch(changeTemporaryData({}));
+  };
+
   return (
-    <View style={styles.addDataBlock}>
-      <TextInput
-        style={styles.input}
-        value={dataInputsInv?.price?.toString()}
-        onChangeText={(text) => onChange("price", text)}
-        keyboardType="numeric"
-        placeholder="Цена"
-        maxLength={8}
-      />
-      <TextInput
-        style={styles.input}
-        value={dataInputsInv?.ves}
-        onChangeText={(text) => onChange("ves", text)}
-        keyboardType="numeric"
-        placeholder="Вес"
-        maxLength={8}
-      />
-      <ViewButton styles={styles.btnAdd} onclick={addInInvoice}>
-        Добавить
-      </ViewButton>
-    </View>
+    <Modal
+      animationType="fade"
+      transparent={true}
+      visible={isCheck}
+      onRequestClose={onClose}
+    >
+      <TouchableWithoutFeedback onPress={onClose}>
+        <View style={styles.parennt}>
+          <View style={styles.child}>
+            {checkComponent && isCheck && (
+              <Text style={styles.leftovers}>Остаток: {obj.end_outcome}</Text>
+            )}
+            <View style={styles.addDataBlock}>
+              <TextInput
+                style={styles.input}
+                value={dataInputsInv?.price?.toString()}
+                onChangeText={(text) => onChange("price", text)}
+                keyboardType="numeric"
+                placeholder="Цена"
+                maxLength={8}
+              />
+              <TextInput
+                style={styles.input}
+                value={dataInputsInv?.ves}
+                onChangeText={(text) => onChange("ves", text)}
+                keyboardType="numeric"
+                placeholder="Вес"
+                maxLength={8}
+              />
+            </View>
+            <ViewButton styles={styles.btnAdd} onclick={addInInvoice}>
+              Добавить
+            </ViewButton>
+          </View>
+        </View>
+      </TouchableWithoutFeedback>
+    </Modal>
   );
 };
 
 const styles = StyleSheet.create({
-  addDataBlock: {
-    minWidth: "100%",
+  parennt: {
+    flex: 1,
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+
+  leftovers: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: "rgba(47, 71, 190, 0.591)",
+  },
+
+  child: {
     backgroundColor: "rgba(184, 196, 246, 0.99)",
+    padding: 15,
+    paddingVertical: 30,
+    borderRadius: 5,
+  },
+  addDataBlock: {
+    width: "80%",
     alignSelf: "center",
     display: "flex",
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    padding: 8,
-    paddingTop: 15,
-    paddingBottom: 5,
-    borderBottomRightRadius: 5,
-    borderBottomLeftRadius: 5,
+    marginVertical: 10,
   },
   input: {
     backgroundColor: "#fff",
     paddingLeft: 10,
     paddingRight: 10,
     height: 40,
-    width: "33%",
+    width: "48%",
     borderRadius: 5,
   },
   btnAdd: {
     backgroundColor: "rgba(95, 230, 165, 0.99)",
     color: "#fff",
     minWidth: "28%",
-    paddingTop: 9,
-    paddingBottom: 9,
+    paddingTop: 11,
+    paddingBottom: 11,
     borderRadius: 5,
     fontWeight: "600",
     borderWidth: 1,
     borderColor: "rgb(217 223 232)",
-    fontSize: 16,
-    marginTop: 0,
+    fontSize: 18,
+    marginTop: 10,
   },
 });

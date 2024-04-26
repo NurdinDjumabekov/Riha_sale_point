@@ -27,7 +27,6 @@ export const ReturnScreen = ({ navigation }) => {
 
   const getData = async () => {
     await getLocalDataUser({ changeLocalData, dispatch });
-    //// await  dispatch(getListRevizors()); //// chechchech
     await dispatch(getHistoryReturn(data?.seller_guid));
   };
 
@@ -35,13 +34,13 @@ export const ReturnScreen = ({ navigation }) => {
   ///// над получить guid агента c бэка
 
   const createInvoice = () => {
-    const data = {
+    const dataObj = {
       ...createReturnInvoice,
       stateModal: true,
       seller_guid: data?.seller_guid,
       agent_guid,
     };
-    dispatch(changeReturnInvoice(data));
+    dispatch(changeReturnInvoice(dataObj));
   };
 
   const empty = listHistoryReturn?.length !== 0;

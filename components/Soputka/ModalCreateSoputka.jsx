@@ -6,6 +6,9 @@ import { TextInput } from "react-native";
 import { ViewButton } from "../../customsTags/ViewButton";
 import { useState } from "react";
 import { createInvoiceSoputkaTT } from "../../store/reducers/requestSlice";
+import { ScrollView } from "react-native";
+import { Alert } from "react-native";
+import { ChoiceAgents } from "../ChoiceAgents";
 
 export const ModalCreateSoputka = (props) => {
   //// модалка для созданя с0путки
@@ -14,24 +17,28 @@ export const ModalCreateSoputka = (props) => {
 
   const dispatch = useDispatch();
 
-  const [comment, setComment] = useState("");
+  const [obj, setObj] = useState({ comment: "", agent_guid: "" });
 
   const closeModal = () => {
     setModalState(false);
-    setComment("");
+    setObj({ comment: "", agent_guid: "" });
   };
 
   const { data } = useSelector((state) => state.saveDataSlice);
 
+  const { listAgents } = useSelector((state) => state.requestSlice);
+
   const create = () => {
-    dispatch(
-      createInvoiceSoputkaTT({
-        navigation,
-        data: { comment, seller_guid: data?.seller_guid },
-      })
-    );
-    closeModal();
+    if (obj?.agent_guid === "") {
+      Alert.alert("Выберите агента");
+    } else {
+      const dataObj = { ...obj, seller_guid: data?.seller_guid };
+      dispatch(createInvoiceSoputkaTT({ navigation, dataObj }));
+      closeModal();
+    }
   };
+
+  // console.log(obj, "obj");
 
   return (
     <Modal
@@ -46,10 +53,21 @@ export const ModalCreateSoputka = (props) => {
         onPress={closeModal} // Закрыть модальное окно
       >
         <View style={styles.modalInner} onPress={() => setModalState(true)}>
+          <ScrollView style={styles.selectBlock}>
+            {listAgents?.map((item) => (
+              <ChoiceAgents
+                item={item}
+                setState={setObj}
+                prev={obj}
+                keyGuid={"agent_guid"}
+                keyText={"agent"}
+              />
+            ))}
+          </ScrollView>
           <TextInput
             style={styles.inputComm}
-            value={comment?.toString()}
-            onChangeText={(text) => setComment(text)}
+            value={obj?.comment?.toString()}
+            onChangeText={(text) => setObj({ ...obj, comment: text })}
             placeholder="Ваш комментарий"
             multiline={true}
             numberOfLines={4}
@@ -103,5 +121,53 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "rgb(217 223 232)",
     marginTop: 20,
+  },
+
+  selectBlock: {
+    marginTop: 15,
+    borderStyle: "solid",
+    borderWidth: 1,
+    borderColor: "rgb(217 223 232)",
+    borderRadius: 5,
+    backgroundColor: "#f0f0f0",
+    minHeight: 40,
+    maxHeight: 250,
+  },
+
+  selectBlockInner: {
+    minWidth: "100%",
+    padding: 10,
+    borderWidth: 1,
+    borderColor: "rgb(217 223 232)",
+    backgroundColor: "#fff",
+    borderRadius: 3,
+  },
+
+  activeSelect: {
+    backgroundColor: "rgba(47, 71, 190, 0.672)",
+  },
+
+  selectText: {
+    fontSize: 15,
+    fontWeight: "500",
+    color: "rgba(47, 71, 190, 0.672)",
+  },
+
+  activeSelectText: {
+    color: "#fff",
+  },
+
+  inputComm: {
+    borderWidth: 1,
+    borderColor: "rgb(217 223 232)",
+    height: 60,
+    borderRadius: 8,
+    padding: 10,
+    paddingLeft: 15,
+    marginTop: 10,
+    height: 120,
+    fontSize: 16,
+    textAlignVertical: "top",
+    backgroundColor: "#fff",
   },
 });

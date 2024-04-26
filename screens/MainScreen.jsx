@@ -30,7 +30,7 @@ export const MainScreen = ({ navigation }) => {
     await dispatch(getBalance(data?.seller_guid));
   };
 
-  console.log(data, "data");
+  // console.log(data, "data");
 
   const goPage = () => navigation.navigate("HistoryBalance");
 

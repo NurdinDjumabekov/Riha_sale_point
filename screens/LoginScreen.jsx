@@ -11,9 +11,7 @@ import { ViewImg } from "../customsTags/ViewImg";
 export const LoginScreen = ({ navigation }) => {
   const dispatch = useDispatch();
   const { dataLogin } = useSelector((state) => state.stateSlice);
-  const { preloader } = useSelector((state) => state.requestSlice);
-  const { token } = useSelector((state) => state.saveDataSlice);
-  // console.log(token, "tokenl");
+  const { data } = useSelector((state) => state.saveDataSlice);
 
   const onChangeLogin = (text) => {
     dispatch(changeDataLogin({ ...dataLogin, login: text }));
@@ -25,7 +23,7 @@ export const LoginScreen = ({ navigation }) => {
 
   const sendLogin = () => {
     if (dataLogin?.login && dataLogin?.password) {
-      dispatch(logInAccount({ dataLogin, navigation }));
+      dispatch(logInAccount({ dataLogin, navigation, data }));
     } else {
       alert("Введите логин и пароль!");
     }

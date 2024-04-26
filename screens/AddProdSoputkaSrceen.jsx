@@ -1,6 +1,10 @@
 import { StyleSheet, TouchableOpacity, View, Text } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import { createInvoiceTT } from "../store/reducers/requestSlice";
+import {
+  clearListCategory,
+  clearListProductTT,
+  createInvoiceTT,
+} from "../store/reducers/requestSlice";
 import { useEffect } from "react";
 import {
   changeStateForCategory,
@@ -16,14 +20,22 @@ export const AddProdSoputkaSrceen = ({ navigation, route }) => {
   const { forAddTovar } = route.params; //// хранятся данные накладной сапутки
 
   const { infoKassa } = useSelector((state) => state.requestSlice);
+  ///// delete
+
   const { data } = useSelector((state) => state.saveDataSlice);
 
   useEffect(() => {
-    defaultFN();
+    defaultActive();
     navigation.setOptions({
       title: `${transformDate(new Date())}`,
     });
     getData();
+
+    return () => {
+      dispatch(clearListCategory());
+      dispatch(clearListProductTT());
+      //// очищаю список категорий и товаров
+    };
   }, []);
 
   const getData = async () => {
@@ -31,9 +43,9 @@ export const AddProdSoputkaSrceen = ({ navigation, route }) => {
     await dispatch(createInvoiceTT(data?.seller_guid));
   };
 
-  const defaultFN = () => {
+  const defaultActive = () => {
+    dispatch(changeStateForCategory({})); /// категория будет "все"
     dispatch(changeTemporaryData({})); // очищаю активный продукт
-    dispatch(changeStateForCategory("0")); /// категория будет "все"
   };
 
   const listProdSale = () => {

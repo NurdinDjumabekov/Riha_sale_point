@@ -1,67 +1,51 @@
 import { Alert, StyleSheet, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  changeTempDataPay,
-  clearTempGDataPay,
-} from "../store/reducers/stateSlice";
 import { Modal } from "react-native";
 import { TouchableOpacity } from "react-native";
 import { TextInput } from "react-native";
 import { ViewButton } from "../customsTags/ViewButton";
 import { acceptMoney } from "../store/reducers/requestSlice";
+import { ScrollView } from "react-native";
+import { ChoiceAgents } from "./ChoiceAgents";
+import { useState } from "react";
 
 export const ModalPayTA = ({ modalState, setModalState, navigation }) => {
-  //// модалка для принятия ТА оплаты каждой ТТ
+  //// модалка для оплаты ТТ
   const dispatch = useDispatch();
 
-  const { temporaryDataPay } = useSelector((state) => state.stateSlice);
+  const [obj, setObj] = useState({ comment: "", amount: "", agent_guid: "" });
+
   const { data } = useSelector((state) => state.saveDataSlice);
+  const { listAgents } = useSelector((state) => state.requestSlice);
 
   const closeModal = () => {
     setModalState(false);
-    dispatch(clearTempGDataPay()); /// очистка временного state для выбора ТТ у ТА
+    setObj({ comment: "", amount: "", agent_guid: "" });
   };
 
-  const changeNum = (text) => {
-    if (/^-?\d*\.?\d*$/.test(text)) {
-      dispatch(
-        changeTempDataPay({
-          ...temporaryDataPay,
-          amount: text,
-        })
-      );
+  const onChange = (text, type) => {
+    if (type === "amount") {
+      if (/^-?\d*\.?\d*$/.test(text)) {
+        setObj({ ...obj, amount: text });
+      }
+    } else {
+      setObj({ ...obj, comment: text });
     }
-  };
-
-  const changeComm = (text) => {
-    dispatch(
-      changeTempDataPay({
-        ...temporaryDataPay,
-        comment: text,
-      })
-    );
   };
 
   const sendMoney = () => {
     ///// отплачиваю деньги как ТТ ревизору
-    if (!temporaryDataPay?.amount) {
+    if (!obj?.amount) {
       Alert.alert("Введите сумму");
     } else {
-      dispatch(
-        acceptMoney({
-          data: { ...temporaryDataPay, seller_guid: data?.seller_guid },
-          closeModal,
-          navigation,
-        })
-      );
+      const dataObj = { ...obj, seller_guid: data?.seller_guid };
+      dispatch(acceptMoney({ dataObj, closeModal, navigation }));
       // if (temporaryGuidPoint?.debit < temporaryGuidPoint?.amount) {
       //   Alert.alert("Введенная вами сумма больше зарабатка торговой точки!");
       // } else {
       // }
     }
   };
-
-  // console.log(temporaryGuidPoint, "temporaryGuidPoint");
 
   return (
     <Modal
@@ -76,19 +60,29 @@ export const ModalPayTA = ({ modalState, setModalState, navigation }) => {
         onPress={closeModal} // Закрыть модальное окно
       >
         <View style={styles.modalInner} onPress={() => setModalState(true)}>
+          <ScrollView style={styles.selectBlock}>
+            {listAgents?.map((item) => (
+              <ChoiceAgents
+                item={item}
+                setState={setObj}
+                prev={obj}
+                keyGuid={"agent_guid"}
+                keyText={"agent"}
+              />
+            ))}
+          </ScrollView>
           <TextInput
             style={styles.inputNum}
-            value={temporaryDataPay?.amount?.toString()}
-            onChangeText={changeNum}
+            value={obj?.amount?.toString()}
+            onChangeText={(e) => onChange(e, "amount")}
             placeholder="Сумма"
             keyboardType="numeric"
             maxLength={8}
           />
-
           <TextInput
             style={styles.inputComm}
-            value={temporaryDataPay.comment}
-            onChangeText={changeComm}
+            value={obj?.comment}
+            onChangeText={(e) => onChange(e, "comment")}
             placeholder="Ваш комментарий"
             multiline={true}
             numberOfLines={4}
@@ -115,6 +109,17 @@ const styles = StyleSheet.create({
     padding: 15,
     borderRadius: 10,
     width: "95%",
+  },
+
+  selectBlock: {
+    marginVertical: 10,
+    borderStyle: "solid",
+    borderWidth: 1,
+    borderColor: "rgb(217 223 232)",
+    borderRadius: 8,
+    backgroundColor: "#f0f0f0",
+    minHeight: 40,
+    maxHeight: 250,
   },
 
   inputNum: {

@@ -7,8 +7,14 @@ import { RefreshControl } from "react-native";
 import { getLocalDataUser } from "../helpers/returnDataUser";
 import { changeLocalData } from "../store/reducers/saveDataSlice";
 import { ViewButton } from "../customsTags/ViewButton";
-import { getHistorySoputka } from "../store/reducers/requestSlice";
+import {
+  clearListCategory,
+  clearListProductTT,
+  getHistorySoputka,
+  getListAgents,
+} from "../store/reducers/requestSlice";
 import { ModalCreateSoputka } from "../components/Soputka/ModalCreateSoputka";
+import { formatCount } from "../helpers/amounts";
 
 export const SoputkaScreen = ({ navigation }) => {
   //// Сопутка
@@ -23,17 +29,23 @@ export const SoputkaScreen = ({ navigation }) => {
 
   useEffect(() => {
     getData();
+
+    return () => {
+      dispatch(clearListCategory());
+      dispatch(clearListProductTT());
+      //// очищаю список категорий и товаров
+    };
   }, []);
 
   const getData = async () => {
     await getLocalDataUser({ changeLocalData, dispatch });
     await dispatch(getHistorySoputka(data?.seller_guid));
+    await dispatch(getListAgents(data?.seller_guid));
   };
 
-  const nav = (guidInvoice) =>
+  const nav = (guidInvoice) => {
     navigation.navigate("SoputkaProdHistoryScreen", { guidInvoice });
-
-  // console.log(listHistorySoputka, "listHistorySoputka");
+  };
 
   return (
     <>
@@ -61,12 +73,11 @@ export const SoputkaScreen = ({ navigation }) => {
                       <Text style={styles.titleNum}>{index + 1} </Text>
                       <View>
                         <Text style={styles.date}>{item?.date}</Text>
-                        <Text style={styles.sum}>{item?.total_price} сом</Text>
+                        <Text style={styles.sum}>
+                          {formatCount(item?.total_price)} сом
+                        </Text>
                       </View>
                     </View>
-                    {item?.comment && (
-                      <Text style={styles.comment}>{item?.comment}</Text>
-                    )}
                   </View>
                   <View style={styles.status}>
                     {item?.status === 0 ? (
@@ -76,6 +87,9 @@ export const SoputkaScreen = ({ navigation }) => {
                     )}
                   </View>
                 </View>
+                {item?.comment && (
+                  <Text style={styles.comment}>{item?.comment}</Text>
+                )}
               </TouchableOpacity>
             )}
             keyExtractor={(item) => item?.codeid}
@@ -213,7 +227,7 @@ const styles = StyleSheet.create({
   },
 
   date: {
-    fontSize: 17,
+    fontSize: 15,
     fontWeight: "500",
     color: "rgba(47, 71, 190, 0.687)",
     lineHeight: 22,

@@ -5,6 +5,7 @@ const initialState = {
     login: "",
     password: "",
   },
+
   acceptConfirmInvoice: {
     invoice_guid: "",
     products: [],
@@ -14,17 +15,12 @@ const initialState = {
   dataInputsInv: { price: "", ves: "" },
   listProductForTT: [],
   stateForCategory: {}, // состояние для хранения временной категории(подсветка категории)
+
   expense: {
     expense_type: "",
     comment: "",
     amount: "",
   }, /// данные суммы расходов каждой ТТ
-
-  temporaryDataPay: {
-    comment: "",
-    amount: "",
-    seller_guid: "",
-  }, //// данные, которые будут отправлены с оплатой ТТ (оплата ревизору)
 
   createReturnInvoice: {
     /// для создания накладной возврата товара
@@ -97,17 +93,6 @@ const stateSlice = createSlice({
       };
     },
 
-    changeTempDataPay: (state, action) => {
-      state.temporaryDataPay = action.payload;
-    },
-    clearTempGDataPay: (state, action) => {
-      state.temporaryDataPay = {
-        comment: "",
-        amount: "",
-        seller_guid: "",
-      };
-    },
-
     changeReturnInvoice: (state, action) => {
       state.createReturnInvoice = action.payload;
     },
@@ -139,8 +124,6 @@ export const {
   changeStateForCategory,
   changeExpense,
   clearExpense,
-  changeTempDataPay,
-  clearTempGDataPay,
   changeReturnInvoice,
   cleareReturnInvoice,
   changeReturnProd,

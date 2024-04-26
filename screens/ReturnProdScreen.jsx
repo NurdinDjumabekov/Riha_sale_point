@@ -37,6 +37,7 @@ export const ReturnProdScreen = ({ route, navigation }) => {
     await dispatch(getMyLeftovers(data?.seller_guid));
   };
 
+  // console.log(listLeftoversForReturn, "listLeftoversForReturn");
   useEffect(() => {
     if (listLeftoversForReturn) {
       const tableDataList = listLeftoversForReturn?.map((item) => {
@@ -45,7 +46,7 @@ export const ReturnProdScreen = ({ route, navigation }) => {
           `${item?.price}`,
           `${item?.end_outcome}`,
           <CheckVes
-            guidProduct={item?.product_guid}
+            guidProduct={item?.guid}
             invoice_guid={agent_invoice_guid}
           />,
         ];
@@ -58,7 +59,7 @@ export const ReturnProdScreen = ({ route, navigation }) => {
         invoice_guid: agent_invoice_guid,
         products: listLeftoversForReturn?.map((i) => {
           return {
-            guid: i?.product_guid,
+            guid: i?.guid,
             price: i?.price,
             count: i?.end_outcome,
           };

@@ -1,10 +1,11 @@
+import { TouchableWithoutFeedback } from "react-native";
 import { TouchableOpacity } from "react-native";
 import { Text } from "react-native";
 
 export const ViewButton = ({ children, styles, onclick }) => {
   // console.log(styles, "styles");
   return (
-    <TouchableOpacity onPress={onclick} activeOpacity={0.7}>
+    <TouchableWithoutFeedback onPress={onclick}>
       <Text
         style={[
           {
@@ -15,7 +16,7 @@ export const ViewButton = ({ children, styles, onclick }) => {
             marginTop: 10,
             borderRadius: 10,
             fontSize: 20,
-            backgroundColor: styles?.backgroundColor || "#f5f5f5",
+            backgroundColor: styles?.backgroundColor || "#000",
             fontWeight: 700,
             // marginHorizontal: 80,
             // minWidth: "100%",
@@ -26,6 +27,6 @@ export const ViewButton = ({ children, styles, onclick }) => {
       >
         {children}
       </Text>
-    </TouchableOpacity>
+    </TouchableWithoutFeedback>
   );
 };

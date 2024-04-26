@@ -21,33 +21,31 @@ export const EveryInvoiceAcceptScreen = ({ route, navigation }) => {
   }, []);
   const newList = listAcceptInvoiceProd?.[0]?.list;
 
+  if (newList?.length === 0) {
+    return <Text style={styles.noneData}>Данные отсутствуют</Text>;
+  }
+
   return (
-    <>
-      {newList?.length === 0 ? (
-        <Text style={styles.noneData}>Данные отсутствуют</Text>
-      ) : (
-        <View style={styles.parent}>
-          <FlatList
-            contentContainerStyle={styles.flatList}
-            data={newList}
-            renderItem={({ item, index }) => (
-              <RenderResult item={item} index={index} />
-            )}
-            keyExtractor={(item) => item.codeid}
-          />
-          <Text style={styles.result}>
-            {/* Итого: {totalSumEveryAccept(newList)} сом */}
-            Итого: {listAcceptInvoiceProd?.[0]?.total_price} сом
-          </Text>
-        </View>
-      )}
-    </>
+    <View style={styles.parent}>
+      <FlatList
+        contentContainerStyle={styles.flatList}
+        data={newList}
+        renderItem={({ item, index }) => (
+          <RenderResult item={item} index={index} />
+        )}
+        keyExtractor={(item) => item.codeid}
+      />
+      <Text style={styles.result}>
+        {/* Итого: {totalSumEveryAccept(newList)} сом */}
+        Итого: {listAcceptInvoiceProd?.[0]?.total_price} сом
+      </Text>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   parent: {
-    maxHeight: "95%",
+    maxHeight: "98%",
   },
 
   flatList: {
@@ -71,19 +69,4 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "500",
   },
-
-  // sendBtn: {
-  //   backgroundColor: "#fff",
-  //   color: "#fff",
-  //   width: "95%",
-  //   paddingTop: 10,
-  //   borderRadius: 10,
-  //   fontWeight: 600,
-  //   backgroundColor: "rgba(12, 169, 70, 0.9)",
-  //   borderWidth: 1,
-  //   borderColor: "rgb(217 223 232)",
-  //   marginTop: 10,
-  //   marginBottom: 20,
-  //   alignSelf: "center",
-  // },
 });

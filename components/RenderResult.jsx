@@ -1,4 +1,5 @@
 import { StyleSheet, Text, View } from "react-native";
+import { formatCount } from "../helpers/amounts";
 
 export const RenderResult = ({ item, index }) => {
   const count = +item?.count_usushka || +item?.count;
@@ -6,13 +7,11 @@ export const RenderResult = ({ item, index }) => {
   return (
     <View style={styles.everyProd}>
       <Text style={styles.titleHistory}>{index + 1}. </Text>
-      <View>
-        <Text style={[styles.titleHistory, styles.width95]}>
-          {item.product_name}
-        </Text>
+      <View style={styles.mainData}>
+        <Text style={styles.titleHistory}>{item.product_name}</Text>
         <View style={styles.everyProdInner}>
           <Text style={styles.koll}>
-            {item?.price} х {count} = {+item?.price * count} сом
+            {item?.price} х {count} = {formatCount(+item?.price * count)} сом
           </Text>
         </View>
       </View>
@@ -46,7 +45,9 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
 
-  width95: { minWidth: "90%" },
+  mainData: {
+    maxWidth: "90%",
+  },
 
   koll: {
     color: "rgba(47, 71, 190, 0.887)",

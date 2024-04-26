@@ -1,6 +1,10 @@
 import { StyleSheet, TouchableOpacity, View, Text } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import { createInvoiceTT } from "../store/reducers/requestSlice";
+import {
+  clearListCategory,
+  clearListProductTT,
+  createInvoiceTT,
+} from "../store/reducers/requestSlice";
 import { useEffect } from "react";
 import {
   changeStateForCategory,
@@ -19,11 +23,17 @@ export const MyShipmentScreen = ({ navigation }) => {
   const { data } = useSelector((state) => state.saveDataSlice);
 
   useEffect(() => {
-    defaultFN();
+    clearStates();
     navigation.setOptions({
       title: `${transformDate(new Date())}`,
     });
     getData();
+
+    return () => {
+      dispatch(clearListProductTT());
+      dispatch(clearListCategory());
+      ///// очищаю список категрий и продуктов
+    };
   }, []);
 
   const getData = async () => {
@@ -31,9 +41,9 @@ export const MyShipmentScreen = ({ navigation }) => {
     await dispatch(createInvoiceTT(data?.seller_guid));
   };
 
-  const defaultFN = () => {
+  const clearStates = () => {
     dispatch(changeTemporaryData({})); // очищаю активный продукт
-    dispatch(changeStateForCategory("0")); /// категория будет "все"
+    dispatch(changeStateForCategory({})); /// очищаю активную категорию
   };
 
   const listProdSale = () => {

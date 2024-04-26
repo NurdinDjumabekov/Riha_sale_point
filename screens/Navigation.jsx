@@ -2,8 +2,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { NavigationContainer } from "@react-navigation/native";
 import { LoginScreen } from "./LoginScreen";
 import { MainScreen } from "./MainScreen";
-import { Provider } from "react-redux";
-import { store } from "../store/index";
+import { useDispatch, useSelector } from "react-redux";
 import { StatusBar } from "expo-status-bar";
 import { Preloader } from "../components/Preloader";
 import { MyApplicationScreen } from "./MyApplicationScreen";
@@ -25,22 +24,38 @@ import { SoputkaScreen } from "./SoputkaScreen";
 import { AddProdSoputkaSrceen } from "./AddProdSoputkaSrceen";
 import { SoputkaProductScreen } from "./SoputkaProductScreen";
 import { SoputkaProdHistoryScreen } from "./SoputkaProdHistoryScreen";
+import { getLocalDataUser } from "../helpers/returnDataUser";
+import { changeLocalData } from "../store/reducers/saveDataSlice";
+import { useEffect } from "react";
 
 const Stack = createNativeStackNavigator();
 
 export const Navigation = () => {
+  const dispatch = useDispatch();
+
+  const { data } = useSelector((state) => state.saveDataSlice);
+
+  useEffect(() => {
+    getLocalDataUser({ changeLocalData, dispatch });
+  }, []);
+
+  const checkLogin = !data?.seller_guid;
+
+  console.log(data, "data");
+
   return (
-    <Provider store={store}>
-      <NavigationContainer>
-        <Preloader />
-        <Stack.Navigator
-          screenOptions={{ headerStyle: { backgroundColor: "#fff" } }}
-        >
+    <NavigationContainer>
+      <Preloader />
+      <Stack.Navigator
+        screenOptions={{ headerStyle: { backgroundColor: "#fff" } }}
+      >
+        {checkLogin ? (
           <Stack.Screen
             name="Login"
             component={LoginScreen}
             options={{ headerShown: false }}
           />
+        ) : (
           <>
             <Stack.Screen
               name="Main"
@@ -113,21 +128,19 @@ export const Navigation = () => {
               component={SoldProductScreen} /// список проданных товаров
               options={{ title: "Список продаж" }}
             />
-
-            {/* /////////////////////// траты /////////////////////// */}
+            {/* /////////////////////// Траты /////////////////////// */}
             <Stack.Screen
               name="Spending"
               component={StoreSpendingScreen}
               options={{ title: "Расходы" }}
             />
 
-            {/* /////////////////////// оплата ТТ /////////////////////// */}
+            {/* /////////////////////// 0плата ТТ /////////////////////// */}
             <Stack.Screen
               name="PayMoney"
               component={PayMoneyScreen}
               options={{ title: "Оплата" }}
             />
-
             {/* /////////////////////// ReturnScreen /////////////////////// */}
             <Stack.Screen
               name="ReturnInvoice"
@@ -144,9 +157,9 @@ export const Navigation = () => {
               options={{ title: "Накладная для возврата" }}
             />
           </>
-        </Stack.Navigator>
-        <StatusBar theme="auto" />
-      </NavigationContainer>
-    </Provider>
+        )}
+      </Stack.Navigator>
+      <StatusBar theme="auto" />
+    </NavigationContainer>
   );
 };

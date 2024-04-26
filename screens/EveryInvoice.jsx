@@ -1,15 +1,16 @@
-import { useCallback, useEffect, useState } from "react";
-import { FlatList, Keyboard, RefreshControl } from "react-native";
+import { useCallback } from "react";
+import { RefreshControl } from "react-native";
 import { SafeAreaView, StyleSheet, Text, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import { getCategoryTT, getProductTT } from "../store/reducers/requestSlice";
+import { getCategoryTT } from "../store/reducers/requestSlice";
 import { EveryProduct } from "../components/EveryProduct";
 import { EveryCategoryInner } from "../components/TAComponents/EveryCategoryInner";
 import { getLocalDataUser } from "../helpers/returnDataUser";
 import { changeLocalData } from "../store/reducers/saveDataSlice";
 import { useFocusEffect, useRoute } from "@react-navigation/native";
+import { ScrollView } from "react-native";
 
-export const EveryInvoice = ({ navigation, forAddTovar }) => {
+export const EveryInvoice = ({ forAddTovar }) => {
   const dispatch = useDispatch();
   const route = useRoute();
 
@@ -21,7 +22,6 @@ export const EveryInvoice = ({ navigation, forAddTovar }) => {
     (state) => state.requestSlice
   );
   const { data } = useSelector((state) => state.saveDataSlice);
-  const [openKeyBoard, setOpenKeyBoard] = useState(false);
 
   useFocusEffect(
     useCallback(() => {
@@ -31,92 +31,58 @@ export const EveryInvoice = ({ navigation, forAddTovar }) => {
 
   const getData = async () => {
     await getLocalDataUser({ changeLocalData, dispatch });
-    await dispatch(
-      getCategoryTT({ checkComponent, seller_guid: data?.seller_guid })
-    );
-    await dispatch(
-      getProductTT({
-        guid: "0",
-        seller_guid: data?.seller_guid,
-        checkComponent,
-      })
-    ); /// 0 - все продукты
+    const dataObj = {
+      checkComponent,
+      seller_guid: data?.seller_guid,
+      type: "sale&&soputka",
+    };
+    await dispatch(getCategoryTT(dataObj));
+    //// внутри есть getProductTT
   };
 
-  useEffect(() => {
-    /// события открытия клавиатуры
-    const keyboardDidShowListener = Keyboard.addListener(
-      "keyboardDidShow",
-      () => setOpenKeyBoard(true)
-    );
-    /// события закрытия клавиатуры
-    const keyboardDidHideListener = Keyboard.addListener(
-      "keyboardDidHide",
-      () => setOpenKeyBoard(false)
-    );
-    // Удаление слушателей после использования
-    return () => {
-      keyboardDidShowListener.remove();
-      keyboardDidHideListener.remove();
-    };
-  }, []);
+  const emptyData = listCategory?.length === 0;
 
-  const checkLength = listProductTT?.length <= 4;
-
-  const emptyData = listCategory?.length >= 1 && listProductTT?.length === 0;
-
-  const widthMax = { minWidth: "100%", width: "100%" };
-
-  const chechSt = openKeyBoard && checkLength;
+  if (emptyData) {
+    return <Text style={styles.noneData}>Список пустой</Text>;
+  }
 
   return (
-    <>
-      {emptyData ? (
-        <Text style={styles.noneData}>Список пустой</Text>
-      ) : (
-        <View style={styles.container}>
-          <SafeAreaView style={styles.parentBlock}>
-            <View style={styles.parentSelectBlock}>
-              <View style={styles.selectBlock}>
-                <Text style={styles.textCateg}>Категории</Text>
-                <FlatList
-                  contentContainerStyle={widthMax}
-                  data={listCategory}
-                  renderItem={({ item }) => (
-                    <EveryCategoryInner
-                      obj={item}
-                      checkComponent={checkComponent}
-                    />
-                  )}
-                  keyExtractor={(item, ind) => `${item.guid}${ind}`}
+    <View style={styles.container}>
+      <SafeAreaView style={styles.parentBlock}>
+        <View style={styles.parentSelectBlock}>
+          <View style={styles.selectBlock}>
+            <Text style={styles.textCateg}>Категории</Text>
+            <ScrollView>
+              {listCategory?.map((item) => (
+                <EveryCategoryInner
+                  key={item?.guid}
+                  obj={item}
+                  checkComponent={checkComponent}
                 />
-              </View>
-            </View>
-            <Text style={[styles.textCateg, styles.textTovar]}>Товары</Text>
-            <View
-              style={[styles.blockSelectProd, chechSt && styles.paddingB50]}
-            >
-              <FlatList
-                contentContainerStyle={widthMax}
-                data={listProductTT}
-                renderItem={({ item, index }) => (
-                  <EveryProduct
-                    obj={item}
-                    index={index}
-                    checkComponent={checkComponent}
-                    forAddTovar={forAddTovar}
-                  />
-                )}
-                keyExtractor={(item, ind) => `${item.guid}${ind}`}
-                refreshControl={
-                  <RefreshControl refreshing={preloader} onRefresh={getData} />
-                }
-              />
-            </View>
-          </SafeAreaView>
+              ))}
+            </ScrollView>
+          </View>
         </View>
-      )}
-    </>
+        <Text style={[styles.textCateg, styles.textTovar]}>Товары</Text>
+        <View style={styles.blockSelectProd}>
+          <ScrollView
+            refreshControl={
+              <RefreshControl refreshing={preloader} onRefresh={getData} />
+            }
+          >
+            {listProductTT?.map((item, index) => (
+              <EveryProduct
+                key={item?.guid}
+                obj={item}
+                index={index}
+                checkComponent={checkComponent}
+                forAddTovar={forAddTovar}
+              />
+            ))}
+          </ScrollView>
+        </View>
+      </SafeAreaView>
+    </View>
   );
 };
 
@@ -145,6 +111,7 @@ const styles = StyleSheet.create({
     width: "100%",
     maxHeight: 280,
   },
+
   textCateg: {
     padding: 8,
     fontSize: 18,
@@ -175,10 +142,10 @@ const styles = StyleSheet.create({
   blockSelectProd: {
     minHeight: "30%",
     overflow: "scroll",
-    height: "48%",
+    height: "52%",
   },
   paddingB50: {
-    // paddingBottom: 95,
+    paddingBottom: 95,
   },
 
   noneData: {

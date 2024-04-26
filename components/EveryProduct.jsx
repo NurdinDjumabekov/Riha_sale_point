@@ -39,16 +39,14 @@ export const EveryProduct = ({ obj, index, checkComponent, forAddTovar }) => {
                 {obj?.product_name}
               </Text>
             </View>
-            {checkComponent && isCheck && (
-              <Text style={styles.leftovers}>Остаток: {obj.end_outcome}</Text>
-            )}
           </View>
-
           {!isCheck && <View style={styles.arrow}></View>}
         </View>
-        {Object.keys(temporaryData).length !== 0 && isCheck && (
+        {Object.keys(temporaryData).length !== 0 && (
           <AddProductsTA
             productGuid={obj.guid}
+            obj={obj}
+            isCheck={isCheck}
             checkComponent={checkComponent}
             forAddTovar={forAddTovar}
           />
@@ -91,12 +89,6 @@ const styles = StyleSheet.create({
     borderColor: "rgba(184, 196, 246, 0.99)",
     display: "flex",
     flexDirection: "column",
-  },
-
-  leftovers: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: "rgba(47, 71, 190, 0.591)",
   },
 
   title: {

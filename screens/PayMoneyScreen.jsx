@@ -1,57 +1,42 @@
 import { useEffect, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-// import { getListRevizors } from "../store/reducers/requestSlice";
 import { SafeAreaView } from "react-native";
-import { FlatList } from "react-native";
 import { RefreshControl } from "react-native";
-import { TouchableOpacity } from "react-native";
-import { changeTempDataPay } from "../store/reducers/stateSlice";
 import { getLocalDataUser } from "../helpers/returnDataUser";
 import { changeLocalData } from "../store/reducers/saveDataSlice";
 import { ModalPayTA } from "../components/ModalPayTA";
 import { ViewButton } from "../customsTags/ViewButton";
-import { getHistoryBalance } from "../store/reducers/requestSlice";
+import {
+  clearListAgents,
+  getHistoryBalance,
+  getListAgents,
+} from "../store/reducers/requestSlice";
+import { ScrollView } from "react-native";
 
 export const PayMoneyScreen = ({ navigation }) => {
   //// оплата ТА (принятие денег ТА)
+
   const dispatch = useDispatch();
   const [modalState, setModalState] = useState(false);
 
-  // const seller_guid = "B3120F36-3FCD-4CA0-8346-484881974846";
-
   const { data } = useSelector((state) => state.saveDataSlice);
 
-  const { temporaryDataPay } = useSelector((state) => state.stateSlice);
-  const { preloader, listRevizors, listHistoryBalance } = useSelector(
+  const { preloader, listHistoryBalance } = useSelector(
     (state) => state.requestSlice
   );
 
   useEffect(() => {
     getData();
+
+    return () => dispatch(clearListAgents());
   }, []);
 
   const getData = async () => {
     await getLocalDataUser({ changeLocalData, dispatch });
     await dispatch(getHistoryBalance(data?.seller_guid));
+    await dispatch(getListAgents(data?.seller_guid));
   };
-
-  const choiceSelect = (obj) => {
-    const { value, debit } = obj;
-    dispatch(
-      changeTempDataPay({
-        ...temporaryDataPay,
-        seller_guid: value,
-        agent_guid,
-        amount: debit,
-      })
-    ); //// ложу guid рквиз0ра
-    setModalState(true);
-  };
-
-  const widthMax = { minWidth: "100%", width: "100%" };
-
-  // console.log(listRevizors);
 
   return (
     <>
@@ -63,14 +48,19 @@ export const PayMoneyScreen = ({ navigation }) => {
         </View>
         <View style={styles.selectBlock}>
           <Text style={styles.title}>История оплат</Text>
-          <FlatList
-            data={listHistoryBalance}
-            renderItem={({ item, index }) => (
+          <ScrollView
+            refreshControl={
+              <RefreshControl refreshing={preloader} onRefresh={getData} />
+            }
+          >
+            {listHistoryBalance?.map((item, index) => (
               <View style={styles.everyProd}>
                 <View style={styles.everyProdInner}>
                   <View style={styles.blockTitle}>
                     <View style={styles.blockTitleInner}>
-                      <Text style={styles.titleNum}>{index + 1} </Text>
+                      <Text style={styles.titleNum}>
+                        {listHistoryBalance.length - index}{" "}
+                      </Text>
                       <Text style={styles.date}>{item?.date_system}</Text>
                     </View>
                     <Text style={styles.comment}>{item.comment || "..."}</Text>
@@ -81,12 +71,8 @@ export const PayMoneyScreen = ({ navigation }) => {
                   </View>
                 </View>
               </View>
-            )}
-            keyExtractor={(item) => item?.codeid}
-            refreshControl={
-              <RefreshControl refreshing={preloader} onRefresh={getData} />
-            }
-          />
+            ))}
+          </ScrollView>
         </View>
       </SafeAreaView>
       <ModalPayTA

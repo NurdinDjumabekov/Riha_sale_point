@@ -2,6 +2,7 @@ import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { clearAcceptInvoiceTT } from "../store/reducers/stateSlice";
 import { useDispatch } from "react-redux";
 import { changePreloader } from "../store/reducers/requestSlice";
+import { formatCount } from "../helpers/amounts";
 
 export const EveryMyInvoice = ({ obj, navigation }) => {
   //// status - 0(накладные только для просмотра),
@@ -58,7 +59,9 @@ export const EveryMyInvoice = ({ obj, navigation }) => {
       <View style={styles.mainDataArrow}>
         <View>
           <Text style={{ color: statusInfo?.color }}>{statusInfo?.text}</Text>
-          <Text style={styles.totalPrice}>{obj?.total_price} сом</Text>
+          <Text style={styles.totalPrice}>
+            {formatCount(obj?.total_price)} сом
+          </Text>
         </View>
         <View style={styles.arrow}></View>
       </View>
@@ -83,7 +86,7 @@ const styles = StyleSheet.create({
 
   innerBlock: {
     display: "flex",
-    width: "60%",
+    width: "58%",
     gap: 5,
   },
 
@@ -141,7 +144,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     paddingRight: 15,
-    width: "35%",
+    width: "37%",
   },
 
   arrow: {
