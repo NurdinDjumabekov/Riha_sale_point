@@ -16,8 +16,6 @@ export const MainScreen = ({ navigation }) => {
   const { data } = useSelector((state) => state.saveDataSlice);
   const { preloader, balance } = useSelector((state) => state.requestSlice);
 
-  // const seller_guid = "e7458a29-6f7f-4364-a96d-ed878812f0cf";
-
   useFocusEffect(
     useCallback(() => {
       getData();
@@ -54,7 +52,7 @@ export const MainScreen = ({ navigation }) => {
             renderItem={({ item }) => (
               <EveryCategory obj={item} navigation={navigation} />
             )}
-            // keyExtractor={(item) => item.codeid}
+            keyExtractor={(item) => item.codeid}
             numColumns={2}
             refreshControl={
               <RefreshControl refreshing={preloader} onRefresh={getData} />

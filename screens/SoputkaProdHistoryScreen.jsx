@@ -20,6 +20,8 @@ export const SoputkaProdHistoryScreen = ({ navigation, route }) => {
 
   const [modalItemGuid, setModalItemGuid] = useState(null); // Состояние для идентификатора элемента, для которого открывается модальное окно
 
+  const [confirm, setConfirm] = useState(false); // Состояние для идентификатора элемента, для которого открывается модальное окно
+
   const { preloader, listProdSoputka } = useSelector(
     (state) => state.requestSlice
   );
@@ -35,21 +37,19 @@ export const SoputkaProdHistoryScreen = ({ navigation, route }) => {
     dispatch(getListSoputkaProd(guidInvoice));
   };
 
-  const { oper_invoice_guid, agent_invoice_guid, agent_guid } = listProdSoputka;
-
   const confirmBtn = () => {
-    const forAddTovar = { oper_invoice_guid, agent_invoice_guid };
-    dispatch(confirmSoputka({ forAddTovar, navigation }));
+    dispatch(confirmSoputka({ invoice_guid: guidInvoice, navigation }));
     /// подтверждение накладной сопутки
+    // console.log(invoice_guid, "invoice_guid");
   };
 
   const addProd = () => {
-    const forAddTovar = { oper_invoice_guid, agent_invoice_guid, agent_guid };
+    const forAddTovar = { invoice_guid: guidInvoice };
     navigation?.navigate("AddProdSoputkaSrceen", { forAddTovar });
   };
 
-  const del = (guid) => {
-    dispatch(deleteSoldProd({ guid, guidInvoice }));
+  const del = (product_guid) => {
+    dispatch(deleteSoldProd({ product_guid, getData }));
     setModalItemGuid(null);
   };
 
@@ -57,60 +57,72 @@ export const SoputkaProdHistoryScreen = ({ navigation, route }) => {
 
   const listData = listProdSoputka?.[0]?.list;
 
-  // console.log(listProdSoputka, "listProdSoputka");
+  // console.log(invoice_guid, "listProdSoputka");
 
   return (
-    <View style={styles.container}>
-      <ScrollView
-        style={styles.historyParent}
-        refreshControl={
-          <RefreshControl refreshing={preloader} onRefresh={getData} />
-        }
-      >
-        {listData?.map((item) => (
-          <>
-            <View style={styles.EveryInner}>
-              <View style={styles.mainData}>
-                <View style={styles.mainDataInner}>
-                  <Text style={styles.titleNum}>{item.codeid}</Text>
-                  <Text style={styles.sum}>
-                    {item.product_price} х {item.count} ={" "}
-                    {formatCount(item.total)} сом
-                  </Text>
+    <>
+      <View style={styles.container}>
+        <ScrollView
+          style={styles.historyParent}
+          refreshControl={
+            <RefreshControl refreshing={preloader} onRefresh={getData} />
+          }
+        >
+          {listData?.map((item) => (
+            <>
+              <View style={styles.EveryInner}>
+                <View style={styles.mainData}>
+                  <View style={styles.mainDataInner}>
+                    <Text style={styles.titleNum}>{item.codeid}</Text>
+                    <Text style={styles.sum}>
+                      {item.product_price} х {item.count} ={" "}
+                      {formatCount(item.total)} сом
+                    </Text>
+                  </View>
+                  {status && (
+                    <TouchableOpacity
+                      style={styles.krest}
+                      onPress={() => setModalItemGuid(item?.guid)}
+                    >
+                      <View style={[styles.line, styles.deg]} />
+                      <View style={[styles.line, styles.degMinus]} />
+                    </TouchableOpacity>
+                  )}
                 </View>
-                {status && (
-                  <TouchableOpacity
-                    style={styles.krest}
-                    onPress={() => setModalItemGuid(item?.guid)}
-                  >
-                    <View style={[styles.line, styles.deg]} />
-                    <View style={[styles.line, styles.degMinus]} />
-                  </TouchableOpacity>
-                )}
+                <Text style={styles.title}>{item.product_name}</Text>
               </View>
-              <Text style={styles.title}>{item.product_name}</Text>
-            </View>
-            <ConfirmationModal
-              visible={modalItemGuid === item.guid}
-              message="Отменить продажу ?"
-              onYes={() => del(item.guid)}
-              onNo={() => setModalItemGuid(null)}
-              onClose={() => setModalItemGuid(null)}
-            />
-          </>
-        ))}
-      </ScrollView>
-      {status && (
-        <View style={styles.actions}>
-          <ViewButton styles={styles.sendBtn} onclick={confirmBtn}>
-            Подтвердить
-          </ViewButton>
-          <ViewButton styles={styles.sendBtn} onclick={addProd}>
-            Добавить товар
-          </ViewButton>
-        </View>
-      )}
-    </View>
+              <ConfirmationModal
+                visible={modalItemGuid === item.guid}
+                message="Отменить продажу ?"
+                onYes={() => del(item.guid)}
+                onNo={() => setModalItemGuid(null)}
+                onClose={() => setModalItemGuid(null)}
+              />
+            </>
+          ))}
+        </ScrollView>
+        {status && (
+          <View style={styles.actions}>
+            <ViewButton
+              styles={styles.sendBtn}
+              onclick={() => setConfirm(true)}
+            >
+              Подтвердить
+            </ViewButton>
+            <ViewButton styles={styles.sendBtn} onclick={addProd}>
+              Добавить товар
+            </ViewButton>
+          </View>
+        )}
+      </View>
+      <ConfirmationModal
+        visible={confirm}
+        message="Подтвердить ?"
+        onYes={() => confirmBtn()}
+        onNo={() => setConfirm(false)}
+        onClose={() => setConfirm(false)}
+      />
+    </>
   );
 };
 

@@ -13,6 +13,7 @@ import {
   getListAgents,
 } from "../store/reducers/requestSlice";
 import { ScrollView } from "react-native";
+import { AccordionBottom } from "../components/AccordionBottom";
 
 export const PayMoneyScreen = ({ navigation }) => {
   //// оплата ТА (принятие денег ТА)
@@ -46,6 +47,7 @@ export const PayMoneyScreen = ({ navigation }) => {
             + Произвести оплату
           </ViewButton>
         </View>
+
         <View style={styles.selectBlock}>
           <Text style={styles.title}>История оплат</Text>
           <ScrollView

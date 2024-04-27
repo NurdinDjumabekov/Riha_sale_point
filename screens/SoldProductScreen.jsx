@@ -27,8 +27,8 @@ export const SoldProductScreen = ({ route }) => {
     dispatch(getListSoldProd(guidInvoice));
   };
 
-  const del = (guid) => {
-    dispatch(deleteSoldProd({ guid, guidInvoice }));
+  const del = (product_guid) => {
+    dispatch(deleteSoldProd({ product_guid, getData }));
     setModalItemGuid(null);
   };
 

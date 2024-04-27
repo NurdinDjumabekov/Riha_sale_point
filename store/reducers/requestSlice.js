@@ -374,17 +374,18 @@ export const getListSoldProd = createAsyncThunk(
 export const deleteSoldProd = createAsyncThunk(
   /// удаление данных из списока проданных товаров
   "deleteSoldProd",
-  async function ({ guid, guidInvoice }, { dispatch, rejectWithValue }) {
+  async function (props, { dispatch, rejectWithValue }) {
+    const { product_guid, getData } = props;
+
     try {
       const response = await axios({
         method: "POST",
         url: `${API}/tt/del_product`,
-        data: { product_guid: guid },
+        data: { product_guid },
       });
       if (response.status >= 200 && response.status < 300) {
-        console.log(response);
         setTimeout(() => {
-          dispatch(getListSoldProd(guidInvoice));
+          getData();
         }, 200);
       } else {
         throw Error(`Error: ${response.status}`);
@@ -631,11 +632,10 @@ export const createInvoiceReturnTT = createAsyncThunk(
       });
       if (response.status >= 200 && response.status < 300) {
         // console.log(response?.data, "createInvoiceReturnTT");
-        const { agent_invoice_guid, oper_invoice_guid } = response?.data;
+        const { invoice_guid } = response?.data;
         closeModal();
         navigation?.navigate("ReturnProd", {
-          agent_invoice_guid,
-          oper_invoice_guid,
+          invoice_guid,
         });
         return response?.data;
       } else {
@@ -726,7 +726,7 @@ export const createInvoiceSoputkaTT = createAsyncThunk(
         data: dataObj,
       });
       if (response.status >= 200 && response.status < 300) {
-        // console.log(response?.data, "response?.data");
+        console.log(response?.data, "createInvoiceSoputkaTT");
         navigation?.navigate("AddProdSoputkaSrceen", {
           forAddTovar: response?.data,
         });
@@ -746,12 +746,13 @@ export const addProductSoputkaTT = createAsyncThunk(
   "addProductSoputkaTT",
   async function (props, { dispatch, rejectWithValue }) {
     const { obj, getData } = props;
-    const { guid, count, price, oper_invoice_guid, agent_invoice_guid } = obj;
+    const { guid, count, price, invoice_guid } = obj;
+    // console.log(obj, "obj");
     try {
       const response = await axios({
         method: "POST",
         url: `${API}/tt/create_invoice_soputka_product`,
-        data: { guid, count, price, oper_invoice_guid, agent_invoice_guid },
+        data: { guid, count, price, invoice_guid },
       });
       if (response.status >= 200 && response.status < 300) {
         dispatch(clearDataInputsInv()); // очищаю { price: "", ves: ""}
@@ -782,6 +783,7 @@ export const getListSoputkaProd = createAsyncThunk(
         url: `${API}/tt/get_invoice_soputka_product?invoice_guid=${guidInvoice}`,
       });
       if (response.status >= 200 && response.status < 300) {
+        // console.log(response?.data, "getListSoputkaProd");
         return response?.data;
       } else {
         throw Error(`Error: ${response.status}`);
@@ -796,16 +798,17 @@ export const getListSoputkaProd = createAsyncThunk(
 export const deleteSoputkaProd = createAsyncThunk(
   /// удаление данных из списока сопутки товаров
   "deleteSoputkaProd",
-  async function ({ guid, guidInvoice }, { dispatch, rejectWithValue }) {
+  async function (props, { dispatch, rejectWithValue }) {
+    const { product_guid, getData } = props;
     try {
       const response = await axios({
         method: "POST",
         url: `${API}/tt/del_soputka`,
-        data: { product_guid: guid },
+        data: { product_guid },
       });
       if (response.status >= 200 && response.status < 300) {
         setTimeout(() => {
-          dispatch(getListSoputkaProd(guidInvoice));
+          getData()
         }, 200);
       } else {
         throw Error(`Error: ${response.status}`);
@@ -841,13 +844,12 @@ export const getHistorySoputka = createAsyncThunk(
 export const confirmSoputka = createAsyncThunk(
   /// подверждение товаров сопутки
   "confirmSoputka",
-  async function ({ forAddTovar, navigation }, { dispatch, rejectWithValue }) {
-    const { oper_invoice_guid, agent_invoice_guid } = forAddTovar;
+  async function ({ invoice_guid, navigation }, { dispatch, rejectWithValue }) {
     try {
       const response = await axios({
         method: "POST",
         url: `${API}/tt/confirm_invoice_soputka`,
-        data: { oper_invoice_guid, agent_invoice_guid },
+        data: { invoice_guid },
       });
       if (response.status >= 200 && response.status < 300) {
         // console.log(response?.data,"confirmSoputka");

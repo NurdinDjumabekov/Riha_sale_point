@@ -1,10 +1,10 @@
+import { useEffect } from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { NavigationContainer } from "@react-navigation/native";
 import { LoginScreen } from "./LoginScreen";
 import { MainScreen } from "./MainScreen";
 import { useDispatch, useSelector } from "react-redux";
 import { StatusBar } from "expo-status-bar";
-import { Preloader } from "../components/Preloader";
 import { MyApplicationScreen } from "./MyApplicationScreen";
 import { MyShipmentScreen } from "./MyShipmentScreen";
 import { LogOut } from "../components/Header/LogOut";
@@ -26,7 +26,7 @@ import { SoputkaProductScreen } from "./SoputkaProductScreen";
 import { SoputkaProdHistoryScreen } from "./SoputkaProdHistoryScreen";
 import { getLocalDataUser } from "../helpers/returnDataUser";
 import { changeLocalData } from "../store/reducers/saveDataSlice";
-import { useEffect } from "react";
+import { Preloader } from "../components/Preloader";
 
 const Stack = createNativeStackNavigator();
 
@@ -40,8 +40,6 @@ export const Navigation = () => {
   }, []);
 
   const checkLogin = !data?.seller_guid;
-
-  console.log(data, "data");
 
   return (
     <NavigationContainer>
@@ -128,6 +126,7 @@ export const Navigation = () => {
               component={SoldProductScreen} /// список проданных товаров
               options={{ title: "Список продаж" }}
             />
+
             {/* /////////////////////// Траты /////////////////////// */}
             <Stack.Screen
               name="Spending"
@@ -141,6 +140,7 @@ export const Navigation = () => {
               component={PayMoneyScreen}
               options={{ title: "Оплата" }}
             />
+
             {/* /////////////////////// ReturnScreen /////////////////////// */}
             <Stack.Screen
               name="ReturnInvoice"

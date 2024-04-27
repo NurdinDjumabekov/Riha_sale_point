@@ -1,10 +1,5 @@
-import {
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { StyleSheet, Text } from "react-native";
+import { TextInput, TouchableOpacity, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import {
   changeReturnInvoice,
@@ -14,7 +9,6 @@ import { Modal } from "react-native";
 import { ViewButton } from "../../customsTags/ViewButton";
 import { FlatList } from "react-native";
 import { createInvoiceReturnTT } from "../../store/reducers/requestSlice";
-import { Alert } from "react-native";
 
 export const ModalChoiceReturn = ({ navigation }) => {
   //// модалка создания накладной для возрата товара
@@ -67,8 +61,8 @@ export const ModalChoiceReturn = ({ navigation }) => {
         onPress={closeModal}
       >
         <View style={styles.modalInner} onPress={openModal}>
-          {/* <Text style={styles.titleSelect}>Выберите админа</Text> */}
-          {/* <View style={styles.selectBlock}>
+          <Text style={styles.titleSelect}>Выберите агента</Text>
+          <View style={styles.selectBlock}>
             <FlatList
               contentContainerStyle={widthMax}
               data={listRevizors}
@@ -93,7 +87,7 @@ export const ModalChoiceReturn = ({ navigation }) => {
                 </TouchableOpacity>
               )}
             />
-          </View> */}
+          </View>
           <TextInput
             style={styles.inputComm}
             value={createReturnInvoice?.comment}

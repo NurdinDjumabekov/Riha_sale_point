@@ -77,7 +77,7 @@ export const LeftoversScreen = ({ route }) => {
         ) : (
           <>
             <View>
-              <Text style={styles.choiceCateg}>Выберите категорию</Text>
+              <Text style={styles.choiceCateg}>Выберите категорию *</Text>
               <View style={styles.blockSelect}>
                 <RNPickerSelect
                   onValueChange={handleValueChange}
@@ -132,6 +132,7 @@ const styles = StyleSheet.create({
     width: "96%",
     alignSelf: "center",
     paddingVertical: 8,
+    fontWeight: "600",
   },
 
   blockSelect: {

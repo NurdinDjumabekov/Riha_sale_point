@@ -13,9 +13,11 @@ import { ViewButton } from "../customsTags/ViewButton";
 export const SoputkaProductScreen = ({ route, navigation }) => {
   //// список проданных продуктов
   const dispatch = useDispatch();
-  const { guidInvoice, forAddTovar } = route.params;
+  const { guidInvoice } = route.params;
   const [modalItemGuid, setModalItemGuid] = useState(null); // Состояние для идентификатора элемента, для которого открывается модальное окно
   const [modalConfirm, setModalConfirm] = useState(false);
+
+  console.log(guidInvoice, "guidInvoice");
 
   const { preloader, listProdSoputka } = useSelector(
     (state) => state.requestSlice
@@ -29,13 +31,16 @@ export const SoputkaProductScreen = ({ route, navigation }) => {
     dispatch(getListSoputkaProd(guidInvoice));
   };
 
-  const del = (guid) => {
-    dispatch(deleteSoputkaProd({ guid, guidInvoice }));
+  const del = (product_guid) => {
+    dispatch(deleteSoputkaProd({ product_guid, getData }));
     setModalItemGuid(null);
     ////// удаление продуктов сопутки
   };
+
+  // const { invoice_guid } = listProdSoputka?.[0];
+
   const confirmBtn = () => {
-    dispatch(confirmSoputka({ forAddTovar, navigation }));
+    dispatch(confirmSoputka({ invoice_guid: guidInvoice, navigation }));
     ///// подтверждение накладной сопутки
   };
 

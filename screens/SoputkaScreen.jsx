@@ -45,7 +45,9 @@ export const SoputkaScreen = ({ navigation }) => {
 
   const nav = (guidInvoice) => {
     navigation.navigate("SoputkaProdHistoryScreen", { guidInvoice });
+    // console.log(guidInvoice, "guidInvoice");
   };
+  // console.log(listHistorySoputka?.[0]?.invoice_guid, "listHistorySoputka");
 
   return (
     <>
@@ -65,7 +67,7 @@ export const SoputkaScreen = ({ navigation }) => {
             renderItem={({ item, index }) => (
               <TouchableOpacity
                 style={styles.everyProd}
-                onPress={() => nav(item?.guid)}
+                onPress={() => nav(item?.invoice_guid)}
               >
                 <View style={styles.everyProdInner}>
                   <View style={styles.blockTitle}>

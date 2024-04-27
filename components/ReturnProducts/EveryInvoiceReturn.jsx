@@ -97,7 +97,6 @@ const styles = StyleSheet.create({
     lineHeight: 17,
     color: "rgba(47, 71, 190, 0.672)",
     width: "85%",
-    // backgroundColor: "red",
     overflow: "hidden",
     height: 18,
   },
@@ -109,8 +108,6 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     paddingRight: 15,
     width: "38%",
-    // overflow: "hidden",
-    // maxWidth: "40%",
   },
 
   totalPrice: {
