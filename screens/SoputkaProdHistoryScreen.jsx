@@ -137,6 +137,7 @@ const styles = StyleSheet.create({
     paddingBottom: 20,
     borderTopWidth: 1,
     borderColor: "rgba(47, 71, 190, 0.587)",
+    maxHeight: "90%",
   },
 
   EveryInner: {

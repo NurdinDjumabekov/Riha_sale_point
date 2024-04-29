@@ -3,6 +3,8 @@ import axios from "axios";
 import { API } from "../../env";
 import {
   changeAcceptInvoiceTT,
+  changeActiveSelectCategory,
+  changeSearchProd,
   changeStateForCategory,
   changeTemporaryData,
   clearDataInputsInv,
@@ -233,7 +235,8 @@ export const getCategoryTT = createAsyncThunk(
           //// для страницы остатков вызываю первую категорию
         } else if (type === "sale&&soputka") {
           ////// для продажи и с0путки
-          const category_guid = response?.data?.[0]?.category_guid;
+          const { category_guid } = response?.data?.[0];
+          dispatch(changeActiveSelectCategory(category_guid));
           const sedData = { guid: category_guid, seller_guid, checkComponent };
           dispatch(getProductTT(sedData));
           dispatch(changeStateForCategory(category_guid));
@@ -272,18 +275,42 @@ export const getProductTT = createAsyncThunk(
   }
 );
 
+/// searchProdTT
+export const searchProdTT = createAsyncThunk(
+  "searchProdTT",
+  /// для поиска товаров
+  async function (props, { dispatch, rejectWithValue }) {
+    const { searchProd, seller_guid, checkComponent } = props;
+    const urlLink = !checkComponent
+      ? `${API}/tt/get_product_all?search=${searchProd}` //// для сопутки
+      : `${API}/tt/get_product?search=${searchProd}&seller_guid=${seller_guid}`; //// для пр0дажи
+    try {
+      const response = await axios(urlLink);
+      if (response.status >= 200 && response.status < 300) {
+        dispatch(changeActiveSelectCategory("0")); /// 0 - все (категории)
+        return response?.data;
+      } else {
+        throw Error(`Error: ${response.status}`);
+      }
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
 /// getMyLeftovers
 export const getMyLeftovers = createAsyncThunk(
   "getMyLeftovers",
   async function (props, { dispatch, rejectWithValue }) {
     const { seller_guid, initilalCateg } = props;
-    // console.log(props, "getMyLeftovers");
+    console.log(props, "props getMyLeftovers");
     try {
       const response = await axios({
         method: "GET",
         url: `${API}/tt/get_report_leftovers?seller_guid=${seller_guid}&categ_guid=${initilalCateg}`,
       });
       if (response.status >= 200 && response.status < 300) {
+        console.log(response?.data);
         return response?.data;
       } else {
         throw Error(`Error: ${response.status}`);
@@ -330,10 +357,11 @@ export const addProductInvoiceTT = createAsyncThunk(
         data,
       });
       if (response.status >= 200 && response.status < 300) {
-        dispatch(clearDataInputsInv()); // очищаю { price: "", ves: ""}
-        dispatch(changeTemporaryData({})); // очищаю активный продукт
-        dispatch(changeStateForCategory({})); // очищаю активную категорию
         if (+response?.data?.result === 1) {
+          dispatch(clearDataInputsInv()); // очищаю { price: "", ves: ""}
+          dispatch(changeTemporaryData({})); // очищаю активный продукт
+          dispatch(changeStateForCategory({})); // очищаю активную категорию
+
           setTimeout(() => {
             getData();
           }, 500);
@@ -622,18 +650,16 @@ export const getHistoryReturn = createAsyncThunk(
 export const createInvoiceReturnTT = createAsyncThunk(
   "createInvoiceReturnTT",
   async function (props, { dispatch, rejectWithValue }) {
-    const { data, navigation, closeModal } = props;
-    console.log(props, "createInvoiceReturnTT");
+    const { dataObj, navigation } = props;
     try {
       const response = await axios({
         method: "POST",
         url: `${API}/tt/create_invoice_return`,
-        data,
+        data: dataObj,
       });
       if (response.status >= 200 && response.status < 300) {
-        // console.log(response?.data, "createInvoiceReturnTT");
-        const { invoice_guid } = response?.data;
-        closeModal();
+        // console.log(response?.data, 'createInvoiceReturnTT');
+        const invoice_guid = response?.data?.invoice_guid;
         navigation?.navigate("ReturnProd", {
           invoice_guid,
         });
@@ -726,7 +752,7 @@ export const createInvoiceSoputkaTT = createAsyncThunk(
         data: dataObj,
       });
       if (response.status >= 200 && response.status < 300) {
-        console.log(response?.data, "createInvoiceSoputkaTT");
+        // console.log(response?.data, "createInvoiceSoputkaTT");
         navigation?.navigate("AddProdSoputkaSrceen", {
           forAddTovar: response?.data,
         });
@@ -755,10 +781,10 @@ export const addProductSoputkaTT = createAsyncThunk(
         data: { guid, count, price, invoice_guid },
       });
       if (response.status >= 200 && response.status < 300) {
-        dispatch(clearDataInputsInv()); // очищаю { price: "", ves: ""}
-        dispatch(changeTemporaryData({})); // очищаю активный продукт
-        dispatch(changeStateForCategory({})); ///  очищаю активную категорию
         if (+response?.data?.result === 1) {
+          dispatch(clearDataInputsInv()); // очищаю { price: "", ves: ""}
+          dispatch(changeTemporaryData({})); // очищаю активный продукт
+          dispatch(changeStateForCategory({})); ///  очищаю активную категорию
           setTimeout(() => {
             getData();
           }, 500);
@@ -808,7 +834,7 @@ export const deleteSoputkaProd = createAsyncThunk(
       });
       if (response.status >= 200 && response.status < 300) {
         setTimeout(() => {
-          getData()
+          getData();
         }, 200);
       } else {
         throw Error(`Error: ${response.status}`);
@@ -1031,12 +1057,14 @@ const requestSlice = createSlice({
     /////// getCategoryTT
     builder.addCase(getCategoryTT.fulfilled, (state, action) => {
       state.preloader = false;
-      state.listCategory = action?.payload?.map(
+      const allCategory = { label: "Все", value: "0" };
+      const categories = action.payload.map(
         ({ category_name, category_guid }, ind) => ({
           label: `${ind + 1}. ${category_name}`,
           value: category_guid,
         })
       );
+      state.listCategory = [allCategory, ...categories];
     });
     builder.addCase(getCategoryTT.rejected, (state, action) => {
       state.error = action.payload;
@@ -1059,6 +1087,19 @@ const requestSlice = createSlice({
       state.preloader = true;
     });
 
+    //////// searchProdTT
+    builder.addCase(searchProdTT.fulfilled, (state, action) => {
+      state.preloader = false;
+      state.listProductTT = action.payload;
+    });
+    builder.addCase(searchProdTT.rejected, (state, action) => {
+      state.error = action.payload;
+      state.preloader = false;
+    });
+    builder.addCase(searchProdTT.pending, (state, action) => {
+      state.preloader = true;
+    });
+
     //////// getMyLeftovers
     builder.addCase(getMyLeftovers.fulfilled, (state, action) => {
       state.preloader = false;
@@ -1071,7 +1112,7 @@ const requestSlice = createSlice({
       ]);
       state.listLeftoversForReturn = action.payload?.filter(
         (item) => item?.end_outcome !== 0
-      ); ////// проверяю на наличие, если end_outcome === 0 (остаток товара), то не добалять ег ов массив для в0зврата товара
+      ); ////// проверяю на наличие, если end_outcome === 0 (остаток товара), то не добалять его в массив для в0зврата товара
     });
     builder.addCase(getMyLeftovers.rejected, (state, action) => {
       state.error = action.payload;
@@ -1407,6 +1448,7 @@ const requestSlice = createSlice({
     },
   },
 });
+
 export const {
   changePreloader,
   changeListInvoices,

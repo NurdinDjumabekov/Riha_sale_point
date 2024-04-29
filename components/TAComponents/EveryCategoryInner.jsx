@@ -10,6 +10,7 @@ import { getLocalDataUser } from "../../helpers/returnDataUser";
 
 export const EveryCategoryInner = ({ obj, checkComponent, index }) => {
   //// список категорий(для сортироваки данных ТT)
+  ///// delete
   const dispatch = useDispatch();
   const { data } = useSelector((state) => state.saveDataSlice);
   const { stateForCategory } = useSelector((state) => state.stateSlice);

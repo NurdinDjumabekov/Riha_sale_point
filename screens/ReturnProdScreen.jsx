@@ -18,7 +18,8 @@ import { changeLocalData } from "../store/reducers/saveDataSlice";
 import { totalCountReturns, totalSumReturns } from "../helpers/amounts";
 
 export const ReturnProdScreen = ({ route, navigation }) => {
-  const { invoice_guid_ } = route.params;
+  const { invoice_guid } = route.params;
+  console.log(invoice_guid, "ReturnProdScreen");
   //// возрат товара
   const dispatch = useDispatch();
   const [listData, setListData] = useState([]);
@@ -34,7 +35,9 @@ export const ReturnProdScreen = ({ route, navigation }) => {
 
   const getData = async () => {
     await getLocalDataUser({ changeLocalData, dispatch });
-    await dispatch(getMyLeftovers(data?.seller_guid));
+    await dispatch(
+      getMyLeftovers({ seller_guid: data?.seller_guid, initilalCateg: 0 })
+    );
   };
 
   // console.log(listLeftoversForReturn, "listLeftoversForReturn");
@@ -45,7 +48,7 @@ export const ReturnProdScreen = ({ route, navigation }) => {
           `${item?.codeid}. ${item?.product_name}`,
           `${item?.price}`,
           `${item?.end_outcome}`,
-          <CheckVes guidProduct={item?.guid} invoice_guid={invoice_guid_} />,
+          <CheckVes guidProduct={item?.guid} invoice_guid={invoice_guid} />,
         ];
       });
       setListData(tableDataList);
@@ -53,7 +56,7 @@ export const ReturnProdScreen = ({ route, navigation }) => {
     dispatch(
       changeReturnProd({
         ...returnProducts,
-        invoice_guid: invoice_guid_,
+        invoice_guid: invoice_guid,
         products: listLeftoversForReturn?.map((i) => {
           return {
             guid: i?.guid,
@@ -70,7 +73,7 @@ export const ReturnProdScreen = ({ route, navigation }) => {
   const sendData = () => {
     dispatch(
       returnListProduct({
-        data: { ...returnProducts, invoice_guid_ },
+        data: { ...returnProducts, invoice_guid },
         navigation,
       })
     );

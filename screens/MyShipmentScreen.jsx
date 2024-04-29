@@ -7,6 +7,7 @@ import {
 } from "../store/reducers/requestSlice";
 import { useEffect } from "react";
 import {
+  changeActiveSelectCategory,
   changeStateForCategory,
   changeTemporaryData,
 } from "../store/reducers/stateSlice";
@@ -33,6 +34,8 @@ export const MyShipmentScreen = ({ navigation }) => {
       dispatch(clearListProductTT());
       dispatch(clearListCategory());
       ///// очищаю список категрий и продуктов
+      dispatch(changeActiveSelectCategory(""));
+      /// очищаю категории, для сортировки товаров по категориям
     };
   }, []);
 
@@ -74,8 +77,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     padding: 10,
-    paddingTop: 15,
-    paddingBottom: 15,
+    paddingTop: 11,
+    paddingBottom: 11,
     backgroundColor: "rgba(12, 169, 70, 0.486)",
     marginBottom: 0,
   },

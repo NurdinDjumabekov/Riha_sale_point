@@ -16,19 +16,16 @@ const initialState = {
   listProductForTT: [],
   stateForCategory: {}, // состояние для хранения временной категории(подсветка категории)
 
+  activeSelectCategory: "",
+  /// хранение активной категории, для сортировки товаров(храню guid категории)
+
+  searchProd: "", /// для текста поиска продуктов
+
   expense: {
     expense_type: "",
     comment: "",
     amount: "",
   }, /// данные суммы расходов каждой ТТ
-
-  createReturnInvoice: {
-    /// для создания накладной возврата товара
-    seller_guid: "",
-    agent_guid: "",
-    comment: "",
-    stateModal: false,
-  },
 
   returnProducts: {
     //// для возврата списка товаров
@@ -53,18 +50,23 @@ const stateSlice = createSlice({
     changeAcceptInvoiceTT: (state, action) => {
       state.acceptConfirmInvoice = action.payload;
     },
+
     clearAcceptInvoiceTT: (state) => {
       state.acceptConfirmInvoice = { invoice_guid: "", products: [] };
     },
+
     changeTemporaryData: (state, action) => {
       state.temporaryData = action.payload;
     },
+
     changeListProductForTT: (state, action) => {
       state.listProductForTT = action.payload;
     },
+
     addListProductForTT: (state, action) => {
       state.listProductForTT = [...state.listProductForTT, action.payload];
     },
+
     removeListProductForTT: (state, action) => {
       const indexToRemove = state.listProductForTT.findIndex(
         (item) => item.guid === action.payload?.guid
@@ -73,15 +75,27 @@ const stateSlice = createSlice({
         state.listProductForTT.splice(indexToRemove, 1);
       }
     },
+
     changeDataInputsInv: (state, action) => {
       state.dataInputsInv = action.payload;
     },
+
     clearDataInputsInv: (state, action) => {
       state.dataInputsInv = { price: "", ves: "" };
     },
+
     changeStateForCategory: (state, action) => {
       state.stateForCategory = action.payload;
     },
+
+    changeActiveSelectCategory: (state, action) => {
+      state.activeSelectCategory = action.payload;
+    },
+
+    changeSearchProd: (state, action) => {
+      state.searchProd = action.payload;
+    },
+
     changeExpense: (state, action) => {
       state.expense = action.payload;
     },
@@ -93,18 +107,6 @@ const stateSlice = createSlice({
       };
     },
 
-    changeReturnInvoice: (state, action) => {
-      state.createReturnInvoice = action.payload;
-    },
-
-    cleareReturnInvoice: (state, action) => {
-      state.createReturnInvoice = {
-        seller_guid: "",
-        agent_guid: "",
-        comment: "",
-        stateModal: false,
-      };
-    },
     changeReturnProd: (state, action) => {
       state.returnProducts = action.payload;
     },
@@ -122,10 +124,10 @@ export const {
   changeDataInputsInv,
   clearDataInputsInv,
   changeStateForCategory,
+  changeActiveSelectCategory,
+  changeSearchProd,
   changeExpense,
   clearExpense,
-  changeReturnInvoice,
-  cleareReturnInvoice,
   changeReturnProd,
 } = stateSlice.actions;
 

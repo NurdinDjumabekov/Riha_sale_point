@@ -13,7 +13,6 @@ import {
   getListAgents,
 } from "../store/reducers/requestSlice";
 import { ScrollView } from "react-native";
-import { AccordionBottom } from "../components/AccordionBottom";
 
 export const PayMoneyScreen = ({ navigation }) => {
   //// оплата ТА (принятие денег ТА)
@@ -47,35 +46,33 @@ export const PayMoneyScreen = ({ navigation }) => {
             + Произвести оплату
           </ViewButton>
         </View>
-
-        <View style={styles.selectBlock}>
-          <Text style={styles.title}>История оплат</Text>
-          <ScrollView
-            refreshControl={
-              <RefreshControl refreshing={preloader} onRefresh={getData} />
-            }
-          >
-            {listHistoryBalance?.map((item, index) => (
-              <View style={styles.everyProd}>
-                <View style={styles.everyProdInner}>
-                  <View style={styles.blockTitle}>
-                    <View style={styles.blockTitleInner}>
-                      <Text style={styles.titleNum}>
-                        {listHistoryBalance.length - index}{" "}
-                      </Text>
-                      <Text style={styles.date}>{item?.date_system}</Text>
-                    </View>
-                    <Text style={styles.comment}>{item.comment || "..."}</Text>
+        <Text style={styles.title}>История оплат</Text>
+        <ScrollView
+          refreshControl={
+            <RefreshControl refreshing={preloader} onRefresh={getData} />
+          }
+          style={styles.listContent}
+        >
+          {listHistoryBalance?.map((item, index) => (
+            <View style={styles.everyProd}>
+              <View style={styles.everyProdInner}>
+                <View style={styles.blockTitle}>
+                  <View style={styles.blockTitleInner}>
+                    <Text style={styles.titleNum}>
+                      {listHistoryBalance.length - index}{" "}
+                    </Text>
+                    <Text style={styles.date}>{item?.date_system}</Text>
                   </View>
-                  <View style={styles.status}>
-                    <Text style={styles.good}>Успешно</Text>
-                    <Text style={styles.sum}>{item.total} сом</Text>
-                  </View>
+                  <Text style={styles.comment}>{item.comment || "..."}</Text>
+                </View>
+                <View style={styles.status}>
+                  <Text style={styles.good}>Успешно</Text>
+                  <Text style={styles.sum}>{item.total} сом</Text>
                 </View>
               </View>
-            ))}
-          </ScrollView>
-        </View>
+            </View>
+          ))}
+        </ScrollView>
       </SafeAreaView>
       <ModalPayTA
         modalState={modalState}
@@ -109,6 +106,10 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
+  },
+
+  listContent: {
+    maxHeight: "82%",
   },
 
   titleNum: {
@@ -149,7 +150,8 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: "#fff",
     minWidth: "95%",
-    paddingTop: 10,
+    paddingTop: 15,
+    paddingBottom: 15,
     borderRadius: 10,
     fontWeight: 600,
     backgroundColor: "rgba(97 ,100, 239,0.7)",
