@@ -1,10 +1,4 @@
-import {
-  FlatList,
-  RefreshControl,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-} from "react-native";
+import { FlatList, RefreshControl, StyleSheet, Text } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 
 import { useEffect } from "react";

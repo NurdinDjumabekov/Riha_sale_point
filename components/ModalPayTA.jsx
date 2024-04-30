@@ -1,4 +1,4 @@
-import { Alert, StyleSheet, View } from "react-native";
+import { Alert, StyleSheet, Text, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { Modal } from "react-native";
 import { TouchableOpacity } from "react-native";
@@ -60,6 +60,7 @@ export const ModalPayTA = ({ modalState, setModalState, navigation }) => {
         onPress={closeModal} // Закрыть модальное окно
       >
         <View style={styles.modalInner} onPress={() => setModalState(true)}>
+          <Text style={styles.titleSelect}>Выберите агента</Text>
           <ScrollView style={styles.selectBlock}>
             {listAgents?.map((item) => (
               <ChoiceAgents
@@ -111,8 +112,14 @@ const styles = StyleSheet.create({
     width: "95%",
   },
 
+  titleSelect: {
+    fontSize: 17,
+    fontWeight: "500",
+  },
+
   selectBlock: {
     marginVertical: 10,
+    marginTop: 5,
     borderStyle: "solid",
     borderWidth: 1,
     borderColor: "rgb(217 223 232)",

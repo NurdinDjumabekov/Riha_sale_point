@@ -3,12 +3,12 @@ import { TextInput, TouchableOpacity, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { Modal } from "react-native";
 import { ViewButton } from "../../customsTags/ViewButton";
-import { createInvoiceReturnTT } from "../../store/reducers/requestSlice";
+import { createInvoiceCheck } from "../../store/reducers/requestSlice";
 import { useState } from "react";
 import { ChoiceAgents } from "../ChoiceAgents";
 
-export const ModalChoiceReturn = (props) => {
-  //// модалка создания накладной для возрата товара
+export const ModalChoiceCheck = (props) => {
+  //// модалка создания накладной для ревизии товара
 
   const dispatch = useDispatch();
 
@@ -30,7 +30,7 @@ export const ModalChoiceReturn = (props) => {
       Alert.alert("Выберите агента");
     } else {
       const dataObj = { ...obj, seller_guid: data?.seller_guid };
-      dispatch(createInvoiceReturnTT({ dataObj, navigation }));
+      dispatch(createInvoiceCheck({ dataObj, navigation }));
       closeModal();
     }
   };

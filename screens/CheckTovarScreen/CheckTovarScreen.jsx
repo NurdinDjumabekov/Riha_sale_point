@@ -2,25 +2,25 @@ import { useEffect, useState } from "react";
 import { RefreshControl, StyleSheet, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  getHistoryReturn,
+  getHistoryCheck,
   getListAgents,
-} from "../store/reducers/requestSlice";
-import { ViewButton } from "../customsTags/ViewButton";
+} from "../../store/reducers/requestSlice";
+import { ViewButton } from "../../customsTags/ViewButton";
 import { FlatList } from "react-native";
-import { ModalChoiceReturn } from "../components/ReturnProducts/ModalChoiceReturn";
-import { EveryInvoiceReturn } from "../components/ReturnProducts/EveryInvoiceReturn";
 import { Text } from "react-native";
-import { changeLocalData } from "../store/reducers/saveDataSlice";
-import { getLocalDataUser } from "../helpers/returnDataUser";
+import { changeLocalData } from "../../store/reducers/saveDataSlice";
+import { getLocalDataUser } from "../../helpers/returnDataUser";
+import { EveryInvoiceCheck } from "../../components/CheckProd/EveryInvoiceCheck";
+import { ModalChoiceCheck } from "../../components/CheckProd/ModalChoiceCheck";
 
-export const ReturnScreen = ({ navigation }) => {
-  //// возрат товара
+export const CheckTovarScreen = ({ navigation }) => {
+  //// ревизия продавца
   const dispatch = useDispatch();
 
   const [modalState, setModalState] = useState(false);
 
   const { data } = useSelector((state) => state.saveDataSlice);
-  const { preloader, listHistoryReturn } = useSelector(
+  const { preloader, listHistoryCheck } = useSelector(
     (state) => state.requestSlice
   );
 
@@ -30,11 +30,11 @@ export const ReturnScreen = ({ navigation }) => {
 
   const getData = async () => {
     await getLocalDataUser({ changeLocalData, dispatch });
-    await dispatch(getHistoryReturn(data?.seller_guid));
+    await dispatch(getHistoryCheck(data?.seller_guid));
     await dispatch(getListAgents(data?.seller_guid));
   };
 
-  const empty = listHistoryReturn?.length === 0;
+  const empty = listHistoryCheck?.length === 0;
 
   return (
     <>
@@ -44,26 +44,26 @@ export const ReturnScreen = ({ navigation }) => {
             styles={styles.return}
             onclick={() => setModalState(true)}
           >
-            + Создать накладную для возврата товара
+            + Создать накладную для ревизии
           </ViewButton>
         </View>
-        <Text style={styles.title}>История возврата товара </Text>
+        <Text style={styles.title}>История ревизии</Text>
         {empty && <Text style={styles.noneData}>Список пустой</Text>}
         <View style={styles.blockList}>
           <FlatList
             contentContainerStyle={styles.flatListStyle}
-            data={listHistoryReturn}
+            data={listHistoryCheck}
             renderItem={({ item }) => (
-              <EveryInvoiceReturn obj={item} navigation={navigation} />
+              <EveryInvoiceCheck obj={item} navigation={navigation} />
             )}
-            keyExtractor={(item) => item.codeid}
+            keyExtractor={(item) => item?.codeid}
             refreshControl={
               <RefreshControl refreshing={preloader} onRefresh={getData} />
             }
           />
         </View>
       </View>
-      <ModalChoiceReturn
+      <ModalChoiceCheck
         modalState={modalState}
         setModalState={setModalState}
         navigation={navigation}
@@ -81,8 +81,6 @@ const styles = StyleSheet.create({
     minWidth: "100%",
     width: "100%",
     paddingBottom: 20,
-    // borderTopWidth: 1,
-    // borderColor: "rgba(47, 71, 190, 0.587)",
   },
 
   returnBlock: {

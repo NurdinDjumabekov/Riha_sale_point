@@ -10,7 +10,7 @@ import {
   changeStateForCategory,
   changeTemporaryData,
 } from "../store/reducers/stateSlice";
-import { EveryInvoice } from "./EveryInvoice";
+import { EveryInvoice } from "../common/EveryInvoice";
 import { transformDate } from "../helpers/transformDate";
 import { getLocalDataUser } from "../helpers/returnDataUser";
 import { changeLocalData } from "../store/reducers/saveDataSlice";
@@ -18,9 +18,6 @@ import { changeLocalData } from "../store/reducers/saveDataSlice";
 export const AddProdSoputkaSrceen = ({ navigation, route }) => {
   const dispatch = useDispatch();
   const { forAddTovar } = route.params; //// хранятся данные накладной сапутки
-
-  const { infoKassa } = useSelector((state) => state.requestSlice);
-  ///// delete
 
   const { data } = useSelector((state) => state.saveDataSlice);
 

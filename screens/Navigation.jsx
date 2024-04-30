@@ -27,6 +27,9 @@ import { SoputkaProdHistoryScreen } from "./SoputkaProdHistoryScreen";
 import { getLocalDataUser } from "../helpers/returnDataUser";
 import { changeLocalData } from "../store/reducers/saveDataSlice";
 import { Preloader } from "../components/Preloader";
+import { CheckTovarScreen } from "./CheckTovarScreen/CheckTovarScreen";
+import { InvoiceCheckScreen } from "./CheckTovarScreen/InvoiceCheckScreen";
+import { ListCheckProdScreen } from "./CheckTovarScreen/ListCheckProdScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -55,6 +58,7 @@ export const Navigation = () => {
           />
         ) : (
           <>
+            {/* /////////////////////// Главная страница ///////////////////////*/}
             <Stack.Screen
               name="Main"
               component={MainScreen}
@@ -148,13 +152,30 @@ export const Navigation = () => {
               options={{ title: "Возврат товара" }}
             />
             <Stack.Screen
-              name="listReturnProd"
-              component={EveryListInvoiceReturn}
-            />
-            <Stack.Screen
               name="ReturnProd"
               component={ReturnProdScreen}
               options={{ title: "Накладная для возврата" }}
+            />
+            <Stack.Screen
+              name="listReturnProd"
+              component={EveryListInvoiceReturn}
+            />
+
+            {/* /////////////////////// CheckTovar /////////////////////// */}
+            <Stack.Screen
+              name="CheckTovarScreen"
+              component={CheckTovarScreen}
+              options={{ title: "Ревизия" }}
+            />
+            <Stack.Screen
+              name="InvoiceCheckScreen"
+              component={InvoiceCheckScreen}
+              options={{ title: "Накладная для возврата" }}
+            />
+
+            <Stack.Screen
+              name="ListCheckProdScreen"
+              component={ListCheckProdScreen}
             />
           </>
         )}

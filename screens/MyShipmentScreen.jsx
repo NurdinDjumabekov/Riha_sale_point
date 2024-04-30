@@ -11,7 +11,7 @@ import {
   changeStateForCategory,
   changeTemporaryData,
 } from "../store/reducers/stateSlice";
-import { EveryInvoice } from "./EveryInvoice";
+import { EveryInvoice } from "../common/EveryInvoice";
 import { transformDate } from "../helpers/transformDate";
 import { getLocalDataUser } from "../helpers/returnDataUser";
 import { changeLocalData } from "../store/reducers/saveDataSlice";

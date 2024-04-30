@@ -59,8 +59,14 @@ export const dataCategory = [
     img: "https://img.freepik.com/premium-vector/teamwork-web-concept-with-character-scene-man-woman-work-together-construct-cubes-developing-project-people-situation-flat-design-vector-illustration-social-media-marketing-material_9209-12505.jpg?w=1380",
     pathApi: "ReturnInvoice",
   },
+  {
+    codeid: 7,
+    name: "Ревизия",
+    link: "CheckTovarScreen",
+    img: "https://img.freepik.com/free-vector/flat-university-concept_23-2148184535.jpg?t=st=1714467037~exp=1714470637~hmac=5c4ad18c3bd18c0d4b01c395340bf0b264b4c3ec37090fd429ec276be7a41b7d&w=900",
+    pathApi: "CheckTovarScreen",
+  },
 ];
-
 export const listTableLeftoverst = [
   "Товар",
   "Остаток на начало",

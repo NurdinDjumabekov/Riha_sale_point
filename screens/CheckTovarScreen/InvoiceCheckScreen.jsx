@@ -3,26 +3,26 @@ import { StyleSheet, Text, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getActionsLeftovers,
-  returnListProduct,
-} from "../store/reducers/requestSlice";
+  sendCheckListProduct,
+} from "../../store/reducers/requestSlice";
 import { ScrollView } from "react-native";
 import { Dimensions } from "react-native";
 import { Row, Rows, Table, TableWrapper } from "react-native-table-component";
-import { CheckVes } from "../components/ReturnProducts/CheckVes";
+import { CheckVes } from "../../components/ReturnProducts/CheckVes";
 import {
   changeActionsProducts,
   clearActionsProducts,
-} from "../store/reducers/stateSlice";
-import { ViewButton } from "../customsTags/ViewButton";
-import ConfirmationModal from "../components/ConfirmationModal";
-import { changeLocalData } from "../store/reducers/saveDataSlice";
+} from "../../store/reducers/stateSlice";
+import { ViewButton } from "../../customsTags/ViewButton";
+import ConfirmationModal from "../../components/ConfirmationModal";
+import { changeLocalData } from "../../store/reducers/saveDataSlice";
 
 ///// helpers
-import { listTableForReturnProd } from "../helpers/Data";
-import { getLocalDataUser } from "../helpers/returnDataUser";
-import { totalCountReturns, totalSumReturns } from "../helpers/amounts";
+import { listTableForReturnProd } from "../../helpers/Data";
+import { getLocalDataUser } from "../../helpers/returnDataUser";
+import { totalCountReturns, totalSumReturns } from "../../helpers/amounts";
 
-export const ReturnProdScreen = ({ route, navigation }) => {
+export const InvoiceCheckScreen = ({ route, navigation }) => {
   const { invoice_guid, agent_guid } = route.params;
 
   //// возрат товара
@@ -35,7 +35,7 @@ export const ReturnProdScreen = ({ route, navigation }) => {
   const { listActionLeftovers } = useSelector((state) => state.requestSlice);
 
   const { actionsProducts } = useSelector((state) => state.stateSlice);
-  //// для возврата списка товаров
+  //// для ревизии списка товаров
 
   const { data } = useSelector((state) => state.saveDataSlice);
 
@@ -43,7 +43,7 @@ export const ReturnProdScreen = ({ route, navigation }) => {
     getData();
 
     return () => dispatch(clearActionsProducts());
-    ///// очищаю список товаров, которые я отпрвляю для возврата накладной
+    ///// очищаю список товаров, которые я отпрвляю для ревизии
   }, []);
 
   const getData = async () => {
@@ -82,7 +82,7 @@ export const ReturnProdScreen = ({ route, navigation }) => {
 
   const sendData = () => {
     const data = { ...actionsProducts, invoice_guid, agent_guid };
-    dispatch(returnListProduct({ data, navigation }));
+    dispatch(sendCheckListProduct({ data, navigation }));
     closeModal();
   };
 

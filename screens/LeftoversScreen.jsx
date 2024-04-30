@@ -31,13 +31,12 @@ export const LeftoversScreen = ({ route }) => {
 
   const getData = async () => {
     await getLocalDataUser({ changeLocalData, dispatch });
-    const obj = {
-      checkComponent: true,
-      seller_guid: data?.seller_guid,
-      type: "leftovers",
-    };
-    await dispatch(getCategoryTT(obj)); ///// get cписок категорий, продукты которых у меня есть
-    setInitialState(listCategory?.[0]);
+
+    const obj = { seller_guid: data?.seller_guid, type: "leftovers" };
+    await dispatch(getCategoryTT({ ...obj, checkComponent: true }));
+    ///// get cписок категорий, продукты которых у меня есть
+    setInitialState(listCategory?.[1]);
+    /// пропускаю категорию "Все" и сразу отображаю вторую категорию
   };
 
   const windowWidth = Dimensions.get("window").width;
@@ -60,7 +59,8 @@ export const LeftoversScreen = ({ route }) => {
     dispatch(getMyLeftovers(objData));
   };
 
-  // console.log(listLeftovers, "listLeftovers");
+  const newList = listCategory?.slice(1, 1000);
+  /// срезаю категорию "Все" и сразу отображаю вторую категорию
 
   return (
     <ScrollView
@@ -81,7 +81,7 @@ export const LeftoversScreen = ({ route }) => {
               <View style={styles.blockSelect}>
                 <RNPickerSelect
                   onValueChange={handleValueChange}
-                  items={listCategory}
+                  items={newList}
                   value={initialState}
                   placeholder={{}}
                 />

@@ -27,9 +27,10 @@ const initialState = {
     amount: "",
   }, /// данные суммы расходов каждой ТТ
 
-  returnProducts: {
-    //// для возврата списка товаров
+  actionsProducts: {
+    //// для возврата и ревизии списка товаров
     invoice_guid: "",
+    agent_guid: "",
     products: [],
   },
 };
@@ -107,8 +108,16 @@ const stateSlice = createSlice({
       };
     },
 
-    changeReturnProd: (state, action) => {
-      state.returnProducts = action.payload;
+    changeActionsProducts: (state, action) => {
+      state.actionsProducts = action.payload;
+    },
+
+    clearActionsProducts: (state, action) => {
+      state.actionsProducts = {
+        invoice_guid: "",
+        agent_guid: "",
+        products: [],
+      };
     },
   },
 });
@@ -128,7 +137,8 @@ export const {
   changeSearchProd,
   changeExpense,
   clearExpense,
-  changeReturnProd,
+  changeActionsProducts,
+  clearActionsProducts,
 } = stateSlice.actions;
 
 export default stateSlice.reducer;

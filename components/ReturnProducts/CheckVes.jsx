@@ -1,27 +1,24 @@
 import { View, StyleSheet, TextInput } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import { changeReturnProd } from "../../store/reducers/stateSlice";
+import { changeActionsProducts } from "../../store/reducers/stateSlice";
 
 export const CheckVes = ({ guidProduct }) => {
-  ///// изменение веса для в0врата накладной
-  const { returnProducts } = useSelector((state) => state.stateSlice);
+  ///// изменение веса для в0врата и ревизии накладной
+  const { actionsProducts } = useSelector((state) => state.stateSlice);
   const dispatch = useDispatch();
 
   const checkInput = (text) => {
     if (/^\d*\.?\d*$/.test(text) || text === "") {
-      dispatch(
-        changeReturnProd({
-          ...returnProducts,
-          products: returnProducts?.products?.map((i) => ({
-            ...i,
-            count: i?.guid === guidProduct ? text : i?.count,
-          })),
-        })
-      );
+      const products = actionsProducts?.products?.map((i) => ({
+        ...i,
+        count: i?.guid === guidProduct ? text : i?.count,
+      }));
+      dispatch(changeActionsProducts({ ...actionsProducts, products }));
+      ///// для возврата и ревизии накладной с продуктами
     }
   };
 
-  const changeCount = returnProducts?.products?.filter(
+  const changeCount = actionsProducts?.products?.filter(
     (item) => item?.guid === guidProduct
   );
 

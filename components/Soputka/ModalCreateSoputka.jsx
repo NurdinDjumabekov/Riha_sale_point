@@ -1,14 +1,14 @@
-import { StyleSheet, View } from 'react-native';
-import { useDispatch, useSelector } from 'react-redux';
-import { Modal } from 'react-native';
-import { TouchableOpacity } from 'react-native';
-import { TextInput } from 'react-native';
-import { ViewButton } from '../../customsTags/ViewButton';
-import { useState } from 'react';
-import { createInvoiceSoputkaTT } from '../../store/reducers/requestSlice';
-import { ScrollView } from 'react-native';
-import { Alert } from 'react-native';
-import { ChoiceAgents } from '../ChoiceAgents';
+import { StyleSheet, Text, View } from "react-native";
+import { useDispatch, useSelector } from "react-redux";
+import { Modal } from "react-native";
+import { TouchableOpacity } from "react-native";
+import { TextInput } from "react-native";
+import { ViewButton } from "../../customsTags/ViewButton";
+import { useState } from "react";
+import { createInvoiceSoputkaTT } from "../../store/reducers/requestSlice";
+import { ScrollView } from "react-native";
+import { Alert } from "react-native";
+import { ChoiceAgents } from "../ChoiceAgents";
 
 export const ModalCreateSoputka = (props) => {
   //// модалка для созданя с0путки
@@ -17,11 +17,11 @@ export const ModalCreateSoputka = (props) => {
 
   const dispatch = useDispatch();
 
-  const [obj, setObj] = useState({ comment: '', agent_guid: '' });
+  const [obj, setObj] = useState({ comment: "", agent_guid: "" });
 
   const closeModal = () => {
     setModalState(false);
-    setObj({ comment: '', agent_guid: '' });
+    setObj({ comment: "", agent_guid: "" });
   };
 
   const { data } = useSelector((state) => state.saveDataSlice);
@@ -29,8 +29,8 @@ export const ModalCreateSoputka = (props) => {
   const { listAgents } = useSelector((state) => state.requestSlice);
 
   const create = () => {
-    if (obj?.agent_guid === '') {
-      Alert.alert('Выберите агента');
+    if (obj?.agent_guid === "") {
+      Alert.alert("Выберите агента");
     } else {
       const dataObj = { ...obj, seller_guid: data?.seller_guid };
       dispatch(createInvoiceSoputkaTT({ navigation, dataObj }));
@@ -51,14 +51,15 @@ export const ModalCreateSoputka = (props) => {
         onPress={closeModal} // Закрыть модальное окно
       >
         <View style={styles.modalInner} onPress={() => setModalState(true)}>
+          <Text style={styles.titleSelect}>Выберите агента</Text>
           <ScrollView style={styles.selectBlock}>
             {listAgents?.map((item) => (
               <ChoiceAgents
                 item={item}
                 setState={setObj}
                 prev={obj}
-                keyGuid={'agent_guid'}
-                keyText={'agent'}
+                keyGuid={"agent_guid"}
+                keyText={"agent"}
               />
             ))}
           </ScrollView>
@@ -82,21 +83,26 @@ export const ModalCreateSoputka = (props) => {
 const styles = StyleSheet.create({
   modalOuter: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
   },
 
   modalInner: {
-    backgroundColor: '#ebeef2',
+    backgroundColor: "#ebeef2",
     padding: 15,
     borderRadius: 10,
-    width: '95%',
+    width: "95%",
+  },
+
+  titleSelect: {
+    fontSize: 17,
+    fontWeight: "500",
   },
 
   inputComm: {
     borderWidth: 1,
-    borderColor: 'rgb(217 223 232)',
+    borderColor: "rgb(217 223 232)",
     height: 60,
     borderRadius: 8,
     padding: 10,
@@ -104,30 +110,30 @@ const styles = StyleSheet.create({
     marginTop: 10,
     height: 120,
     fontSize: 16,
-    textAlignVertical: 'top',
-    backgroundColor: '#fff',
+    textAlignVertical: "top",
+    backgroundColor: "#fff",
   },
 
   sendBtn: {
-    backgroundColor: '#fff',
-    color: '#fff',
-    minWidth: '100%',
+    backgroundColor: "#fff",
+    color: "#fff",
+    minWidth: "100%",
     paddingTop: 10,
     borderRadius: 10,
     fontWeight: 600,
-    backgroundColor: 'rgba(12, 169, 70, 0.9)',
+    backgroundColor: "rgba(12, 169, 70, 0.9)",
     borderWidth: 1,
-    borderColor: 'rgb(217 223 232)',
+    borderColor: "rgb(217 223 232)",
     marginTop: 20,
   },
 
   selectBlock: {
-    marginTop: 15,
-    borderStyle: 'solid',
+    marginTop: 5,
+    borderStyle: "solid",
     borderWidth: 1,
-    borderColor: 'rgb(217 223 232)',
+    borderColor: "rgb(217 223 232)",
     borderRadius: 5,
-    backgroundColor: '#f0f0f0',
+    backgroundColor: "#f0f0f0",
     minHeight: 40,
     maxHeight: 180,
   },
