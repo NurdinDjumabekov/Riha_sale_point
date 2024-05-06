@@ -20,14 +20,10 @@ export const MyShipmentScreen = ({ navigation }) => {
   const dispatch = useDispatch();
 
   const { infoKassa } = useSelector((state) => state.requestSlice);
-  // const seller_guid = "e7458a29-6f7f-4364-a96d-ed878812f0cf";
   const { data } = useSelector((state) => state.saveDataSlice);
 
   useEffect(() => {
     clearStates();
-    navigation.setOptions({
-      title: `${transformDate(new Date())}`,
-    });
     getData();
 
     return () => {

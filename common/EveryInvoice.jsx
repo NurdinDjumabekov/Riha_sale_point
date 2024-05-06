@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import { useFocusEffect, useRoute } from "@react-navigation/native";
 import { RefreshControl, ScrollView } from "react-native";
 import { SafeAreaView, StyleSheet, Text, View } from "react-native";
@@ -10,8 +10,9 @@ import { changeLocalData } from "../store/reducers/saveDataSlice";
 import { changeSearchProd } from "../store/reducers/stateSlice";
 
 import { ActionsEveryInvoice } from "./ActionsEveryInvoice";
+import { SearchProds } from "./SearchProds";
 
-export const EveryInvoice = ({ forAddTovar }) => {
+export const EveryInvoice = ({ forAddTovar, navigation }) => {
   const dispatch = useDispatch();
   const route = useRoute();
 
@@ -24,12 +25,6 @@ export const EveryInvoice = ({ forAddTovar }) => {
   );
   const { data } = useSelector((state) => state.saveDataSlice);
 
-  useFocusEffect(
-    useCallback(() => {
-      getData();
-    }, [])
-  );
-
   const getData = async () => {
     await getLocalDataUser({ changeLocalData, dispatch });
     const sendData = { seller_guid: data?.seller_guid, type: "sale&&soputka" };
@@ -39,14 +34,27 @@ export const EveryInvoice = ({ forAddTovar }) => {
     ////// очищаю поиск
   };
 
+  useEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <SearchProds getData={getData} checkComponent={checkComponent} />
+      ),
+    });
+  }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      getData();
+    }, [])
+  );
+
   const emptyData = listCategory?.length === 0;
+
+  const emptyDataProd = listProductTT?.length === 0;
 
   if (emptyData) {
     return <Text style={styles.noneData}>Список пустой</Text>;
   }
-
-  // console.log(activeSelectCategory, "activeSelectCategory");
-  // console.log(searchProd, "searchProd ");
 
   return (
     <View style={styles.container}>
@@ -56,23 +64,27 @@ export const EveryInvoice = ({ forAddTovar }) => {
           checkComponent={checkComponent}
         />
         <Text style={styles.textTovar}>Список товаров</Text>
-        <View style={styles.blockSelectProd}>
-          <ScrollView
-            refreshControl={
-              <RefreshControl refreshing={preloader} onRefresh={getData} />
-            }
-          >
-            {listProductTT?.map((item, index) => (
-              <EveryProduct
-                key={item?.guid}
-                obj={item}
-                index={index}
-                checkComponent={checkComponent}
-                forAddTovar={forAddTovar}
-              />
-            ))}
-          </ScrollView>
-        </View>
+        {emptyDataProd ? (
+          <Text style={styles.noneData}>Список пустой</Text>
+        ) : (
+          <View style={styles.blockSelectProd}>
+            <ScrollView
+              refreshControl={
+                <RefreshControl refreshing={preloader} onRefresh={getData} />
+              }
+            >
+              {listProductTT?.map((item, index) => (
+                <EveryProduct
+                  key={item?.guid}
+                  obj={item}
+                  index={index}
+                  checkComponent={checkComponent}
+                  forAddTovar={forAddTovar}
+                />
+              ))}
+            </ScrollView>
+          </View>
+        )}
       </SafeAreaView>
     </View>
   );
