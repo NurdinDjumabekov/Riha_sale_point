@@ -768,9 +768,7 @@ export const addProductSoputkaTT = createAsyncThunk(
   /// добавление продукта(по одному) в накладную в сопуттку накладной
   "addProductSoputkaTT",
   async function (props, { dispatch, rejectWithValue }) {
-    const { obj, getData } = props;
-    const { guid, count, price, invoice_guid } = obj;
-    // console.log(obj, "obj");
+    const { guid, count, price, invoice_guid } = props?.obj;
     try {
       const response = await axios({
         method: "POST",
@@ -778,13 +776,9 @@ export const addProductSoputkaTT = createAsyncThunk(
         data: { guid, count, price, invoice_guid },
       });
       if (response.status >= 200 && response.status < 300) {
+        dispatch(changeTemporaryData({})); // очищаю активный продукт
         if (+response?.data?.result === 1) {
           dispatch(clearDataInputsInv()); // очищаю { price: "", ves: ""}
-          dispatch(changeTemporaryData({})); // очищаю активный продукт
-          dispatch(changeStateForCategory({})); ///  очищаю активную категорию
-          setTimeout(() => {
-            getData();
-          }, 500);
         }
       } else {
         throw Error(`Error: ${response.status}`);
@@ -797,7 +791,7 @@ export const addProductSoputkaTT = createAsyncThunk(
 
 //// getListSoputkaProd
 export const getListSoputkaProd = createAsyncThunk(
-  /// список товаров сопутки
+  /// список товаров сопутки (истр0ия сопутки)
   "getListSoputkaProd",
   async function (guidInvoice, { dispatch, rejectWithValue }) {
     try {
@@ -806,7 +800,6 @@ export const getListSoputkaProd = createAsyncThunk(
         url: `${API}/tt/get_invoice_soputka_product?invoice_guid=${guidInvoice}`,
       });
       if (response.status >= 200 && response.status < 300) {
-        // console.log(response?.data, "getListSoputkaProd");
         return response?.data;
       } else {
         throw Error(`Error: ${response.status}`);
@@ -1162,15 +1155,15 @@ const requestSlice = createSlice({
 
     //////// searchProdTT
     builder.addCase(searchProdTT.fulfilled, (state, action) => {
-      state.preloader = false;
+      // state.preloader = false;
       state.listProductTT = action.payload;
     });
     builder.addCase(searchProdTT.rejected, (state, action) => {
       state.error = action.payload;
-      state.preloader = false;
+      // state.preloader = false;
     });
     builder.addCase(searchProdTT.pending, (state, action) => {
-      state.preloader = true;
+      // state.preloader = true;
     });
 
     //////// getMyLeftovers
@@ -1210,23 +1203,6 @@ const requestSlice = createSlice({
     builder.addCase(getActionsLeftovers.pending, (state, action) => {
       state.preloader = true;
     });
-
-    ////// getProductEveryInvoice
-    // builder.addCase(getProductEveryInvoice.fulfilled, (state, action) => {
-    //   state.preloader = false;
-    //   state.historyEveryInvoice = {
-    //     status: action.payload?.status,
-    //     list: action.payload?.list,
-    //   };
-    // });
-    // builder.addCase(getProductEveryInvoice.rejected, (state, action) => {
-    //   state.error = action.payload;
-    //   state.preloader = false;
-    //   Alert.alert("Упс, что-то пошло не так! Не удалось загрузить данные");
-    // });
-    // builder.addCase(getProductEveryInvoice.pending, (state, action) => {
-    //   state.preloader = true;
-    // });
 
     /////// addProductInvoiceTT
     builder.addCase(addProductInvoiceTT.fulfilled, (state, action) => {

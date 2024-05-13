@@ -27,11 +27,10 @@ export const SoputkaProdHistoryScreen = ({ navigation, route }) => {
   );
 
   useEffect(() => {
-    getData();
-    navigation.setOptions({
-      title: `${listProdSoputka?.[0]?.date}`,
-    });
+    navigation.setOptions({ title: `${listProdSoputka?.[0]?.date}` });
   }, [listProdSoputka?.[0]?.date]);
+
+  useEffect(() => getData(), []);
 
   const getData = () => {
     dispatch(getListSoputkaProd(guidInvoice));
@@ -40,24 +39,23 @@ export const SoputkaProdHistoryScreen = ({ navigation, route }) => {
   const confirmBtn = () => {
     dispatch(confirmSoputka({ invoice_guid: guidInvoice, navigation }));
     /// подтверждение накладной сопутки
-    // console.log(invoice_guid, "invoice_guid");
   };
 
   const addProd = () => {
     const forAddTovar = { invoice_guid: guidInvoice };
     navigation?.navigate("AddProdSoputkaSrceen", { forAddTovar });
+    /// д0бавление товара в накладную сопутки
   };
 
   const del = (product_guid) => {
     dispatch(deleteSoldProd({ product_guid, getData }));
     setModalItemGuid(null);
+    /// удаление товара в накладную сопутки
   };
 
   const status = listProdSoputka?.[0]?.status === 0; /// 0 - не подтверждён
 
   const listData = listProdSoputka?.[0]?.list;
-
-  // console.log(invoice_guid, "listProdSoputka");
 
   return (
     <>

@@ -3,17 +3,14 @@ import { StyleSheet, Image, View } from "react-native";
 import { TextInput, TouchableOpacity } from "react-native";
 
 import { useDispatch, useSelector } from "react-redux";
-import searchIcon from "../assets/icons/searchIcon.png";
+import searchIcon from "../../assets/icons/searchIcon.png";
 import { debounce } from "lodash";
-import {
-  changeActiveSelectCategory,
-  changeSearchProd,
-} from "../store/reducers/stateSlice";
-import { getLocalDataUser } from "../helpers/returnDataUser";
-import { changeLocalData } from "../store/reducers/saveDataSlice";
-import { searchProdTT } from "../store/reducers/requestSlice";
+import { changeSearchProd } from "../../store/reducers/stateSlice";
+import { getLocalDataUser } from "../../helpers/returnDataUser";
+import { changeLocalData } from "../../store/reducers/saveDataSlice";
+import { searchProdTT } from "../../store/reducers/requestSlice";
 
-export const SearchProds = ({ getData, checkComponent }) => {
+export const SearchProdsSoputka = ({ getData, checkComponent }) => {
   const refInput = useRef();
 
   const dispatch = useDispatch();
@@ -24,18 +21,18 @@ export const SearchProds = ({ getData, checkComponent }) => {
 
   const searchData = useCallback(
     debounce((text) => {
-      dispatch(changeActiveSelectCategory("0")); // Установка активной категории
       getLocalDataUser({ changeLocalData, dispatch }); // Получение локальных данных пользователя
       const sendData = { searchProd: text, seller_guid: data?.seller_guid }; // Подготовка данных для поиска
       dispatch(searchProdTT({ ...sendData, checkComponent })); // Выполнение поиска с заданными параметрами
-    }, 800),
+    }, 500),
     []
   );
 
   const onChange = (text) => {
     dispatch(changeSearchProd(text));
-    searchData(text);
-    if (text === "") {
+    if (text?.length > 2) {
+      searchData(text);
+    } else if (text === "") {
       getData();
     }
   };
@@ -48,6 +45,7 @@ export const SearchProds = ({ getData, checkComponent }) => {
         placeholder="Поиск товаров ..."
         onChangeText={onChange}
         value={searchProd}
+        ref={refInput}
       />
       <TouchableOpacity onPress={() => refInput?.current?.focus()}>
         <Image style={styles.iconSearch} source={searchIcon} />
@@ -76,7 +74,7 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   iconSearch: {
-    width: 25,
-    height: 25,
+    width: 30,
+    height: 30,
   },
 });

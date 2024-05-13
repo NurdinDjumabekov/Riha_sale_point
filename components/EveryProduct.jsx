@@ -18,41 +18,39 @@ export const EveryProduct = ({ obj, index, checkComponent, forAddTovar }) => {
   const isCheck = temporaryData?.guid === obj?.guid;
 
   return (
-    <>
-      <TouchableOpacity
-        onPress={addInTemporary}
-        style={[styles.block, styles.blockMain, isCheck && styles.activeBlock]}
-      >
-        <View style={styles.blockMainInner}>
-          <View>
-            <View style={styles.mainContent}>
-              <Text style={[styles.title, isCheck && styles.activeTitle]}>
-                {index + 1}.{" "}
-              </Text>
-              <Text
-                style={[
-                  styles.title,
-                  isCheck && styles.activeTitle,
-                  styles.width85,
-                ]}
-              >
-                {obj?.product_name}
-              </Text>
-            </View>
+    <TouchableOpacity
+      onPress={addInTemporary}
+      style={[styles.block, styles.blockMain, isCheck && styles.activeBlock]}
+    >
+      <View style={styles.blockMainInner}>
+        <View>
+          <View style={styles.mainContent}>
+            <Text style={[styles.title, isCheck && styles.activeTitle]}>
+              {index + 1}.{" "}
+            </Text>
+            <Text
+              style={[
+                styles.title,
+                isCheck && styles.activeTitle,
+                styles.width85,
+              ]}
+            >
+              {obj?.product_name}
+            </Text>
           </View>
-          {!isCheck && <View style={styles.arrow}></View>}
         </View>
-        {Object.keys(temporaryData).length !== 0 && (
-          <AddProductsTA
-            productGuid={obj.guid}
-            obj={obj}
-            isCheck={isCheck}
-            checkComponent={checkComponent}
-            forAddTovar={forAddTovar}
-          />
-        )}
-      </TouchableOpacity>
-    </>
+        {!isCheck && <View style={styles.arrow}></View>}
+      </View>
+      {Object.keys(temporaryData).length !== 0 && (
+        <AddProductsTA
+          productGuid={obj.guid}
+          obj={obj}
+          isCheck={isCheck}
+          checkComponent={checkComponent}
+          forAddTovar={forAddTovar}
+        />
+      )}
+    </TouchableOpacity>
   );
 };
 

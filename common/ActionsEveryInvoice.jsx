@@ -39,40 +39,85 @@ export const ActionsEveryInvoice = ({ checkComponent }) => {
   };
 
   return (
-    <>
+    <View style={styles.parentSelects}>
+      <Text style={styles.choiceCateg}>Выберите цех</Text>
+      <View style={styles.blockSelect}>
+        <RNPickerSelect
+          onValueChange={handleValueChange}
+          items={listCategory}
+          useNativeAndroidPickerStyle={false}
+          value={activeSelectCategory}
+          placeholder={{}}
+          style={styles}
+        />
+        <View style={styles.arrow}></View>
+      </View>
       <Text style={styles.choiceCateg}>Выберите категорию</Text>
       <View style={styles.blockSelect}>
         <RNPickerSelect
           onValueChange={handleValueChange}
           items={listCategory}
+          useNativeAndroidPickerStyle={false}
           value={activeSelectCategory}
           placeholder={{}}
+          style={styles}
         />
+        <View style={styles.arrow}></View>
       </View>
-    </>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
-  /////////// category
+  parentSelects: {
+    paddingVertical: 10,
+  },
 
   choiceCateg: {
-    fontSize: 17,
+    fontSize: 15,
     fontWeight: "500",
     color: "#000",
-    width: "95%",
+    width: "96%",
     alignSelf: "center",
-    paddingBottom: 5,
-    marginTop: 10,
+    paddingBottom: 3,
+    marginTop: 0,
+    paddingLeft: 3,
   },
 
   blockSelect: {
-    borderWidth: 1,
-    borderColor: "rgba(47, 71, 190, 0.591)",
     width: "96%",
     alignSelf: "center",
     borderRadius: 5,
     marginBottom: 10,
-    height: 55,
+    position: "relative",
+  },
+
+  inputAndroid: {
+    fontSize: 14,
+    paddingHorizontal: 10,
+    paddingVertical: 8,
+    borderRadius: 6,
+    color: "#000",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 1,
+    shadowRadius: 4,
+    elevation: 5,
+    width: "100%",
+    alignSelf: "center",
+    backgroundColor: "#fff",
+  },
+
+  arrow: {
+    borderTopWidth: 3,
+    borderRightWidth: 3,
+    borderColor: "#222",
+    height: 12,
+    width: 12,
+    borderRadius: 3,
+    transform: [{ rotate: "135deg" }],
+    position: "absolute",
+    top: 14,
+    right: 25,
   },
 });

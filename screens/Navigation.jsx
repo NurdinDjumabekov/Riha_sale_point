@@ -82,12 +82,14 @@ export const Navigation = () => {
               component={MyApplicationScreen}
               options={{ title: "Список накладных" }}
             />
+
             <Stack.Screen name="detailedInvoice" component={DetailedInvoice} />
             <Stack.Screen
               name="InvoiceHistory"
               component={AcceptInvoiceHistory}
               options={{ title: "Список принятых накладных" }}
             />
+
             <Stack.Screen
               name="EveryInvoiceHistory"
               component={EveryInvoiceAcceptScreen}
@@ -99,11 +101,13 @@ export const Navigation = () => {
               component={SoputkaScreen}
               options={{ title: "Сопутка" }}
             />
+
             <Stack.Screen
               name="AddProdSoputkaSrceen"
               component={AddProdSoputkaSrceen}
-              options={{ title: "Сопутствующие товары" }}
+              options={{ title: "" }}
             />
+
             <Stack.Screen
               name="SoputkaProductScreen"
               component={SoputkaProductScreen}
@@ -113,7 +117,7 @@ export const Navigation = () => {
             <Stack.Screen
               name="SoputkaProdHistoryScreen"
               component={SoputkaProdHistoryScreen}
-              options={{ title: "Сопутствующие товары" }}
+              options={{ title: "" }}
             />
 
             {/* /////////////////////// Остатки ///////////////////////*/}

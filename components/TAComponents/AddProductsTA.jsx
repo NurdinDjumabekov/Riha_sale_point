@@ -1,26 +1,27 @@
-import {
-  Alert,
-  StyleSheet,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from 'react-native';
-import { useDispatch, useSelector } from 'react-redux';
-import { ViewButton } from '../../customsTags/ViewButton';
+//////// tags
+import { Modal, Text, TouchableWithoutFeedback } from "react-native";
+import { Alert, StyleSheet, TextInput } from "react-native";
+import { TouchableOpacity, View } from "react-native";
+import { ViewButton } from "../../customsTags/ViewButton";
+
+//////// hooks
+import { useDispatch, useSelector } from "react-redux";
+
+//////// helpers
+import { typeProd } from "../../helpers/Data";
+
+//////// fns
 import {
   changeDataInputsInv,
   changeTemporaryData,
-} from '../../store/reducers/stateSlice';
+} from "../../store/reducers/stateSlice";
 import {
   addProductInvoiceTT,
   addProductSoputkaTT,
   getCategoryTT,
-} from '../../store/reducers/requestSlice';
-import { getLocalDataUser } from '../../helpers/returnDataUser';
-import { changeLocalData } from '../../store/reducers/saveDataSlice';
-import { Modal } from 'react-native';
-import { Text } from 'react-native';
-import { TouchableWithoutFeedback } from 'react-native';
+} from "../../store/reducers/requestSlice";
+import { getLocalDataUser } from "../../helpers/returnDataUser";
+import { changeLocalData } from "../../store/reducers/saveDataSlice";
 
 export const AddProductsTA = (props) => {
   const { productGuid, checkComponent, forAddTovar, isCheck, obj } = props;
@@ -41,12 +42,12 @@ export const AddProductsTA = (props) => {
 
   const addInInvoice = () => {
     if (
-      dataInputsInv?.price === '' ||
-      dataInputsInv?.ves === '' ||
+      dataInputsInv?.price === "" ||
+      dataInputsInv?.ves === "" ||
       dataInputsInv?.price == 0 ||
       dataInputsInv?.ves == 0
     ) {
-      Alert.alert('Введите цену и вес (кол-во)!');
+      Alert.alert("Введите цену и вес (кол-во)!");
     } else {
       const data = {
         guid: productGuid,
@@ -70,15 +71,13 @@ export const AddProductsTA = (props) => {
     const dataObj = {
       checkComponent,
       seller_guid: data?.seller_guid,
-      type: 'sale&&soputka',
+      type: "sale&&soputka",
     };
     await dispatch(getCategoryTT(dataObj));
   }; /// для вызова категорий и продуктов
 
-  const onClose = () => {
-    dispatch(changeTemporaryData({}));
-  };
-  // console.log(obj?.product_name);
+  const onClose = () => dispatch(changeTemporaryData({}));
+
   return (
     <Modal
       animationType="fade"
@@ -97,25 +96,33 @@ export const AddProductsTA = (props) => {
             {checkComponent && isCheck && (
               <Text style={styles.leftovers}>Остаток: {obj.end_outcome}</Text>
             )}
-
             <View style={styles.addDataBlock}>
-              <TextInput
-                style={styles.input}
-                value={`${dataInputsInv?.price?.toString()} сом`}
-                onChangeText={(text) => onChange('price', text)}
-                keyboardType="numeric"
-                placeholder="Цена"
-                maxLength={8}
-              />
-              <TextInput
-                style={styles.input}
-                value={dataInputsInv?.ves}
-                onChangeText={(text) => onChange('ves', text)}
-                keyboardType="numeric"
-                placeholder="Вес (кол-во)"
-                maxLength={8}
-                // placeholderTextColor={#f68548}
-              />
+              <View style={styles.inputBlock}>
+                <Text style={styles.inputTitle}>Введите цену</Text>
+                <TextInput
+                  style={styles.input}
+                  value={`${dataInputsInv?.price?.toString()} сом`}
+                  onChangeText={(text) => onChange("price", text)}
+                  keyboardType="numeric"
+                  placeholder="Цена"
+                  maxLength={8}
+                />
+              </View>
+              <View style={styles.inputBlock}>
+                <Text style={styles.inputTitle}>
+                  Введите {typeProd?.[obj?.count_type] || "вес (кол-во)"}
+                </Text>
+                <TextInput
+                  style={styles.input}
+                  value={dataInputsInv?.ves}
+                  onChangeText={(text) => onChange("ves", text)}
+                  keyboardType="numeric"
+                  placeholder={`${
+                    typeProd?.[obj?.count_type] || "вес (кол-во)"
+                  }`}
+                  maxLength={8}
+                />
+              </View>
             </View>
             <ViewButton styles={styles.btnAdd} onclick={addInInvoice}>
               Добавить
@@ -130,87 +137,100 @@ export const AddProductsTA = (props) => {
 const styles = StyleSheet.create({
   parennt: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    justifyContent: "center",
+    alignItems: "center",
   },
 
   leftovers: {
     fontSize: 16,
-    fontWeight: '600',
-    color: 'rgba(47, 71, 190, 0.591)',
+    fontWeight: "600",
+    color: "rgba(47, 71, 190, 0.591)",
     marginVertical: 5,
   },
 
   child: {
     padding: 15,
-    paddingVertical: 10,
+    paddingVertical: 20,
     paddingBottom: 25,
     borderRadius: 5,
-    backgroundColor: '#ebeef2',
-    position: 'relative',
+    backgroundColor: "#ebeef2",
+    position: "relative",
   },
 
   title: {
     fontSize: 17,
-    fontWeight: '500',
+    fontWeight: "500",
     marginBottom: 10,
-    maxWidth: '85%',
+    maxWidth: "85%",
   },
 
   addDataBlock: {
-    width: '95%',
-    alignSelf: 'center',
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginVertical: 10,
+    width: "95%",
+    alignSelf: "center",
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginVertical: 20,
+  },
+
+  inputTitle: {
+    fontSize: 14,
+    fontWeight: "500",
+    lineHeight: 15,
+    color: "#222",
+    marginBottom: 5,
+    paddingLeft: 5,
+  },
+
+  inputBlock: {
+    width: "48%",
   },
 
   input: {
     paddingLeft: 10,
     paddingRight: 10,
     height: 40,
-    width: '48%',
+    width: "100%",
     borderRadius: 5,
-    borderColor: 'rgb(217 223 232)',
+    borderColor: "rgb(217 223 232)",
     borderRadius: 8,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
   },
 
   btnAdd: {
-    color: '#fff',
+    color: "#fff",
     paddingTop: 11,
     paddingBottom: 11,
     borderRadius: 8,
-    fontWeight: '600',
+    fontWeight: "600",
     borderWidth: 1,
-    borderColor: 'rgb(217 223 232)',
+    borderColor: "rgb(217 223 232)",
     fontSize: 18,
     marginTop: 10,
-    backgroundColor: 'rgba(97 ,100, 239,0.7)',
+    backgroundColor: "rgba(97 ,100, 239,0.7)",
   },
 
   //////////////////// krestik
   krest: {
     width: 22,
     height: 22,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     marginRight: 15,
-    position: 'absolute',
+    position: "absolute",
     right: 0,
-    top: 10,
+    top: 20,
   },
 
   line: {
-    position: 'absolute',
-    width: '100%',
+    position: "absolute",
+    width: "100%",
     height: 2,
-    backgroundColor: 'red',
+    backgroundColor: "red",
   },
 
-  deg: { transform: [{ rotate: '45deg' }] },
-  degMinus: { transform: [{ rotate: '-45deg' }] },
+  deg: { transform: [{ rotate: "45deg" }] },
+  degMinus: { transform: [{ rotate: "-45deg" }] },
 });

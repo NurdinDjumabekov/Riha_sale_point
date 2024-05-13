@@ -10,10 +10,10 @@ import {
   changeStateForCategory,
   changeTemporaryData,
 } from "../store/reducers/stateSlice";
-import { EveryInvoice } from "../common/EveryInvoice";
 import { transformDate } from "../helpers/transformDate";
 import { getLocalDataUser } from "../helpers/returnDataUser";
 import { changeLocalData } from "../store/reducers/saveDataSlice";
+import { EveryInvoiceSoputka } from "../components/Soputka/EveryInvoiceSoputka";
 
 export const AddProdSoputkaSrceen = ({ navigation, route }) => {
   const dispatch = useDispatch();
@@ -26,7 +26,6 @@ export const AddProdSoputkaSrceen = ({ navigation, route }) => {
     navigation.setOptions({
       title: `${transformDate(new Date())}`,
     });
-    getData();
 
     return () => {
       dispatch(clearListCategory());
@@ -35,18 +34,12 @@ export const AddProdSoputkaSrceen = ({ navigation, route }) => {
     };
   }, []);
 
-  const getData = async () => {
-    await getLocalDataUser({ changeLocalData, dispatch });
-    await dispatch(createInvoiceTT(data?.seller_guid));
-  };
-
   const defaultActive = () => {
     dispatch(changeStateForCategory({})); /// категория будет "все"
     dispatch(changeTemporaryData({})); // очищаю активный продукт
   };
 
   const listProdSale = () => {
-    // console.log(forAddTovar, "forAddTovar");
     navigation.navigate("SoputkaProductScreen", {
       guidInvoice: forAddTovar?.invoice_guid,
     });
@@ -58,7 +51,7 @@ export const AddProdSoputkaSrceen = ({ navigation, route }) => {
         <Text style={styles.textBtn}>Список сопутствующих товаров</Text>
         <View style={styles.arrowInner}></View>
       </TouchableOpacity>
-      <EveryInvoice navigation={navigation} forAddTovar={forAddTovar} />
+      <EveryInvoiceSoputka navigation={navigation} forAddTovar={forAddTovar} />
     </View>
   );
 };

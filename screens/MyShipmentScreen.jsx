@@ -11,10 +11,9 @@ import {
   changeStateForCategory,
   changeTemporaryData,
 } from "../store/reducers/stateSlice";
-import { EveryInvoice } from "../common/EveryInvoice";
-import { transformDate } from "../helpers/transformDate";
 import { getLocalDataUser } from "../helpers/returnDataUser";
 import { changeLocalData } from "../store/reducers/saveDataSlice";
+import { EveryInvoiceSale } from "../components/SaleProd/EveryInvoiceSale";
 
 export const MyShipmentScreen = ({ navigation }) => {
   const dispatch = useDispatch();
@@ -58,7 +57,7 @@ export const MyShipmentScreen = ({ navigation }) => {
         <Text style={styles.textBtn}>Список продаж</Text>
         <View style={styles.arrowInner}></View>
       </TouchableOpacity>
-      <EveryInvoice navigation={navigation} />
+      <EveryInvoiceSale navigation={navigation} />
     </View>
   );
 };

@@ -91,3 +91,9 @@ export const listTableForReturnProd = [
   "Возврат",
   " ....",
 ];
+
+export const typeProd = {
+  1: "кг",
+  2: "шт",
+  /////count_type
+};

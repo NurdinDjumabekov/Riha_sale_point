@@ -83,7 +83,6 @@ const styles = StyleSheet.create({
     left: 10,
     right: 10,
     minWidth: "90%",
-    // elevation: 2,
     color: "#fff",
     marginTop: 0,
   },

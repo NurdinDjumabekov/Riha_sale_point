@@ -17,8 +17,6 @@ export const SoputkaProductScreen = ({ route, navigation }) => {
   const [modalItemGuid, setModalItemGuid] = useState(null); // Состояние для идентификатора элемента, для которого открывается модальное окно
   const [modalConfirm, setModalConfirm] = useState(false);
 
-  console.log(guidInvoice, "guidInvoice");
-
   const { preloader, listProdSoputka } = useSelector(
     (state) => state.requestSlice
   );
@@ -56,11 +54,11 @@ export const SoputkaProductScreen = ({ route, navigation }) => {
           <FlatList
             contentContainerStyle={styles.flatList}
             data={listProdSoputka?.[0]?.list}
-            renderItem={({ item }) => (
+            renderItem={({ item, index }) => (
               <TouchableOpacity style={styles.container}>
                 <View style={styles.parentBlock}>
                   <View style={styles.mainData}>
-                    <Text style={styles.titleNum}>{item.codeid} </Text>
+                    <Text style={styles.titleNum}>{index + 1} </Text>
                     <View>
                       <Text style={styles.titleDate}>
                         {item?.date || "..."}
@@ -82,7 +80,6 @@ export const SoputkaProductScreen = ({ route, navigation }) => {
                 <View>
                   <Text style={styles.title}>{item?.product_name}</Text>
                 </View>
-
                 <ConfirmationModal
                   visible={modalItemGuid === item.guid}
                   message="Отменить ?"
@@ -155,10 +152,6 @@ const styles = StyleSheet.create({
     lineHeight: 16,
     color: "rgba(47, 71, 190, 0.672)",
   },
-
-  // status: {
-  //   color: "rgba(12, 169, 70, 0.9)",
-  // },
 
   title: {
     fontSize: 15,

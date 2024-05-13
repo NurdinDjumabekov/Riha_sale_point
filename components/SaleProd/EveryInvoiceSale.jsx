@@ -3,16 +3,16 @@ import { useFocusEffect, useRoute } from "@react-navigation/native";
 import { RefreshControl, ScrollView } from "react-native";
 import { SafeAreaView, StyleSheet, Text, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import { getCategoryTT } from "../store/reducers/requestSlice";
-import { EveryProduct } from "../components/EveryProduct";
-import { getLocalDataUser } from "../helpers/returnDataUser";
-import { changeLocalData } from "../store/reducers/saveDataSlice";
-import { changeSearchProd } from "../store/reducers/stateSlice";
+import { getCategoryTT } from "../../store/reducers/requestSlice";
+import { EveryProduct } from "../EveryProduct";
+import { changeLocalData } from "../../store/reducers/saveDataSlice";
+import { changeSearchProd } from "../../store/reducers/stateSlice";
 
-import { ActionsEveryInvoice } from "./ActionsEveryInvoice";
-import { SearchProds } from "./SearchProds";
+import { ActionsEveryInvoice } from "../../common/ActionsEveryInvoice";
+import { getLocalDataUser } from "../../helpers/returnDataUser";
+import { SearchProdsSale } from "./SearchProdsSale";
 
-export const EveryInvoice = ({ forAddTovar, navigation }) => {
+export const EveryInvoiceSale = ({ forAddTovar, navigation }) => {
   const dispatch = useDispatch();
   const route = useRoute();
 
@@ -37,7 +37,7 @@ export const EveryInvoice = ({ forAddTovar, navigation }) => {
   useEffect(() => {
     navigation.setOptions({
       headerRight: () => (
-        <SearchProds getData={getData} checkComponent={checkComponent} />
+        <SearchProdsSale getData={getData} checkComponent={checkComponent} />
       ),
     });
   }, []);
