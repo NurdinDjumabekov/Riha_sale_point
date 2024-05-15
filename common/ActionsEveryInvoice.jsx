@@ -1,41 +1,74 @@
 import { StyleSheet, Text, View } from "react-native";
 import React from "react";
 import RNPickerSelect from "react-native-picker-select";
-import { getLocalDataUser } from "../helpers/returnDataUser";
-import { changeLocalData } from "../store/reducers/saveDataSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { getProductTT } from "../store/reducers/requestSlice";
 import {
-  changeActiveSelectCategory,
-  changeSearchProd,
-  changeStateForCategory,
-  changeTemporaryData,
-} from "../store/reducers/stateSlice";
+  getProductTT,
+  getCategoryTT,
+  getMyLeftovers,
+  clearLeftovers,
+} from "../store/reducers/requestSlice";
+import { clearListCategory } from "../store/reducers/requestSlice";
+import { clearListProductTT } from "../store/reducers/requestSlice";
+import { changeActiveSelectCategory } from "../store/reducers/stateSlice";
+import { changeActiveSelectWorkShop } from "../store/reducers/stateSlice";
+import { changeSearchProd } from "../store/reducers/stateSlice";
+import { changeTemporaryData } from "../store/reducers/stateSlice";
 
-export const ActionsEveryInvoice = ({ checkComponent }) => {
+export const ActionsEveryInvoice = ({ checkComponent, type }) => {
   const dispatch = useDispatch();
 
-  const { listCategory } = useSelector((state) => state.requestSlice);
+  const { listCategory, listWorkShopSale } = useSelector(
+    (state) => state.requestSlice
+  );
 
-  const { activeSelectCategory } = useSelector((state) => state.stateSlice);
+  const { activeSelectCategory, activeSelectWorkShop } = useSelector(
+    (state) => state.stateSlice
+  );
+
+  // console.log(listCategory, "listCategory");
+  // console.log(listWorkShopSale, "listWorkShopSale");
+  // console.log(activeSelectCategory, "activeSelectCategory");
+  // console.log(activeSelectWorkShop, "activeSelectWorkShop");
 
   const { data } = useSelector((state) => state.saveDataSlice);
 
-  const handleValueChange = (value) => {
-    if (value !== activeSelectCategory) {
-      getLocalDataUser({ changeLocalData, dispatch });
-      const sendData = { guid: value, seller_guid: data?.seller_guid };
-      dispatch(getProductTT({ ...sendData, checkComponent }));
+  const { seller_guid } = data;
 
-      dispatch(changeStateForCategory(value));
-      dispatch(changeTemporaryData({}));
-      ///// checkcheck
+  const onChangeWorkShop = (value) => {
+    if (value !== activeSelectCategory) {
+      dispatch(clearListCategory()); //// очищаю список категорий перед отправкой запроса
+      const send = { seller_guid, type, workshop_guid: value };
+      dispatch(getCategoryTT({ ...send, checkComponent }));
+
+      dispatch(changeActiveSelectWorkShop(value));
+      /// хранение активной категории, для сортировки товаров(храню guid категории)
+      clear();
+    }
+  };
+
+  const onChangeCateg = (value) => {
+    if (value !== activeSelectCategory) {
+      dispatch(clearListProductTT()); //// очищаю список товаров перед отправкой запроса
+      dispatch(clearLeftovers()); //// очищаю массив данныз остатков
+
+      if (type === "sale") {
+        dispatch(getProductTT({ guid: value, seller_guid, checkComponent }));
+      } else if (type === "leftovers") {
+        dispatch(getMyLeftovers({ seller_guid, category_guid: value }));
+      }
 
       dispatch(changeActiveSelectCategory(value));
       /// хранение активной категории, для сортировки товаров(храню guid категории)
-      dispatch(changeSearchProd(""));
-      ////// очищаю поиск
+      clear();
     }
+  };
+
+  const clear = () => {
+    dispatch(changeSearchProd(""));
+    ////// очищаю поиск
+    dispatch(changeTemporaryData({}));
+    ////// очищаю временный данные для продажи
   };
 
   return (
@@ -43,10 +76,10 @@ export const ActionsEveryInvoice = ({ checkComponent }) => {
       <Text style={styles.choiceCateg}>Выберите цех</Text>
       <View style={styles.blockSelect}>
         <RNPickerSelect
-          onValueChange={handleValueChange}
-          items={listCategory}
+          onValueChange={onChangeWorkShop}
+          items={listWorkShopSale}
           useNativeAndroidPickerStyle={false}
-          value={activeSelectCategory}
+          value={activeSelectWorkShop}
           placeholder={{}}
           style={styles}
         />
@@ -55,7 +88,7 @@ export const ActionsEveryInvoice = ({ checkComponent }) => {
       <Text style={styles.choiceCateg}>Выберите категорию</Text>
       <View style={styles.blockSelect}>
         <RNPickerSelect
-          onValueChange={handleValueChange}
+          onValueChange={onChangeCateg}
           items={listCategory}
           useNativeAndroidPickerStyle={false}
           value={activeSelectCategory}

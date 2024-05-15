@@ -2,17 +2,18 @@ import { useEffect, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  getActionsLeftovers,
-  sendCheckListProduct,
+  changeListActionLeftovers,
+  getLeftoversForCheck,
 } from "../../store/reducers/requestSlice";
+import { sendCheckListProduct } from "../../store/reducers/requestSlice";
+import { getActionsLeftovers } from "../../store/reducers/requestSlice";
 import { ScrollView } from "react-native";
 import { Dimensions } from "react-native";
 import { Row, Rows, Table, TableWrapper } from "react-native-table-component";
 import { CheckVes } from "../../components/ReturnProducts/CheckVes";
-import {
-  changeActionsProducts,
-  clearActionsProducts,
-} from "../../store/reducers/stateSlice";
+import { changeActionsProducts } from "../../store/reducers/stateSlice";
+import { clearActionsProducts } from "../../store/reducers/stateSlice";
+
 import { ViewButton } from "../../customsTags/ViewButton";
 import ConfirmationModal from "../../components/ConfirmationModal";
 import { changeLocalData } from "../../store/reducers/saveDataSlice";
@@ -23,13 +24,12 @@ import { getLocalDataUser } from "../../helpers/returnDataUser";
 import { totalCountReturns, totalSumReturns } from "../../helpers/amounts";
 
 export const InvoiceCheckScreen = ({ route, navigation }) => {
-  const { invoice_guid, agent_guid } = route.params;
+  const { invoice_guid, guidWorkShop } = route.params;
+  //// список товаров для ревизии
 
-  //// возрат товара
   const dispatch = useDispatch();
 
   const [listData, setListData] = useState([]);
-
   const [modalSend, setModalSend] = useState(false);
 
   const { listActionLeftovers } = useSelector((state) => state.requestSlice);
@@ -42,22 +42,26 @@ export const InvoiceCheckScreen = ({ route, navigation }) => {
   useEffect(() => {
     getData();
 
-    return () => dispatch(clearActionsProducts());
+    return () => {
+      dispatch(clearActionsProducts());
+      dispatch(changeListActionLeftovers());
+    };
     ///// очищаю список товаров, которые я отпрвляю для ревизии
   }, []);
 
   const getData = async () => {
     await getLocalDataUser({ changeLocalData, dispatch });
 
-    const obj = { seller_guid: data?.seller_guid, agent_guid };
-    await dispatch(getActionsLeftovers(obj));
+    const obj = { seller_guid: data?.seller_guid, guidWorkShop };
+    await dispatch(getLeftoversForCheck(obj));
+    /// get остатки разделенные по цехам для ревизии
   };
 
   useEffect(() => {
     if (listActionLeftovers) {
-      const tableDataList = listActionLeftovers?.map((item) => {
+      const tableDataList = listActionLeftovers?.map((item, index) => {
         return [
-          `${item?.codeid}. ${item?.product_name}`,
+          `${index + 1}. ${item?.product_name}`,
           `${item?.price}`,
           `${item?.end_outcome}`,
           <CheckVes guidProduct={item?.guid} />,
@@ -81,8 +85,7 @@ export const InvoiceCheckScreen = ({ route, navigation }) => {
   const closeModal = () => setModalSend(false);
 
   const sendData = () => {
-    const data = { ...actionsProducts, invoice_guid, agent_guid };
-    dispatch(sendCheckListProduct({ data, navigation }));
+    dispatch(sendCheckListProduct({ actionsProducts, navigation }));
     closeModal();
   };
 
@@ -93,6 +96,8 @@ export const InvoiceCheckScreen = ({ route, navigation }) => {
   const resultWidths = arrWidth.map(
     (percentage) => (percentage / 100) * windowWidth
   );
+
+  const noneData = listData?.length === 0;
 
   return (
     <ScrollView>
@@ -123,17 +128,21 @@ export const InvoiceCheckScreen = ({ route, navigation }) => {
             />
           </TableWrapper>
         </Table>
-        <View style={styles.divAction}>
-          <View style={styles.blockTotal}>
-            <Text style={styles.totalItemCount}>
-              Сумма: {totalSumReturns(actionsProducts) || 0} сом
-            </Text>
-            <Text style={styles.totalItemCount}>
-              Кол-во: {totalCountReturns(actionsProducts) || 0}
-            </Text>
+        {!noneData && (
+          <View style={styles.divAction}>
+            <View style={styles.blockTotal}>
+              <Text style={styles.totalItemCount}>
+                Сумма: {totalSumReturns(actionsProducts) || 0} сом
+              </Text>
+              <Text style={styles.totalItemCount}>
+                Кол-во: {totalCountReturns(actionsProducts) || 0}
+              </Text>
+            </View>
           </View>
-        </View>
-        {true && (
+        )}
+        {noneData ? (
+          <Text style={styles.noneData}>Список пустой</Text>
+        ) : (
           <ViewButton
             styles={styles.sendBtn}
             onclick={() => setModalSend(true)}
@@ -144,7 +153,7 @@ export const InvoiceCheckScreen = ({ route, navigation }) => {
       </View>
       <ConfirmationModal
         visible={modalSend}
-        message="Сформировать накладную для возврата товара ?"
+        message="Сформировать накладную для ревизии товара ?"
         onYes={sendData}
         onNo={closeModal}
         onClose={closeModal}
@@ -156,7 +165,6 @@ export const InvoiceCheckScreen = ({ route, navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
     minWidth: "100%",
     marginBottom: 20,
     marginTop: 0,
@@ -164,7 +172,9 @@ const styles = StyleSheet.create({
     paddingBottom: 102,
     paddingTop: 5,
   },
+
   head: { height: 60, backgroundColor: "rgba(199, 210, 254, 0.250)" },
+
   text: {
     margin: 4,
     marginBottom: 8,
@@ -263,5 +273,14 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     backgroundColor: "red",
     transform: [{ rotate: "45deg" }],
+  },
+
+  noneData: {
+    paddingTop: 250,
+    textAlign: "center",
+    fontSize: 20,
+    fontWeight: "500",
+    color: "#222",
+    height: "100%",
   },
 });

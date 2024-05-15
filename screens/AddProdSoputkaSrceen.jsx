@@ -6,10 +6,7 @@ import {
   createInvoiceTT,
 } from "../store/reducers/requestSlice";
 import { useEffect } from "react";
-import {
-  changeStateForCategory,
-  changeTemporaryData,
-} from "../store/reducers/stateSlice";
+import { changeTemporaryData } from "../store/reducers/stateSlice";
 import { transformDate } from "../helpers/transformDate";
 import { getLocalDataUser } from "../helpers/returnDataUser";
 import { changeLocalData } from "../store/reducers/saveDataSlice";
@@ -35,7 +32,6 @@ export const AddProdSoputkaSrceen = ({ navigation, route }) => {
   }, []);
 
   const defaultActive = () => {
-    dispatch(changeStateForCategory({})); /// категория будет "все"
     dispatch(changeTemporaryData({})); // очищаю активный продукт
   };
 

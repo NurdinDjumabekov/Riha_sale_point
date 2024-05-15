@@ -1,36 +1,47 @@
-import { ScrollView, StyleSheet, Text } from "react-native";
-import { TextInput, TouchableOpacity, View } from "react-native";
+import { Alert, ScrollView, StyleSheet, Text } from "react-native";
+import { TouchableOpacity, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { Modal } from "react-native";
 import { ViewButton } from "../../customsTags/ViewButton";
-import { createInvoiceCheck } from "../../store/reducers/requestSlice";
 import { useState } from "react";
 import { ChoiceAgents } from "../ChoiceAgents";
+import { createInvoiceCheck } from "../../store/reducers/requestSlice";
 
-export const ModalChoiceCheck = (props) => {
-  //// модалка создания накладной для ревизии товара
-
-  const dispatch = useDispatch();
+export const ModalWorkShop = (props) => {
+  //// модалка для выбора цеха и продавца для которого ревизия
 
   const { modalState, setModalState, navigation } = props;
 
-  const { listAgents } = useSelector((state) => state.requestSlice);
+  const dispatch = useDispatch();
+
+  const { listSellersPoints, listWorkShop } = useSelector(
+    (state) => state.requestSlice
+  );
 
   const { data } = useSelector((state) => state.saveDataSlice);
 
-  const [obj, setObj] = useState({ comment: "", agent_guid: "" });
+  const [obj, setObj] = useState({ guid: "", guidWorkShop: "" });
+  ///// guid - guid продавца  //// guidWorkShop - guid цеха
 
   const closeModal = () => {
     setModalState(false);
-    setObj({ comment: "", agent_guid: "" });
+    setObj({ guid: "", guidWorkShop: "" });
   };
 
   const createInvoiceReturn = () => {
-    if (obj?.agent_guid === "") {
-      Alert.alert("Выберите агента");
+    if (obj?.guid === "") {
+      Alert.alert("Выберите продавца");
+    } else if (obj?.guidWorkShop === "") {
+      Alert.alert("Выберите цех");
     } else {
-      const dataObj = { ...obj, seller_guid: data?.seller_guid };
-      dispatch(createInvoiceCheck({ dataObj, navigation }));
+      const dataSend = {
+        seller_guid_to: obj?.guid, //// от какого продавца ревизия
+        seller_guid_from: data?.seller_guid, //// какому продавцу ревизия
+        guidWorkShop: obj?.guidWorkShop,
+        navigation,
+      };
+
+      dispatch(createInvoiceCheck(dataSend));
       closeModal();
     }
   };
@@ -48,26 +59,31 @@ export const ModalChoiceCheck = (props) => {
         onPress={closeModal}
       >
         <View style={styles.modalInner} onPress={() => setModalState(true)}>
-          <Text style={styles.titleSelect}>Выберите агента</Text>
+          <Text style={styles.titleSelect}>Выберите продавца</Text>
           <ScrollView style={styles.selectBlock}>
-            {listAgents?.map((item) => (
+            {listSellersPoints?.map((item) => (
               <ChoiceAgents
                 item={item}
                 setState={setObj}
                 prev={obj}
-                keyGuid={"agent_guid"}
-                keyText={"agent"}
+                keyGuid={"guid"}
+                keyText={"fio"}
               />
             ))}
           </ScrollView>
-          <TextInput
-            style={styles.inputComm}
-            value={obj?.comment?.toString()}
-            onChangeText={(text) => setObj({ ...obj, comment: text })}
-            placeholder="Ваш комментарий"
-            multiline={true}
-            numberOfLines={4}
-          />
+          <Text style={styles.titleSelect}>Выберите цех</Text>
+          <ScrollView style={styles.selectBlock}>
+            {listWorkShop?.map((item) => (
+              <ChoiceAgents
+                item={item}
+                setState={setObj}
+                prev={obj}
+                keyGuid={"guidWorkShop"}
+                keyText={"name"}
+              />
+            ))}
+          </ScrollView>
+
           <ViewButton
             styles={{ ...styles.sendBtn, ...styles.actionSendBtn }}
             onclick={createInvoiceReturn}
@@ -121,13 +137,14 @@ const styles = StyleSheet.create({
 
   selectBlock: {
     marginTop: 5,
+    marginBottom: 10,
     borderStyle: "solid",
     borderWidth: 1,
     borderColor: "rgb(217 223 232)",
     borderRadius: 5,
     backgroundColor: "#f0f0f0",
     minHeight: 30,
-    maxHeight: 180,
+    maxHeight: 150,
   },
 
   inputComm: {

@@ -1,13 +1,6 @@
 import { useEffect } from "react";
-import {
-  SafeAreaView,
-  FlatList,
-  RefreshControl,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { SafeAreaView, FlatList, RefreshControl } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { getMyInvoice } from "../store/reducers/requestSlice";
 import { EveryMyInvoice } from "../components/EveryMyInvoice";
@@ -22,8 +15,6 @@ export const MyApplicationScreen = ({ navigation, route }) => {
     (state) => state.requestSlice
   );
   const { data } = useSelector((state) => state.saveDataSlice);
-
-  // const seller_guid = "e7458a29-6f7f-4364-a96d-ed878812f0cf";
 
   useEffect(() => {
     getData();

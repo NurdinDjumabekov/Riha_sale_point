@@ -1,16 +1,12 @@
 import { StyleSheet, TouchableOpacity, View, Text } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  clearListCategory,
-  clearListProductTT,
-  createInvoiceTT,
-} from "../store/reducers/requestSlice";
+import { clearListCategory } from "../store/reducers/requestSlice";
+import { clearListProductTT } from "../store/reducers/requestSlice";
+import { createInvoiceTT } from "../store/reducers/requestSlice";
 import { useEffect } from "react";
-import {
-  changeActiveSelectCategory,
-  changeStateForCategory,
-  changeTemporaryData,
-} from "../store/reducers/stateSlice";
+import { changeActiveSelectCategory } from "../store/reducers/stateSlice";
+import { changeActiveSelectWorkShop } from "../store/reducers/stateSlice";
+import { changeTemporaryData } from "../store/reducers/stateSlice";
 import { getLocalDataUser } from "../helpers/returnDataUser";
 import { changeLocalData } from "../store/reducers/saveDataSlice";
 import { EveryInvoiceSale } from "../components/SaleProd/EveryInvoiceSale";
@@ -31,6 +27,8 @@ export const MyShipmentScreen = ({ navigation }) => {
       ///// очищаю список категрий и продуктов
       dispatch(changeActiveSelectCategory(""));
       /// очищаю категории, для сортировки товаров по категориям
+      dispatch(changeActiveSelectWorkShop(""));
+      /// очищаю цеха, для сортировки товаров по категориям
     };
   }, []);
 
@@ -41,7 +39,6 @@ export const MyShipmentScreen = ({ navigation }) => {
 
   const clearStates = () => {
     dispatch(changeTemporaryData({})); // очищаю активный продукт
-    dispatch(changeStateForCategory({})); /// очищаю активную категорию
   };
 
   const listProdSale = () => {

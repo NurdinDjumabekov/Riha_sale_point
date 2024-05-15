@@ -81,8 +81,6 @@ const styles = StyleSheet.create({
     minWidth: "100%",
     width: "100%",
     paddingBottom: 20,
-    // borderTopWidth: 1,
-    // borderColor: "rgba(47, 71, 190, 0.587)",
   },
 
   returnBlock: {

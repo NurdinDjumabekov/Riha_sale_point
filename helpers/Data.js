@@ -67,6 +67,7 @@ export const dataCategory = [
     pathApi: "CheckTovarScreen",
   },
 ];
+
 export const listTableLeftoverst = [
   "Товар",
   "Остаток на начало",

@@ -6,7 +6,9 @@ import {
 } from "../store/reducers/stateSlice";
 import { AddProductsTA } from "./TAComponents/AddProductsTA";
 
-export const EveryProduct = ({ obj, index, checkComponent, forAddTovar }) => {
+export const EveryProduct = (props) => {
+  const { obj, index, checkComponent, forAddTovar } = props;
+
   const dispatch = useDispatch();
   const { temporaryData } = useSelector((state) => state.stateSlice);
 

@@ -14,10 +14,12 @@ const initialState = {
   temporaryData: {}, ///// временные данные(после добавления сюда, они добавляются в список(listProductForTT))
   dataInputsInv: { price: "", ves: "" },
   listProductForTT: [],
-  stateForCategory: {}, // состояние для хранения временной категории(подсветка категории)
 
   activeSelectCategory: "",
   /// хранение активной категории, для сортировки товаров(храню guid категории)
+
+  activeSelectWorkShop: "",
+  /// хранение активного Цеха для сортировки категорий(храню guid Цеха)
 
   searchProd: "", /// для текста поиска продуктов
 
@@ -85,12 +87,12 @@ const stateSlice = createSlice({
       state.dataInputsInv = { price: "", ves: "" };
     },
 
-    changeStateForCategory: (state, action) => {
-      state.stateForCategory = action.payload;
-    },
-
     changeActiveSelectCategory: (state, action) => {
       state.activeSelectCategory = action.payload;
+    },
+
+    changeActiveSelectWorkShop: (state, action) => {
+      state.activeSelectWorkShop = action.payload;
     },
 
     changeSearchProd: (state, action) => {
@@ -132,8 +134,8 @@ export const {
   removeListProductForTT,
   changeDataInputsInv,
   clearDataInputsInv,
-  changeStateForCategory,
   changeActiveSelectCategory,
+  changeActiveSelectWorkShop,
   changeSearchProd,
   changeExpense,
   clearExpense,

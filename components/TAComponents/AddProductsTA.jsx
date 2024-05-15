@@ -13,12 +13,13 @@ import { typeProd } from "../../helpers/Data";
 //////// fns
 import {
   changeDataInputsInv,
+  changeSearchProd,
   changeTemporaryData,
 } from "../../store/reducers/stateSlice";
 import {
   addProductInvoiceTT,
   addProductSoputkaTT,
-  getCategoryTT,
+  getWorkShopsGorSale,
 } from "../../store/reducers/requestSlice";
 import { getLocalDataUser } from "../../helpers/returnDataUser";
 import { changeLocalData } from "../../store/reducers/saveDataSlice";
@@ -68,12 +69,12 @@ export const AddProductsTA = (props) => {
 
   const getData = async () => {
     await getLocalDataUser({ changeLocalData, dispatch });
-    const dataObj = {
-      checkComponent,
-      seller_guid: data?.seller_guid,
-      type: "sale&&soputka",
-    };
-    await dispatch(getCategoryTT(dataObj));
+    const sendData = { seller_guid: data?.seller_guid, type: "sale" };
+    // ////// внутри есть getCategoryTT и getProductTT
+    dispatch(getWorkShopsGorSale({ ...sendData, checkComponent }));
+
+    dispatch(changeSearchProd(""));
+    ////// очищаю поиск
   }; /// для вызова категорий и продуктов
 
   const onClose = () => dispatch(changeTemporaryData({}));

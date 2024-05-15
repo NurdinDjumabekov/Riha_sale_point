@@ -14,12 +14,9 @@ export const ListCheckProdScreen = ({ route, navigation }) => {
 
   useEffect(() => {
     dispatch(getReturnHistory(obj?.guid));
-    navigation.setOptions({
-      title, /// "Накладная №***
-    });
+    navigation.setOptions({ title });
+    /// "Накладная №***
   }, []);
-
-  // console.log(listProdReturn?.[0]?.list, "listProdReturn");
 
   return (
     <>

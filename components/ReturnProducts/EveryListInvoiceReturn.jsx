@@ -19,8 +19,6 @@ export const EveryListInvoiceReturn = ({ route, navigation }) => {
     });
   }, []);
 
-  // console.log(listProdReturn?.[0]?.list, "listProdReturn");
-
   return (
     <>
       {listProdReturn?.[0]?.list?.length === 0 ? (

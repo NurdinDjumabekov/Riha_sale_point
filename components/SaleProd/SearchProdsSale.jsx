@@ -1,14 +1,11 @@
 import React, { useCallback, useRef } from "react";
 import { StyleSheet, Image, View } from "react-native";
 import { TextInput, TouchableOpacity } from "react-native";
-
 import { useDispatch, useSelector } from "react-redux";
 import searchIcon from "../../assets/icons/searchIcon.png";
 import { debounce } from "lodash";
-import {
-  changeActiveSelectCategory,
-  changeSearchProd,
-} from "../../store/reducers/stateSlice";
+import { changeSearchProd } from "../../store/reducers/stateSlice";
+import { changeActiveSelectCategory } from "../../store/reducers/stateSlice";
 import { getLocalDataUser } from "../../helpers/returnDataUser";
 import { changeLocalData } from "../../store/reducers/saveDataSlice";
 import { searchProdTT } from "../../store/reducers/requestSlice";
@@ -22,7 +19,7 @@ export const SearchProdsSale = ({ getData, checkComponent }) => {
 
   const { data } = useSelector((state) => state.saveDataSlice);
 
-  const searchData = useCallback(
+  const searchDataDebounce = useCallback(
     debounce((text) => {
       dispatch(changeActiveSelectCategory("0")); // Установка активной категории
       getLocalDataUser({ changeLocalData, dispatch }); // Получение локальных данных пользователя
@@ -34,7 +31,7 @@ export const SearchProdsSale = ({ getData, checkComponent }) => {
 
   const onChange = (text) => {
     dispatch(changeSearchProd(text));
-    searchData(text);
+    searchDataDebounce(text);
     if (text === "") {
       getData();
     }
@@ -43,6 +40,7 @@ export const SearchProdsSale = ({ getData, checkComponent }) => {
   return (
     <View style={styles.blockSearch}>
       <TextInput
+        ref={refInput}
         style={styles.inputSearch}
         placeholderTextColor={"#222"}
         placeholder="Поиск товаров ..."

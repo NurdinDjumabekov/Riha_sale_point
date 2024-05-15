@@ -3,7 +3,7 @@ import { useFocusEffect, useRoute } from "@react-navigation/native";
 import { RefreshControl, ScrollView } from "react-native";
 import { SafeAreaView, StyleSheet, Text, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import { getCategoryTT } from "../../store/reducers/requestSlice";
+import { getWorkShopsGorSale } from "../../store/reducers/requestSlice";
 import { EveryProduct } from "../EveryProduct";
 import { changeLocalData } from "../../store/reducers/saveDataSlice";
 import { changeSearchProd } from "../../store/reducers/stateSlice";
@@ -27,9 +27,11 @@ export const EveryInvoiceSale = ({ forAddTovar, navigation }) => {
 
   const getData = async () => {
     await getLocalDataUser({ changeLocalData, dispatch });
-    const sendData = { seller_guid: data?.seller_guid, type: "sale&&soputka" };
-    dispatch(getCategoryTT({ ...sendData, checkComponent }));
-    ////// внутри есть getProductTT
+
+    const sendData = { seller_guid: data?.seller_guid, type: "sale" };
+    // ////// внутри есть getCategoryTT и getProductTT
+    dispatch(getWorkShopsGorSale({ ...sendData, checkComponent }));
+
     dispatch(changeSearchProd(""));
     ////// очищаю поиск
   };
@@ -59,10 +61,7 @@ export const EveryInvoiceSale = ({ forAddTovar, navigation }) => {
   return (
     <View style={styles.container}>
       <SafeAreaView style={styles.parentBlock}>
-        <ActionsEveryInvoice
-          getData={getData}
-          checkComponent={checkComponent}
-        />
+        <ActionsEveryInvoice checkComponent={checkComponent} type={"sale"} />
         <Text style={styles.textTovar}>Список товаров</Text>
         {emptyDataProd ? (
           <Text style={styles.noneData}>Список пустой</Text>
@@ -75,7 +74,7 @@ export const EveryInvoiceSale = ({ forAddTovar, navigation }) => {
             >
               {listProductTT?.map((item, index) => (
                 <EveryProduct
-                  key={item?.guid}
+                  key={`${item?.guid}${index}`}
                   obj={item}
                   index={index}
                   checkComponent={checkComponent}

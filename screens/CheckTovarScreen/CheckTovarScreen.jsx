@@ -1,26 +1,37 @@
+////// hooks
 import { useEffect, useState } from "react";
-import { RefreshControl, StyleSheet, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  getHistoryCheck,
-  getListAgents,
-} from "../../store/reducers/requestSlice";
+
+///// tags
+import { RefreshControl, StyleSheet, View } from "react-native";
+import { FlatList, Text } from "react-native";
 import { ViewButton } from "../../customsTags/ViewButton";
-import { FlatList } from "react-native";
-import { Text } from "react-native";
+
+///// requestSlice
+import { clearListSellersPoints } from "../../store/reducers/requestSlice";
+import { getHistoryRevision } from "../../store/reducers/requestSlice";
+import { getSellersEveryPoint } from "../../store/reducers/requestSlice";
+import { getWorkShops } from "../../store/reducers/requestSlice";
 import { changeLocalData } from "../../store/reducers/saveDataSlice";
-import { getLocalDataUser } from "../../helpers/returnDataUser";
+
+///// components
 import { EveryInvoiceCheck } from "../../components/CheckProd/EveryInvoiceCheck";
-import { ModalChoiceCheck } from "../../components/CheckProd/ModalChoiceCheck";
+import { ModalWorkShop } from "../../components/CheckProd/ModalWorkShop";
+
+///helpers
+import { getLocalDataUser } from "../../helpers/returnDataUser";
+import { ListProdsRevision } from "./ListProdsRevision";
 
 export const CheckTovarScreen = ({ navigation }) => {
-  //// ревизия продавца
+  //// ревизия (отображение списка ист0рий ревизии.
+  //// btns для создания ревии и просмотра запросов других продавцов)
+
   const dispatch = useDispatch();
 
-  const [modalState, setModalState] = useState(false);
+  const [workShop, setWorkShop] = useState(false);
 
   const { data } = useSelector((state) => state.saveDataSlice);
-  const { preloader, listHistoryCheck } = useSelector(
+  const { preloader, listHistoryRevision } = useSelector(
     (state) => state.requestSlice
   );
 
@@ -29,22 +40,35 @@ export const CheckTovarScreen = ({ navigation }) => {
   }, []);
 
   const getData = async () => {
+    dispatch(clearListSellersPoints());
+    ///// очищаю список продавцов каждой точки
+
+    const { seller_guid } = data;
     await getLocalDataUser({ changeLocalData, dispatch });
-    await dispatch(getHistoryCheck(data?.seller_guid));
-    await dispatch(getListAgents(data?.seller_guid));
+
+    ////// get список цех0в
+    await dispatch(getWorkShops(seller_guid));
+
+    ////// get список продавцов определенной точки
+    await dispatch(getSellersEveryPoint(seller_guid));
+
+    ////// get историю ревизии
+    await dispatch(getHistoryRevision(seller_guid));
   };
 
-  const empty = listHistoryCheck?.length === 0;
+  const navLick = () => navigation.navigate("RevisionRequest");
+
+  const empty = listHistoryRevision?.length === 0;
 
   return (
     <>
       <View style={styles.container}>
-        <View style={styles.returnBlock}>
-          <ViewButton
-            styles={styles.return}
-            onclick={() => setModalState(true)}
-          >
-            + Создать накладную для ревизии
+        <View style={styles.actionBlock}>
+          <ViewButton styles={styles.btn} onclick={() => setWorkShop(true)}>
+            Выбрать продавца для ревизии
+          </ViewButton>
+          <ViewButton styles={styles.btn} onclick={navLick}>
+            Запросы других продавцов
           </ViewButton>
         </View>
         <Text style={styles.title}>История ревизии</Text>
@@ -52,9 +76,9 @@ export const CheckTovarScreen = ({ navigation }) => {
         <View style={styles.blockList}>
           <FlatList
             contentContainerStyle={styles.flatListStyle}
-            data={listHistoryCheck}
+            data={listHistoryRevision}
             renderItem={({ item }) => (
-              <EveryInvoiceCheck obj={item} navigation={navigation} />
+              <ListProdsRevision item={item} navigation={navigation} />
             )}
             keyExtractor={(item) => item?.codeid}
             refreshControl={
@@ -63,11 +87,12 @@ export const CheckTovarScreen = ({ navigation }) => {
           />
         </View>
       </View>
-      <ModalChoiceCheck
-        modalState={modalState}
-        setModalState={setModalState}
+      <ModalWorkShop
+        modalState={workShop}
+        setModalState={setWorkShop}
         navigation={navigation}
       />
+      {/* /////для выбора цехов*/}
     </>
   );
 };
@@ -83,25 +108,28 @@ const styles = StyleSheet.create({
     paddingBottom: 20,
   },
 
-  returnBlock: {
+  actionBlock: {
     textAlign: "center",
     display: "flex",
     flexDirection: "row",
     justifyContent: "center",
     minWidth: "100%",
+    gap: 20,
   },
 
-  return: {
-    fontSize: 16,
+  btn: {
+    fontSize: 14,
     color: "#fff",
-    minWidth: "95%",
-    paddingTop: 15,
-    paddingBottom: 15,
-    borderRadius: 10,
+    width: "43%",
+    paddingTop: 7,
+    paddingBottom: 7,
+    paddingRight: 8,
+    paddingLeft: 8,
+    borderRadius: 8,
     fontWeight: 600,
     backgroundColor: "rgba(97 ,100, 239,0.7)",
-    marginTop: 20,
-    marginBottom: 20,
+    marginTop: 15,
+    marginBottom: 15,
   },
 
   title: {

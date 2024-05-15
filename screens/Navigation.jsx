@@ -30,6 +30,8 @@ import { Preloader } from "../components/Preloader";
 import { CheckTovarScreen } from "./CheckTovarScreen/CheckTovarScreen";
 import { InvoiceCheckScreen } from "./CheckTovarScreen/InvoiceCheckScreen";
 import { ListCheckProdScreen } from "./CheckTovarScreen/ListCheckProdScreen";
+import { EveryRevisionRequest } from "./CheckTovarScreen/EveryRevisionRequest";
+import { RevisionRequest } from "./CheckTovarScreen/RevisionRequest";
 
 const Stack = createNativeStackNavigator();
 
@@ -50,6 +52,7 @@ export const Navigation = () => {
       <Stack.Navigator
         screenOptions={{ headerStyle: { backgroundColor: "#fff" } }}
       >
+        {/* {false ? ( */}
         {checkLogin ? (
           <Stack.Screen
             name="Login"
@@ -84,6 +87,7 @@ export const Navigation = () => {
             />
 
             <Stack.Screen name="detailedInvoice" component={DetailedInvoice} />
+
             <Stack.Screen
               name="InvoiceHistory"
               component={AcceptInvoiceHistory}
@@ -166,15 +170,31 @@ export const Navigation = () => {
             />
 
             {/* /////////////////////// CheckTovar /////////////////////// */}
+
             <Stack.Screen
               name="CheckTovarScreen"
               component={CheckTovarScreen}
               options={{ title: "Ревизия" }}
+              ////// выбор продавца и сипсок истории
             />
+
             <Stack.Screen
               name="InvoiceCheckScreen"
               component={InvoiceCheckScreen}
               options={{ title: "Накладная для возврата" }}
+            />
+
+            <Stack.Screen
+              name="RevisionRequest"
+              component={RevisionRequest}
+              options={{ title: "Список запросов на ревизию" }}
+              ////// список запрос0в других пр0давцов для подтверждения ревизии
+            />
+
+            <Stack.Screen
+              name="EveryRevisionRequest"
+              component={EveryRevisionRequest}
+              ////// каждый запрос других пр0давцов для подтверждения ревизии
             />
 
             <Stack.Screen

@@ -1,13 +1,13 @@
-import { useEffect, useState } from 'react';
-import { FlatList, StyleSheet, Text, View } from 'react-native';
-import { TouchableOpacity, RefreshControl } from 'react-native';
-import { useDispatch, useSelector } from 'react-redux';
+import { useEffect, useState } from "react";
+import { FlatList, StyleSheet, Text, View } from "react-native";
+import { TouchableOpacity, RefreshControl } from "react-native";
+import { useDispatch, useSelector } from "react-redux";
 import {
   deleteSoldProd,
   getListSoldProd,
-} from '../store/reducers/requestSlice';
-import ConfirmationModal from '../components/ConfirmationModal';
-import { formatCount } from '../helpers/amounts';
+} from "../store/reducers/requestSlice";
+import ConfirmationModal from "../components/ConfirmationModal";
+import { formatCount } from "../helpers/amounts";
 
 export const SoldProductScreen = ({ route }) => {
   //// список проданных продуктов
@@ -37,7 +37,7 @@ export const SoldProductScreen = ({ route }) => {
   }
 
   return (
-    <View style={{ paddingBottom: 200 }}>
+    <View>
       <FlatList
         contentContainerStyle={styles.flatList}
         data={listSoldProd}
@@ -47,9 +47,9 @@ export const SoldProductScreen = ({ route }) => {
               <View style={styles.mainData}>
                 <Text style={styles.titleNum}>{item.codeid} </Text>
                 <View>
-                  <Text style={styles.titleDate}>{item.date || '...'}</Text>
+                  <Text style={styles.titleDate}>{item.date || "..."}</Text>
                   <Text style={styles.totalPrice}>
-                    {item?.product_price} х {item?.count} ={' '}
+                    {item?.product_price} х {item?.count} ={" "}
                     {formatCount(item?.total)} сом
                   </Text>
                 </View>
@@ -85,28 +85,28 @@ export const SoldProductScreen = ({ route }) => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: 'rgba(162, 178, 238, 0.102)',
-    minWidth: '100%',
+    backgroundColor: "rgba(162, 178, 238, 0.102)",
+    minWidth: "100%",
     padding: 8,
     paddingTop: 10,
     paddingBottom: 10,
     borderBottomWidth: 1,
-    borderColor: 'rgba(47, 71, 190, 0.287)',
+    borderColor: "rgba(47, 71, 190, 0.287)",
   },
 
   parentBlock: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
 
   titleNum: {
     fontSize: 19,
-    fontWeight: '700',
-    color: 'rgba(47, 71, 190, 0.672)',
-    borderColor: 'rgba(47, 71, 190, 0.672)',
+    fontWeight: "700",
+    color: "rgba(47, 71, 190, 0.672)",
+    borderColor: "rgba(47, 71, 190, 0.672)",
     borderWidth: 1,
-    backgroundColor: '#d4dfee',
+    backgroundColor: "#d4dfee",
     padding: 3,
     paddingLeft: 7,
     paddingRight: 0,
@@ -115,10 +115,10 @@ const styles = StyleSheet.create({
 
   titleDate: {
     fontSize: 14,
-    fontWeight: '500',
+    fontWeight: "500",
     borderRadius: 5,
     lineHeight: 16,
-    color: 'rgba(47, 71, 190, 0.672)',
+    color: "rgba(47, 71, 190, 0.672)",
   },
 
   // status: {
@@ -127,59 +127,63 @@ const styles = StyleSheet.create({
 
   title: {
     fontSize: 15,
-    fontWeight: '500',
+    fontWeight: "500",
     borderRadius: 5,
     lineHeight: 17,
-    color: '#222',
+    color: "#222",
     marginTop: 10,
   },
 
   price: {
     fontSize: 15,
-    fontWeight: '400',
+    fontWeight: "400",
   },
 
   totalPrice: {
     fontSize: 14,
-    fontWeight: '500',
+    fontWeight: "500",
     // marginTop: 15,
-    color: 'rgba(12, 169, 70, 0.9)',
+    color: "rgba(12, 169, 70, 0.9)",
   },
 
   mainData: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'flex-start',
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "flex-start",
     gap: 5,
   },
 
   noneData: {
     paddingTop: 250,
-    textAlign: 'center',
+    textAlign: "center",
     fontSize: 20,
-    fontWeight: '500',
-    color: '#222',
-    height: '100%',
+    fontWeight: "500",
+    color: "#222",
+    height: "100%",
   },
 
-  flatList: { width: '100%', paddingTop: 8 },
+  flatList: {
+    width: "100%",
+    paddingTop: 8,
+    paddingBottom: 40,
+  },
 
   //////////////////// krestik
   krest: {
     width: 22,
     height: 22,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     marginRight: 15,
   },
 
   line: {
-    position: 'absolute',
-    width: '100%',
+    position: "absolute",
+    width: "100%",
     height: 2,
-    backgroundColor: 'red',
+    backgroundColor: "red",
   },
 
-  deg: { transform: [{ rotate: '45deg' }] },
-  degMinus: { transform: [{ rotate: '-45deg' }] },
+  deg: { transform: [{ rotate: "45deg" }] },
+  degMinus: { transform: [{ rotate: "-45deg" }] },
 });
