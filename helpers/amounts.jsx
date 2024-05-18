@@ -56,6 +56,10 @@ export const totalSumEveryAccept = (list) => {
   return formatCount(totalSum);
 };
 
+export const sumSoputkaProds = (arr) => {
+  return arr?.reduce((sum, item) => sum + item?.total, 0);
+};
+
 ////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////
 export const formatCount = (count) => {

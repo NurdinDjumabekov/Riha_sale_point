@@ -26,10 +26,8 @@ export const ActionsEveryInvoice = ({ checkComponent, type }) => {
     (state) => state.stateSlice
   );
 
-  // console.log(listCategory, "listCategory");
   // console.log(listWorkShopSale, "listWorkShopSale");
-  // console.log(activeSelectCategory, "activeSelectCategory");
-  // console.log(activeSelectWorkShop, "activeSelectWorkShop");
+  // console.log(listCategory, "listCategory");
 
   const { data } = useSelector((state) => state.saveDataSlice);
 
@@ -80,7 +78,7 @@ export const ActionsEveryInvoice = ({ checkComponent, type }) => {
           items={listWorkShopSale}
           useNativeAndroidPickerStyle={false}
           value={activeSelectWorkShop}
-          placeholder={{}}
+          // placeholder={{}}
           style={styles}
         />
         <View style={styles.arrow}></View>
@@ -92,7 +90,7 @@ export const ActionsEveryInvoice = ({ checkComponent, type }) => {
           items={listCategory}
           useNativeAndroidPickerStyle={false}
           value={activeSelectCategory}
-          placeholder={{}}
+          // placeholder={{}}
           style={styles}
         />
         <View style={styles.arrow}></View>

@@ -15,17 +15,15 @@ export const SoldProductScreen = ({ route }) => {
   const { guidInvoice } = route.params;
   const [modalItemGuid, setModalItemGuid] = useState(null); // Состояние для идентификатора элемента, для которого открывается модальное окно
 
+  // console.log(guidInvoice, "guidInvoice");
+
   const { preloader, listSoldProd } = useSelector(
     (state) => state.requestSlice
   );
 
-  useEffect(() => {
-    getData();
-  }, [guidInvoice]);
+  useEffect(() => getData(), [guidInvoice]);
 
-  const getData = () => {
-    dispatch(getListSoldProd(guidInvoice));
-  };
+  const getData = () => dispatch(getListSoldProd(guidInvoice));
 
   const del = (product_guid) => {
     dispatch(deleteSoldProd({ product_guid, getData }));

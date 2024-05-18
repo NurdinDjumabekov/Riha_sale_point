@@ -15,7 +15,6 @@ import { getWorkShops } from "../../store/reducers/requestSlice";
 import { changeLocalData } from "../../store/reducers/saveDataSlice";
 
 ///// components
-import { EveryInvoiceCheck } from "../../components/CheckProd/EveryInvoiceCheck";
 import { ModalWorkShop } from "../../components/CheckProd/ModalWorkShop";
 
 ///helpers
@@ -71,14 +70,18 @@ export const CheckTovarScreen = ({ navigation }) => {
             Запросы других продавцов
           </ViewButton>
         </View>
-        <Text style={styles.title}>История ревизии</Text>
+        <Text style={styles.title}>История вашей ревизии</Text>
         {empty && <Text style={styles.noneData}>Список пустой</Text>}
         <View style={styles.blockList}>
           <FlatList
             contentContainerStyle={styles.flatListStyle}
             data={listHistoryRevision}
             renderItem={({ item }) => (
-              <ListProdsRevision item={item} navigation={navigation} />
+              <ListProdsRevision
+                item={item}
+                navigation={navigation}
+                disable={true}
+              />
             )}
             keyExtractor={(item) => item?.codeid}
             refreshControl={

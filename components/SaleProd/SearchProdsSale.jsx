@@ -24,7 +24,7 @@ export const SearchProdsSale = ({ getData, checkComponent }) => {
       dispatch(changeActiveSelectCategory("0")); // Установка активной категории
       getLocalDataUser({ changeLocalData, dispatch }); // Получение локальных данных пользователя
       const sendData = { searchProd: text, seller_guid: data?.seller_guid }; // Подготовка данных для поиска
-      dispatch(searchProdTT({ ...sendData, checkComponent })); // Выполнение поиска с заданными параметрами
+      dispatch(searchProdTT({ ...sendData, checkComponent, type: 2 })); // Выполнение поиска с заданными параметрами (type: 2 поиск по основным цехам(не сопутки!))
     }, 800),
     []
   );
@@ -32,9 +32,9 @@ export const SearchProdsSale = ({ getData, checkComponent }) => {
   const onChange = (text) => {
     dispatch(changeSearchProd(text));
     searchDataDebounce(text);
-    if (text === "") {
-      getData();
-    }
+    // if (text === "") {
+    //   getData();
+    // }
   };
 
   return (

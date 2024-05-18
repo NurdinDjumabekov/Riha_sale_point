@@ -221,14 +221,15 @@ export const acceptInvoiceTT = createAsyncThunk(
 export const getWorkShopsGorSale = createAsyncThunk(
   "getWorkShopsGorSale",
   async function (props, { dispatch, rejectWithValue }) {
-    // const { seller_guid, checkComponent, type } = props;
-    /// check
+    const { seller_guid } = props;
     try {
-      const response = await axios(`${API}/tt/get_workshop`);
+      const response = await axios(
+        `${API}/tt/get_leftover_workshop?seller_guid=${seller_guid}`
+      );
       if (response.status >= 200 && response.status < 300) {
-        const { guid } = response?.data?.[0];
-        await dispatch(changeActiveSelectWorkShop(guid));
-        await dispatch(getCategoryTT({ ...props, workshop_guid: guid }));
+        const { workshop_guid } = response?.data?.[0];
+        await dispatch(changeActiveSelectWorkShop(workshop_guid));
+        await dispatch(getCategoryTT({ ...props, workshop_guid }));
         return response.data;
       } else {
         throw Error(`Error: ${response.status}`);
@@ -247,15 +248,13 @@ export const getCategoryTT = createAsyncThunk(
     const { checkComponent, seller_guid, type, workshop_guid } = props;
     const urlLink = !checkComponent
       ? `${API}/tt/get_category_all` //// для сопутки
-      : `${API}/tt/get_category_all?workshop_guid=${workshop_guid}`; //// для пр0дажи
-    // : `${API}/tt/get_category?seller_guid=${seller_guid}`; //// для пр0дажи
-    /// check
+      : `${API}/tt/get_category?seller_guid=${seller_guid}&workshop_guid=${workshop_guid}`; //// для пр0дажи
 
     try {
       const response = await axios(urlLink);
+      // console.log(urlLink, "urlLink");
       if (response.status >= 200 && response.status < 300) {
-        const category_guid = response?.data?.[0]?.category_guid || "";
-        await dispatch(changeActiveSelectCategory(category_guid)); /// исользую в продаже и в остатках
+        const category_guid = response.data?.[0]?.category_guid || "";
 
         if (type === "leftovers") {
           await dispatch(getMyLeftovers({ seller_guid, category_guid }));
@@ -266,6 +265,7 @@ export const getCategoryTT = createAsyncThunk(
           await dispatch(getProductTT(sedData));
           //// get список продуктов сопутки по категориям
           //// сразу подставляю первую категорию
+          dispatch(changeActiveSelectCategory(category_guid)); /// исользую в продаже и в остатках
         }
         return response?.data;
       } else {
@@ -304,14 +304,13 @@ export const searchProdTT = createAsyncThunk(
   "searchProdTT",
   /// для поиска товаров
   async function (props, { dispatch, rejectWithValue }) {
-    const { searchProd, seller_guid, checkComponent } = props;
+    const { searchProd, seller_guid, checkComponent, type } = props;
     const urlLink = !checkComponent
       ? `${API}/tt/get_product_all?search=${searchProd}` //// для сопутки
-      : `${API}/tt/get_product?search=${searchProd}&seller_guid=${seller_guid}`; //// для пр0дажи
+      : `${API}/tt/get_product?search=${searchProd}&seller_guid=${seller_guid}&type=${type}`; //// для пр0дажи
     try {
       const response = await axios(urlLink);
       if (response.status >= 200 && response.status < 300) {
-        dispatch(changeSearchProd(searchProd));
         return response?.data;
       } else {
         throw Error(`Error: ${response.status}`);
@@ -434,7 +433,7 @@ export const getListSoldProd = createAsyncThunk(
         url: `${API}/tt/get_point_invoice_product?invoice_guid=${guidInvoice}`,
       });
       if (response.status >= 200 && response.status < 300) {
-        // console.log(response?.data?.[0]?.list, "response");
+        console.log(response?.data, "response");
         return response?.data?.[0]?.list;
       } else {
         throw Error(`Error: ${response.status}`);
@@ -1036,7 +1035,7 @@ export const getRevisionRequest = createAsyncThunk(
     try {
       const response = await axios({
         method: "GET",
-        url: `${API}/tt/get_invoice_revision?seller_guid=${seller_guid}&type=1`,
+        url: `${API}/tt/get_invoice_revision?seller_guid=${seller_guid}&type=2`,
       });
       if (response.status >= 200 && response.status < 300) {
         return response.data;
@@ -1057,7 +1056,7 @@ export const getHistoryRevision = createAsyncThunk(
     try {
       const response = await axios({
         method: "GET",
-        url: `${API}/tt/get_invoice_revision?seller_guid=${seller_guid}&type=0`,
+        url: `${API}/tt/get_invoice_revision?seller_guid=${seller_guid}&type=1`,
       });
       if (response.status >= 200 && response.status < 300) {
         return response?.data;
@@ -1246,10 +1245,12 @@ const requestSlice = createSlice({
     ///// getWorkShopsGorSale
     builder.addCase(getWorkShopsGorSale.fulfilled, (state, action) => {
       state.preloader = false;
-      state.listWorkShopSale = action?.payload?.map(({ name, guid }, ind) => ({
-        label: `${ind + 1}. ${name}`,
-        value: guid,
-      }));
+      state.listWorkShopSale = action?.payload?.map(
+        ({ workshop, workshop_guid }, ind) => ({
+          label: `${ind + 1}. ${workshop}`,
+          value: workshop_guid,
+        })
+      );
     });
     builder.addCase(getWorkShopsGorSale.rejected, (state, action) => {
       state.error = action.payload;
@@ -1338,6 +1339,9 @@ const requestSlice = createSlice({
     builder.addCase(searchProdTT.fulfilled, (state, action) => {
       // state.preloader = false;
       state.listProductTT = action.payload;
+      if (action.payload?.length === 0) {
+        Alert.alert("По вашему запросу ничего не найдено (");
+      }
     });
     builder.addCase(searchProdTT.rejected, (state, action) => {
       state.error = action.payload;

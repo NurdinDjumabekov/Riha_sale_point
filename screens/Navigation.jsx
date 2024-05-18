@@ -121,7 +121,6 @@ export const Navigation = () => {
             <Stack.Screen
               name="SoputkaProdHistoryScreen"
               component={SoputkaProdHistoryScreen}
-              options={{ title: "" }}
             />
 
             {/* /////////////////////// Остатки ///////////////////////*/}
@@ -132,7 +131,12 @@ export const Navigation = () => {
             />
 
             {/* /////////////////////// Продажа ///////////////////////*/}
-            <Stack.Screen name="Shipment" component={MyShipmentScreen} />
+            <Stack.Screen
+              name="Shipment"
+              component={MyShipmentScreen}
+              options={{ title: "Продажи" }}
+            />
+
             <Stack.Screen
               name="SoldProduct"
               component={SoldProductScreen} /// список проданных товаров
@@ -194,12 +198,14 @@ export const Navigation = () => {
             <Stack.Screen
               name="EveryRevisionRequest"
               component={EveryRevisionRequest}
+              options={{ title: "" }}
               ////// каждый запрос других пр0давцов для подтверждения ревизии
             />
 
             <Stack.Screen
               name="ListCheckProdScreen"
               component={ListCheckProdScreen}
+              options={{ title: "" }}
             />
           </>
         )}

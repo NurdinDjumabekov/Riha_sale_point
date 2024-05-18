@@ -7,7 +7,7 @@ import {
   getListSoputkaProd,
 } from "../store/reducers/requestSlice";
 import { ViewButton } from "../customsTags/ViewButton";
-import { formatCount } from "../helpers/amounts";
+import { formatCount, sumSoputkaProds } from "../helpers/amounts";
 import ConfirmationModal from "../components/ConfirmationModal";
 import { useState } from "react";
 import { TouchableOpacity } from "react-native";
@@ -66,12 +66,12 @@ export const SoputkaProdHistoryScreen = ({ navigation, route }) => {
             <RefreshControl refreshing={preloader} onRefresh={getData} />
           }
         >
-          {listData?.map((item) => (
+          {listData?.map((item, index) => (
             <>
               <View style={styles.EveryInner}>
                 <View style={styles.mainData}>
                   <View style={styles.mainDataInner}>
-                    <Text style={styles.titleNum}>{item.codeid}</Text>
+                    <Text style={styles.titleNum}>{index + 1}</Text>
                     <Text style={styles.sum}>
                       {item.product_price} х {item.count} ={" "}
                       {formatCount(item.total)} сом
@@ -99,6 +99,9 @@ export const SoputkaProdHistoryScreen = ({ navigation, route }) => {
             </>
           ))}
         </ScrollView>
+        <Text style={styles.totalItemSumm}>
+          Общая сумма: {sumSoputkaProds(listProdSoputka?.[0]?.list)} сом
+        </Text>
         {status && (
           <View style={styles.actions}>
             <ViewButton
@@ -209,6 +212,14 @@ const styles = StyleSheet.create({
     borderColor: "rgb(217 223 232)",
     alignSelf: "center",
     fontSize: 16,
+  },
+
+  totalItemSumm: {
+    fontSize: 18,
+    fontWeight: "500",
+    color: "rgba(47, 71, 190, 0.991)",
+    paddingHorizontal: 10,
+    paddingBottom: 10,
   },
 
   //////////////////// krestik

@@ -20,11 +20,7 @@ export const StoreSpendingScreen = ({ navigation }) => {
   const { expense } = useSelector((state) => state.stateSlice);
   const { listCategExpense } = useSelector((state) => state.requestSlice);
 
-  // const seller_guid = "e7458a29-6f7f-4364-a96d-ed878812f0cf";
-
-  useEffect(() => {
-    getData();
-  }, []);
+  useEffect(() => getData(), []);
 
   const getData = async () => {
     await getLocalDataUser({ changeLocalData, dispatch });
@@ -46,22 +42,14 @@ export const StoreSpendingScreen = ({ navigation }) => {
   };
 
   const changeSel = (value) => {
-    dispatch(
-      changeExpense({
-        ...expense,
-        expense_type: value,
-      })
-    );
+    const send = { ...expense, expense_type: value };
+    dispatch(changeExpense(send));
   };
 
   const changeAmount = (num) => {
     if (/^\d*\.?\d*$/.test(num) || num === "") {
-      dispatch(
-        changeExpense({
-          ...expense,
-          amount: num,
-        })
-      );
+      const send = { ...expense, amount: num };
+      dispatch(changeExpense(send));
     }
   };
 

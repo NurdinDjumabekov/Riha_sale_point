@@ -1,8 +1,12 @@
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { statusColor, statusRevision } from "../../helpers/Data";
 
-export const ListProdsRevision = ({ item, navigation }) => {
+export const ListProdsRevision = ({ item, navigation, disable }) => {
   const lookInvoice = (invoice_guid) => {
-    navigation.navigate("EveryRevisionRequest", { invoice_guid });
+    navigation.navigate("EveryRevisionRequest", {
+      invoice_guid,
+      disable,
+    });
   };
 
   return (
@@ -11,11 +15,18 @@ export const ListProdsRevision = ({ item, navigation }) => {
       onPress={() => lookInvoice(item?.guid)}
     >
       <View style={styles.innerBlock}>
+        <Text style={styles.titleDate}>{item?.date}</Text>
         <View style={styles.mainData}>
           <Text style={styles.titleNum}>{item?.codeid} </Text>
           <View>
-            <Text style={[styles.titleDate, styles.role]}>{item?.seller}</Text>
-            <Text style={styles.titleDate}>{item?.date}</Text>
+            <Text style={[styles.titleDate, styles.role]}>
+              {item?.seller_from}
+            </Text>
+            <Text
+              style={[styles.titleDate, { color: statusColor?.[item?.status] }]}
+            >
+              {statusRevision?.[item.status]}
+            </Text>
           </View>
         </View>
       </View>

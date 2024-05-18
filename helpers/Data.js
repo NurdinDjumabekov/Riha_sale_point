@@ -98,3 +98,14 @@ export const typeProd = {
   2: "шт",
   /////count_type
 };
+
+export const statusRevision = {
+  1: "Не подтверждён",
+  2: "Подтверждён",
+  ///// статус накладных для ревизии
+};
+
+export const statusColor = {
+  1: "red",
+  2: "green",
+};

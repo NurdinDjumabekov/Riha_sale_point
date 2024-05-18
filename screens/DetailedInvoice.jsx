@@ -1,13 +1,7 @@
 import { useEffect, useState } from "react";
 import { Row, Rows, Table } from "react-native-table-component";
-import {
-  Dimensions,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { Dimensions, ScrollView, StyleSheet } from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
 
 import { useDispatch, useSelector } from "react-redux";
 
@@ -30,14 +24,6 @@ import { totalCountAccept, totalSumAccept } from "../helpers/amounts";
 
 import styled from "styled-components/native";
 
-const Div = styled.View`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 4px;
-  padding: 0px 10px;
-`;
-
 export const DetailedInvoice = ({ route, navigation }) => {
   const { date, guid } = route.params;
   const [listData, setListData] = useState([]);
@@ -48,9 +34,7 @@ export const DetailedInvoice = ({ route, navigation }) => {
   const { everyInvoice } = useSelector((state) => state.requestSlice);
   const { acceptConfirmInvoice } = useSelector((state) => state.stateSlice);
 
-  const clickOkay = () => {
-    setModalVisibleOk(true);
-  };
+  const clickOkay = () => setModalVisibleOk(true);
 
   const sendData = () => {
     dispatch(acceptInvoiceTT({ data: acceptConfirmInvoice, navigation }));
@@ -71,9 +55,7 @@ export const DetailedInvoice = ({ route, navigation }) => {
     setIsChecked(!isChecked); // Инвертируем состояние чекбокса
   };
 
-  useEffect(() => {
-    dispatch(getMyEveryInvoice(guid));
-  }, []);
+  useEffect(() => dispatch(getMyEveryInvoice(guid)), []);
 
   useEffect(() => {
     navigation.setOptions({
@@ -123,17 +105,14 @@ export const DetailedInvoice = ({ route, navigation }) => {
       return changeValue !== 0 && changeValue !== "";
     });
 
-  // console.log(everyInvoice, "everyInvoice");
-  // console.log(acceptConfirmInvoice, "acceptConfirmInvoice");
-
   return (
     <ScrollView>
       <View style={styles.container}>
-        <Div style={{ justifyContent: "space-between", marginBottom: 5 }}>
-          <Div style={{ paddingTop: 10, paddingBottom: 15, paddingLeft: 0 }}>
+        <View style={styles.parent}>
+          <View style={styles.child}>
             <Text style={styles.titleDate}>{everyInvoice?.date}</Text>
-          </Div>
-        </Div>
+          </View>
+        </View>
         <Table>
           <Row
             data={listTableForAcceptInvoice}
@@ -198,7 +177,31 @@ const styles = StyleSheet.create({
     paddingTop: 5,
   },
 
+  parent: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginBottom: 5,
+    gap: 4,
+    paddingHorizontal: 10,
+  },
+
+  child: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    gap: 4,
+    marginBottom: 5,
+    paddingHorizontal: 10,
+    paddingTop: 10,
+    paddingBottom: 15,
+    paddingLeft: 0,
+  },
+
   head: { height: 65, backgroundColor: "rgba(199, 210, 254, 0.250)" },
+
   text: {
     margin: 6,
     marginBottom: 8,
@@ -212,6 +215,7 @@ const styles = StyleSheet.create({
     fontWeight: "500",
     color: "#222",
   },
+
   textTitle: {
     fontSize: 15,
     fontWeight: "700",
@@ -219,6 +223,7 @@ const styles = StyleSheet.create({
     paddingLeft: 5,
     color: "#383838",
   },
+
   divAction: {
     display: "flex",
     flexDirection: "row",
@@ -279,7 +284,5 @@ const styles = StyleSheet.create({
     color: "#1ab782",
     minWidth: "95%",
     alignSelf: "center",
-    // position: "absolute",
-    // bottom: -80,
   },
 });

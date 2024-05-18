@@ -8,52 +8,43 @@ export const ListExpense = ({ getData }) => {
 
   const emptyData = listExpense?.length === 0;
 
+  if (emptyData) {
+    return <Text style={styles.noneData}>Список пустой</Text>;
+  }
+
   return (
-    <>
-      {emptyData ? (
-        <Text style={styles.noneData}>Список пустой</Text>
-      ) : (
-        <View style={styles.parentBlock}>
-          <FlatList
-            contentContainerStyle={styles.flatlist}
-            data={listExpense}
-            renderItem={({ item }) => (
-              <View style={styles.everyProd}>
-                <View style={styles.everyProdInner}>
-                  <View style={styles.blockTitle}>
-                    <Text style={styles.title}>
-                      {item?.seller_fio} ({item.name})
-                    </Text>
-                    <Text style={styles.comment}>
-                      {item.comment ? item.comment : "..."}
-                    </Text>
-                  </View>
-                  <View style={styles.blockTitle}>
-                    <Text style={item?.status ? styles.noo : styles.good}>
-                      {+item?.status === 1 ? "Отменено админом" : "Одобрено"}
-                    </Text>
-                    <Text style={styles.date}>{item.date_system}</Text>
-                    <Text style={styles.sum}>{item.amount} сом</Text>
-                  </View>
-                </View>
-                {item?.cancel_comment && (
-                  <Text style={styles.commentAdmin}>
-                    {item?.cancel_comment}
-                  </Text>
-                )}
+    <View style={styles.parentBlock}>
+      <FlatList
+        contentContainerStyle={styles.flatlist}
+        data={listExpense}
+        renderItem={({ item }) => (
+          <View style={styles.everyProd}>
+            <View style={styles.everyProdInner}>
+              <View style={styles.blockTitle}>
+                <Text style={styles.title}>{item?.name}</Text>
+                <Text style={styles.comment}>
+                  {item.comment ? item.comment : "..."}
+                </Text>
               </View>
+              <View style={styles.blockTitle}>
+                <Text style={item?.status ? styles.noo : styles.good}>
+                  {+item?.status === 1 ? "Отменено админом" : "Одобрено"}
+                </Text>
+                <Text style={styles.date}>{item.date_system}</Text>
+                <Text style={styles.sum}>{item.amount} сом</Text>
+              </View>
+            </View>
+            {item?.cancel_comment && (
+              <Text style={styles.commentAdmin}>{item?.cancel_comment}</Text>
             )}
-            keyExtractor={(item) => item.guid}
-            refreshControl={
-              <RefreshControl
-                refreshing={preloader}
-                onRefresh={() => getData()}
-              />
-            }
-          />
-        </View>
-      )}
-    </>
+          </View>
+        )}
+        keyExtractor={(item) => item.guid}
+        refreshControl={
+          <RefreshControl refreshing={preloader} onRefresh={() => getData()} />
+        }
+      />
+    </View>
   );
 };
 
@@ -66,23 +57,27 @@ const styles = StyleSheet.create({
 
   everyProd: {
     padding: 15,
+    paddingHorizontal: 10,
     backgroundColor: "rgba(212, 223, 238, 0.47)",
     marginBottom: 10,
     borderRadius: 6,
     borderWidth: 1,
     borderColor: "rgba(47, 71, 190, 0.107)",
   },
+
   everyProdInner: {
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
     flexDirection: "row",
+    gap: 10,
   },
 
   title: {
     fontSize: 15,
     fontWeight: "500",
     color: "#222",
+    maxWidth: "95%",
   },
 
   comment: {

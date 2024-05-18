@@ -9,6 +9,7 @@ import {
 } from "../store/reducers/requestSlice";
 import ConfirmationModal from "../components/ConfirmationModal";
 import { ViewButton } from "../customsTags/ViewButton";
+import { sumSoputkaProds } from "../helpers/amounts";
 
 export const SoputkaProductScreen = ({ route, navigation }) => {
   //// список проданных продуктов
@@ -21,13 +22,9 @@ export const SoputkaProductScreen = ({ route, navigation }) => {
     (state) => state.requestSlice
   );
 
-  useEffect(() => {
-    getData();
-  }, [guidInvoice]);
+  useEffect(() => getData(), [guidInvoice]);
 
-  const getData = () => {
-    dispatch(getListSoputkaProd(guidInvoice));
-  };
+  const getData = () => dispatch(getListSoputkaProd(guidInvoice));
 
   const del = (product_guid) => {
     dispatch(deleteSoputkaProd({ product_guid, getData }));
@@ -94,6 +91,9 @@ export const SoputkaProductScreen = ({ route, navigation }) => {
               <RefreshControl refreshing={preloader} onRefresh={getData} />
             }
           />
+          <Text style={styles.totalItemSumm}>
+            Общая сумма: {sumSoputkaProds(listProdSoputka?.[0]?.list)} сом
+          </Text>
           {moreOne && (
             <ViewButton
               styles={styles.sendBtn}
@@ -191,6 +191,14 @@ const styles = StyleSheet.create({
   },
 
   flatList: { width: "100%", paddingTop: 8 },
+
+  totalItemSumm: {
+    fontSize: 18,
+    fontWeight: "500",
+    color: "rgba(47, 71, 190, 0.991)",
+    paddingHorizontal: 10,
+    paddingVertical: 10,
+  },
 
   //////////////////// krestik
   krest: {

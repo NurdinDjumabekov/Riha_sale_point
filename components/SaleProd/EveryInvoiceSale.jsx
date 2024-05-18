@@ -36,13 +36,13 @@ export const EveryInvoiceSale = ({ forAddTovar, navigation }) => {
     ////// очищаю поиск
   };
 
-  useEffect(() => {
-    navigation.setOptions({
-      headerRight: () => (
-        <SearchProdsSale getData={getData} checkComponent={checkComponent} />
-      ),
-    });
-  }, []);
+  // useEffect(() => {
+  //   navigation.setOptions({
+  //     headerRight: () => (
+  //       <SearchProdsSale getData={getData} checkComponent={checkComponent} />
+  //     ),
+  //   });
+  // }, []);
 
   useFocusEffect(
     useCallback(() => {
@@ -54,9 +54,9 @@ export const EveryInvoiceSale = ({ forAddTovar, navigation }) => {
 
   const emptyDataProd = listProductTT?.length === 0;
 
-  if (emptyData) {
-    return <Text style={styles.noneData}>Список пустой</Text>;
-  }
+  // if (emptyData) {
+  //   return <Text style={styles.noneData}>Список пустой</Text>;
+  // }
 
   return (
     <View style={styles.container}>

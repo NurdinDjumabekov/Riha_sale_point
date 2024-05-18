@@ -38,15 +38,19 @@ export const EveryMyInvoice = ({ obj, navigation }) => {
     }
   };
 
-  // console.log(obj, "obj");
-
   return (
     <TouchableOpacity style={styles.container} onPress={lookInvoice}>
       <View style={styles.innerBlock}>
         <View style={styles.mainData}>
           <Text style={styles.titleNum}>{obj.codeid} </Text>
           <View>
-            <Text style={[styles.titleDate, styles.role]}>{obj?.agent}</Text>
+            <Text
+              style={[styles.titleDate, styles.role]}
+              numberOfLines={1}
+              ellipsizeMode="tail"
+            >
+              {obj?.agent}
+            </Text>
             <Text style={styles.titleDate}>{obj.date}</Text>
           </View>
         </View>
@@ -116,20 +120,17 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     lineHeight: 17,
     color: "rgba(47, 71, 190, 0.672)",
+    width: "80%",
   },
 
-  status: {
-    color: "rgba(205, 70, 92, 0.756)",
-  },
+  status: { color: "rgba(205, 70, 92, 0.756)" },
 
   totalPrice: {
     fontSize: 16,
     fontWeight: "400",
   },
 
-  comments: {
-    maxWidth: 230,
-  },
+  comments: { maxWidth: 230 },
 
   mainData: {
     display: "flex",

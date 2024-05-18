@@ -1,7 +1,6 @@
 import React, { useCallback, useRef } from "react";
 import { StyleSheet, Image, View } from "react-native";
 import { TextInput, TouchableOpacity } from "react-native";
-
 import { useDispatch, useSelector } from "react-redux";
 import searchIcon from "../../assets/icons/searchIcon.png";
 import { debounce } from "lodash";
@@ -21,20 +20,18 @@ export const SearchProdsSoputka = ({ getData, checkComponent }) => {
 
   const searchData = useCallback(
     debounce((text) => {
-      getLocalDataUser({ changeLocalData, dispatch }); // Получение локальных данных пользователя
-      const sendData = { searchProd: text, seller_guid: data?.seller_guid }; // Подготовка данных для поиска
-      dispatch(searchProdTT({ ...sendData, checkComponent })); // Выполнение поиска с заданными параметрами
-    }, 500),
-    []
+      if (text?.length > 1) {
+        getLocalDataUser({ changeLocalData, dispatch });
+        const sendData = { searchProd: text, seller_guid: data?.seller_guid };
+        dispatch(searchProdTT({ ...sendData, checkComponent, type: 1 }));
+      }
+    }, 800),
+    [data]
   );
 
   const onChange = (text) => {
     dispatch(changeSearchProd(text));
-    if (text?.length > 2) {
-      searchData(text);
-    } else if (text === "") {
-      getData();
-    }
+    text?.length === 0 ? getData() : searchData(text);
   };
 
   return (

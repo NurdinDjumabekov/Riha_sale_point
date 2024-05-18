@@ -16,18 +16,14 @@ export const MyApplicationScreen = ({ navigation, route }) => {
   );
   const { data } = useSelector((state) => state.saveDataSlice);
 
-  useEffect(() => {
-    getData();
-  }, []);
+  useEffect(() => getData(), []);
 
   const getData = async () => {
     await getLocalDataUser({ changeLocalData, dispatch });
     await dispatch(getMyInvoice(data?.seller_guid));
   };
 
-  const getHistory = () => {
-    navigation.navigate("InvoiceHistory");
-  };
+  const getHistory = () => navigation.navigate("InvoiceHistory");
 
   const widthMax = { minWidth: "100%", width: "100%" };
 

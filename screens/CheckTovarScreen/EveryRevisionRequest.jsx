@@ -18,7 +18,7 @@ import { listTableForAcceptInvoice } from "../../helpers/Data";
 import styled from "styled-components/native";
 
 export const EveryRevisionRequest = ({ route, navigation }) => {
-  const { invoice_guid } = route.params;
+  const { invoice_guid, disable } = route.params;
 
   const dispatch = useDispatch();
 
@@ -55,7 +55,7 @@ export const EveryRevisionRequest = ({ route, navigation }) => {
   }, [everyRequestRevision]);
 
   const windowWidth = Dimensions.get("window").width;
-  const arrWidth = [65, 20, 15]; //  проценты %
+  const arrWidth = [60, 20, 20]; //  проценты %
 
   // Преобразуем проценты в абсолютные значения ширины
   const resultWidths = arrWidth.map(
@@ -96,11 +96,11 @@ export const EveryRevisionRequest = ({ route, navigation }) => {
             </View>
           </View>
         </View>
-
-        {/* ////// check */}
-        <ViewButton styles={styles.sendBtn} onclick={clickOkay}>
-          Принять накладную
-        </ViewButton>
+        {!disable && (
+          <ViewButton styles={styles.sendBtn} onclick={clickOkay}>
+            Принять накладную
+          </ViewButton>
+        )}
       </View>
       <ConfirmationModal
         visible={modalVisibleOk}
@@ -147,6 +147,7 @@ const styles = StyleSheet.create({
   },
 
   head: { height: 65, backgroundColor: "rgba(199, 210, 254, 0.250)" },
+
   text: {
     margin: 6,
     marginBottom: 8,
@@ -160,6 +161,7 @@ const styles = StyleSheet.create({
     fontWeight: "500",
     color: "#222",
   },
+
   textTitle: {
     fontSize: 15,
     fontWeight: "700",
@@ -167,6 +169,7 @@ const styles = StyleSheet.create({
     paddingLeft: 5,
     color: "#383838",
   },
+
   divAction: {
     display: "flex",
     flexDirection: "row",

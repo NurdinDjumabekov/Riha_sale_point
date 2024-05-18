@@ -37,9 +37,7 @@ export const MyShipmentScreen = ({ navigation }) => {
     await dispatch(createInvoiceTT(data?.seller_guid));
   };
 
-  const clearStates = () => {
-    dispatch(changeTemporaryData({})); // очищаю активный продукт
-  };
+  const clearStates = () => dispatch(changeTemporaryData({})); // очищаю активный продукт
 
   const listProdSale = () => {
     navigation.navigate("SoldProduct", {
