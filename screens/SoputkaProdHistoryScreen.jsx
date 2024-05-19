@@ -7,7 +7,7 @@ import {
   getListSoputkaProd,
 } from "../store/reducers/requestSlice";
 import { ViewButton } from "../customsTags/ViewButton";
-import { formatCount, sumSoputkaProds } from "../helpers/amounts";
+import { formatCount, sumSoputkaProds, unitResultFN } from "../helpers/amounts";
 import ConfirmationModal from "../components/ConfirmationModal";
 import { useState } from "react";
 import { TouchableOpacity } from "react-native";
@@ -57,6 +57,8 @@ export const SoputkaProdHistoryScreen = ({ navigation, route }) => {
 
   const listData = listProdSoputka?.[0]?.list;
 
+  const totals = unitResultFN(listData);
+
   return (
     <>
       <View style={styles.container}>
@@ -73,8 +75,8 @@ export const SoputkaProdHistoryScreen = ({ navigation, route }) => {
                   <View style={styles.mainDataInner}>
                     <Text style={styles.titleNum}>{index + 1}</Text>
                     <Text style={styles.sum}>
-                      {item.product_price} х {item.count} ={" "}
-                      {formatCount(item.total)} сом
+                      {item.product_price} сом х {item.count} {item?.unit} ={" "}
+                      {formatCount(item.total_soputka)} сом
                     </Text>
                   </View>
                   {status && (
@@ -100,7 +102,10 @@ export const SoputkaProdHistoryScreen = ({ navigation, route }) => {
           ))}
         </ScrollView>
         <Text style={styles.totalItemSumm}>
-          Общая сумма: {sumSoputkaProds(listProdSoputka?.[0]?.list)} сом
+          Итого: {totals?.totalKg} кг и {totals?.totalSht} штук
+        </Text>
+        <Text style={styles.totalItemSumm}>
+          Сумма: {sumSoputkaProds(listProdSoputka?.[0]?.list)} сом
         </Text>
         {status && (
           <View style={styles.actions}>
@@ -219,7 +224,6 @@ const styles = StyleSheet.create({
     fontWeight: "500",
     color: "rgba(47, 71, 190, 0.991)",
     paddingHorizontal: 10,
-    paddingBottom: 10,
   },
 
   //////////////////// krestik

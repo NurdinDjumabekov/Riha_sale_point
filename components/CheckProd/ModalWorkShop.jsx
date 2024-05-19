@@ -1,18 +1,25 @@
-import { Alert, ScrollView, StyleSheet, Text } from "react-native";
-import { TouchableOpacity, View } from "react-native";
+import { StyleSheet, Text } from "react-native";
+import { TouchableOpacity } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import { Modal } from "react-native";
-import { ViewButton } from "../../customsTags/ViewButton";
-import { useState } from "react";
-import { ChoiceAgents } from "../ChoiceAgents";
-import { createInvoiceCheck } from "../../store/reducers/requestSlice";
+import { useCallback, useMemo, useRef, useState } from "react";
+import {
+  createInvoiceCheck,
+  getWorkShopsForRevision,
+} from "../../store/reducers/requestSlice";
+import BottomSheet, {
+  BottomSheetFlatList,
+  BottomSheetBackdrop,
+} from "@gorhom/bottom-sheet";
+import { View } from "react-native";
 
 export const ModalWorkShop = (props) => {
   //// модалка для выбора цеха и продавца для которого ревизия
 
-  const { modalState, setModalState, navigation } = props;
+  const { navigation, refAccord } = props;
 
   const dispatch = useDispatch();
+
+  const refWorkShop = useRef();
 
   const { listSellersPoints, listWorkShop } = useSelector(
     (state) => state.requestSlice
@@ -23,141 +30,171 @@ export const ModalWorkShop = (props) => {
   const [obj, setObj] = useState({ guid: "", guidWorkShop: "" });
   ///// guid - guid продавца  //// guidWorkShop - guid цеха
 
-  const closeModal = () => {
-    setModalState(false);
-    setObj({ guid: "", guidWorkShop: "" });
+  const snapPointsWorks = useMemo(() => ["70%"], []);
+
+  const shadowBlock = useCallback(
+    (props) => (
+      <BottomSheetBackdrop
+        appearsOnIndex={1}
+        disappearsOnIndex={-1}
+        {...props}
+      ></BottomSheetBackdrop>
+    ),
+    []
+  );
+
+  const closeSeller = () => refAccord.current?.close();
+  const closeWorkShop = () => refWorkShop.current?.close();
+
+  const selectSeller = useCallback(
+    ({ item }) => (
+      <TouchableOpacity
+        style={styles.selectBlockInner}
+        onPress={() => choiceSeller(item?.guid)}
+      >
+        <Text style={styles.selectText}>{item?.fio}</Text>
+      </TouchableOpacity>
+    ),
+    [obj]
+  );
+
+  const choiceSeller = (guid) => {
+    setObj({ ...obj, guid });
+    ////// get список актуальных цех0в продавца
+    console.log(guid, "guid");
+    dispatch(getWorkShopsForRevision(guid));
+    closeSeller();
+    workShopOpen(0);
   };
 
-  const createInvoiceReturn = () => {
-    if (obj?.guid === "") {
-      Alert.alert("Выберите продавца");
-    } else if (obj?.guidWorkShop === "") {
-      Alert.alert("Выберите цех");
-    } else {
-      const dataSend = {
-        seller_guid_to: obj?.guid, //// от какого продавца ревизия
-        seller_guid_from: data?.seller_guid, //// какому продавцу ревизия
-        guidWorkShop: obj?.guidWorkShop,
-        navigation,
-      };
+  ////////////////// choice workshop
 
-      dispatch(createInvoiceCheck(dataSend));
-      closeModal();
-    }
+  const workShopOpen = useCallback((index) => {
+    refWorkShop.current?.snapToIndex(index);
+  }, []);
+
+  const selectWorkShop = useCallback(
+    ({ item }) => (
+      <TouchableOpacity
+        style={styles.selectBlockInner}
+        onPress={() => choiceWorkShop(item?.workshop_guid)}
+      >
+        <Text style={styles.selectText}>{item?.workshop}</Text>
+      </TouchableOpacity>
+    ),
+    [obj]
+  );
+
+  const choiceWorkShop = (guidWorkShop) => {
+    const dataSend = { seller_guid_to: obj?.guid, guidWorkShop, navigation };
+
+    dispatch(
+      createInvoiceCheck({ ...dataSend, seller_guid_from: data?.seller_guid })
+    );
+
+    setObj({ ...obj, guidWorkShop });
+
+    //// закрываю аккардион
+    closeWorkShop();
   };
 
   return (
-    <Modal
-      animationType="fade"
-      transparent={true}
-      visible={modalState}
-      onRequestClose={closeModal}
-    >
-      <TouchableOpacity
-        style={styles.modalOuter}
-        activeOpacity={1}
-        onPress={closeModal}
+    <>
+      <BottomSheet
+        ref={refAccord}
+        index={-1}
+        snapPoints={snapPointsWorks}
+        enablePanDownToClose={true}
+        backdropComponent={shadowBlock}
+        onClose={closeSeller}
       >
-        <View style={styles.modalInner} onPress={() => setModalState(true)}>
-          <Text style={styles.titleSelect}>Выберите продавца</Text>
-          <ScrollView style={styles.selectBlock}>
-            {listSellersPoints?.map((item) => (
-              <ChoiceAgents
-                item={item}
-                setState={setObj}
-                prev={obj}
-                keyGuid={"guid"}
-                keyText={"fio"}
-              />
-            ))}
-          </ScrollView>
-          <Text style={styles.titleSelect}>Выберите цех</Text>
-          <ScrollView style={styles.selectBlock}>
-            {listWorkShop?.map((item) => (
-              <ChoiceAgents
-                item={item}
-                setState={setObj}
-                prev={obj}
-                keyGuid={"guidWorkShop"}
-                keyText={"name"}
-              />
-            ))}
-          </ScrollView>
-
-          <ViewButton
-            styles={{ ...styles.sendBtn, ...styles.actionSendBtn }}
-            onclick={createInvoiceReturn}
-          >
-            Создать накладную
-          </ViewButton>
+        <View style={styles.parent}>
+          <Text style={styles.titleSelect}>Выберите продавца для ревизии</Text>
+          <BottomSheetFlatList
+            data={listSellersPoints}
+            keyExtractor={(item) => item?.guid}
+            renderItem={selectSeller}
+            contentContainerStyle={styles.selectBlock}
+          />
         </View>
-      </TouchableOpacity>
-    </Modal>
+      </BottomSheet>
+      <BottomSheet
+        ref={refWorkShop}
+        index={-1}
+        snapPoints={snapPointsWorks}
+        enablePanDownToClose={true}
+        backdropComponent={shadowBlock}
+        onClose={closeWorkShop}
+      >
+        <View style={styles.parent}>
+          {listWorkShop?.length === 0 ? (
+            <Text style={styles.noneData}>Список пустой</Text>
+          ) : (
+            <>
+              <Text style={styles.titleSelect}>Выберите цех</Text>
+              <BottomSheetFlatList
+                data={listWorkShop}
+                keyExtractor={(item) => item?.guid}
+                renderItem={selectWorkShop}
+                contentContainerStyle={styles.selectBlock}
+              />
+            </>
+          )}
+        </View>
+      </BottomSheet>
+    </>
   );
 };
 
 const styles = StyleSheet.create({
-  modalOuter: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  selectBlockInner: {
+    minWidth: "100%",
+    padding: 10,
+    borderWidth: 1,
+    borderColor: "rgb(217 223 232)",
+    backgroundColor: "#f5f5f5",
+    borderRadius: 5,
+    marginVertical: 1,
+    backgroundColor: "rgba(199, 210, 254, 0.718)",
   },
 
-  modalInner: {
-    backgroundColor: "#ebeef2",
-    padding: 15,
-    borderRadius: 10,
-    width: "90%",
+  selectText: {
+    fontSize: 15,
+    fontWeight: "600",
+    color: "rgba(47, 71, 190, 0.672)",
   },
 
   titleSelect: {
-    fontSize: 17,
-    fontWeight: "500",
-  },
-
-  sendBtn: {
-    backgroundColor: "#fff",
-    color: "rgba(97 ,100, 239,0.7)",
-    minWidth: "100%",
-    paddingTop: 10,
-    borderRadius: 10,
-    fontWeight: 600,
-    borderWidth: 1,
-    borderColor: "rgb(217 223 232)",
-    marginTop: 10,
-  },
-
-  actionSendBtn: {
-    paddingTop: 12,
     fontSize: 18,
-    backgroundColor: "rgba(97 ,100, 239,0.7)",
-    color: "#fff",
+    fontWeight: "500",
+    marginHorizontal: 10,
+    marginTop: 10,
+    marginBottom: 5,
   },
 
   selectBlock: {
     marginTop: 5,
     marginBottom: 10,
     borderStyle: "solid",
-    borderWidth: 1,
-    borderColor: "rgb(217 223 232)",
+    // borderWidth: 1,
+    // borderColor: "rgb(217 223 232)",
     borderRadius: 5,
-    backgroundColor: "#f0f0f0",
-    minHeight: 30,
-    maxHeight: 150,
+    backgroundColor: "#fff",
+    marginHorizontal: 10,
+    paddingBottom: 20,
   },
 
-  inputComm: {
-    borderWidth: 1,
-    borderColor: "rgb(217 223 232)",
-    height: 60,
-    borderRadius: 8,
-    padding: 10,
-    paddingLeft: 15,
-    marginTop: 10,
-    height: 120,
-    fontSize: 16,
-    textAlignVertical: "top",
-    backgroundColor: "#fff",
+  parent: {
+    flex: 1,
+    paddingBottom: 20,
+  },
+
+  noneData: {
+    paddingTop: 200,
+    textAlign: "center",
+    fontSize: 20,
+    fontWeight: "500",
+    color: "#222",
+    height: "100%",
   },
 });

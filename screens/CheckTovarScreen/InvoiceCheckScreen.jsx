@@ -6,7 +6,6 @@ import {
   getLeftoversForCheck,
 } from "../../store/reducers/requestSlice";
 import { sendCheckListProduct } from "../../store/reducers/requestSlice";
-import { getActionsLeftovers } from "../../store/reducers/requestSlice";
 import { ScrollView } from "react-native";
 import { Dimensions } from "react-native";
 import { Row, Rows, Table, TableWrapper } from "react-native-table-component";
@@ -21,10 +20,10 @@ import { changeLocalData } from "../../store/reducers/saveDataSlice";
 ///// helpers
 import { listTableForReturnProd } from "../../helpers/Data";
 import { getLocalDataUser } from "../../helpers/returnDataUser";
-import { totalCountReturns, totalSumReturns } from "../../helpers/amounts";
+import { totalSumReturns, unitResultFN } from "../../helpers/amounts";
 
 export const InvoiceCheckScreen = ({ route, navigation }) => {
-  const { invoice_guid, guidWorkShop } = route.params;
+  const { invoice_guid, guidWorkShop, seller_guid_to } = route.params;
   //// список товаров для ревизии
 
   const dispatch = useDispatch();
@@ -52,7 +51,8 @@ export const InvoiceCheckScreen = ({ route, navigation }) => {
   const getData = async () => {
     await getLocalDataUser({ changeLocalData, dispatch });
 
-    const obj = { seller_guid: data?.seller_guid, guidWorkShop };
+    // const obj = { seller_guid: data?.seller_guid, guidWorkShop };
+    const obj = { seller_guid: seller_guid_to, guidWorkShop };
     await dispatch(getLeftoversForCheck(obj));
     /// get остатки разделенные по цехам для ревизии
   };
@@ -62,8 +62,8 @@ export const InvoiceCheckScreen = ({ route, navigation }) => {
       const tableDataList = listActionLeftovers?.map((item, index) => {
         return [
           `${index + 1}. ${item?.product_name}`,
-          `${item?.price}`,
-          `${item?.end_outcome}`,
+          `${item?.sale_price}`,
+          `${item?.end_outcome}  ${item?.unit}`,
           <CheckVes guidProduct={item?.guid} />,
         ];
       });
@@ -73,8 +73,9 @@ export const InvoiceCheckScreen = ({ route, navigation }) => {
     //////////////////////////////////////////////
     const products = listActionLeftovers?.map((i) => ({
       guid: i?.guid,
-      price: i?.price,
+      price: i?.sale_price,
       count: i?.end_outcome,
+      unit_codeid: i?.unit_codeid,
     }));
 
     const newData = { ...actionsProducts, invoice_guid, products };
@@ -98,6 +99,11 @@ export const InvoiceCheckScreen = ({ route, navigation }) => {
   );
 
   const noneData = listData?.length === 0;
+
+  const totals = unitResultFN(actionsProducts?.products);
+
+  // console.log(listActionLeftovers, "listActionLeftovers");
+  // console.log(actionsProducts?.products, "actionsProducts?.products");
 
   return (
     <ScrollView>
@@ -132,10 +138,10 @@ export const InvoiceCheckScreen = ({ route, navigation }) => {
           <View style={styles.divAction}>
             <View style={styles.blockTotal}>
               <Text style={styles.totalItemCount}>
-                Сумма: {totalSumReturns(actionsProducts) || 0} сом
+                Итого: {totals?.totalKg} кг и {totals?.totalSht} штук
               </Text>
               <Text style={styles.totalItemCount}>
-                Кол-во: {totalCountReturns(actionsProducts) || 0}
+                Сумма: {totalSumReturns(actionsProducts) || 0} сом
               </Text>
             </View>
           </View>

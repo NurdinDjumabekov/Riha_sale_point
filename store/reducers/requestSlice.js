@@ -433,7 +433,6 @@ export const getListSoldProd = createAsyncThunk(
         url: `${API}/tt/get_point_invoice_product?invoice_guid=${guidInvoice}`,
       });
       if (response.status >= 200 && response.status < 300) {
-        console.log(response?.data, "response");
         return response?.data?.[0]?.list;
       } else {
         throw Error(`Error: ${response.status}`);
@@ -472,6 +471,7 @@ export const deleteSoldProd = createAsyncThunk(
 
 /// getProductEveryInvoice
 /// список товаров каждой накладной ТT(типо истории)
+//////checkcheck
 export const getProductEveryInvoice = createAsyncThunk(
   "getProductEveryInvoice",
   async function (guid, { dispatch, rejectWithValue }) {
@@ -888,7 +888,6 @@ export const confirmSoputka = createAsyncThunk(
         data: { invoice_guid },
       });
       if (response.status >= 200 && response.status < 300) {
-        // console.log(response?.data,"confirmSoputka");
         if (+response?.data?.result === 1) {
           navigation.navigate("Main");
         }
@@ -924,14 +923,17 @@ export const getSellersEveryPoint = createAsyncThunk(
   }
 );
 
-/// getWorkShops
-/// get все цеха
-export const getWorkShops = createAsyncThunk(
-  "getWorkShops",
-  async function (i, { dispatch, rejectWithValue }) {
+/// getWorkShopsForRevision
+/// get все актульные цеха для определенного продавца
+export const getWorkShopsForRevision = createAsyncThunk(
+  "getWorkShopsForRevision",
+  async function (seller_guid, { dispatch, rejectWithValue }) {
     try {
-      const response = await axios(`${API}/tt/get_workshop`);
+      const response = await axios(
+        `${API}/tt/get_leftover_workshop?seller_guid=${seller_guid}`
+      );
       if (response.status >= 200 && response.status < 300) {
+        console.log(response.data, "getWorkShopsForRevision");
         return response.data;
       } else {
         throw Error(`Error: ${response.status}`);
@@ -965,6 +967,7 @@ export const createInvoiceCheck = createAsyncThunk(
           navigation?.navigate("InvoiceCheckScreen", {
             invoice_guid,
             guidWorkShop,
+            seller_guid_to,
           });
         }
       } else {
@@ -1231,7 +1234,7 @@ const requestSlice = createSlice({
     ///// acceptInvoiceTT
     builder.addCase(acceptInvoiceTT.fulfilled, (state, action) => {
       state.preloader = false;
-      // Alert.alert("Принято!");
+      Alert.alert("Накладная успешно принята!");
     });
     builder.addCase(acceptInvoiceTT.rejected, (state, action) => {
       state.error = action.payload;
@@ -1399,7 +1402,7 @@ const requestSlice = createSlice({
         ? Alert.alert("Товар продан!")
         : Alert.alert(
             "Ошибка!",
-            "Введенное количество товара больше доступного количества. Пожалуйста, введите корректное количество или вес"
+            "Введенное количество товара больше доступного вам количества."
           );
     });
     builder.addCase(addProductInvoiceTT.rejected, (state, action) => {
@@ -1699,20 +1702,20 @@ const requestSlice = createSlice({
       state.preloader = true;
     });
 
-    ///////// getWorkShops
-    builder.addCase(getWorkShops.fulfilled, (state, action) => {
+    ///////// getWorkShopsForRevision
+    builder.addCase(getWorkShopsForRevision.fulfilled, (state, action) => {
       state.preloader = false;
       state.listWorkShop = action?.payload?.map((item) => ({
         ...item,
         guidWorkShop: item?.guid,
       }));
     });
-    builder.addCase(getWorkShops.rejected, (state, action) => {
+    builder.addCase(getWorkShopsForRevision.rejected, (state, action) => {
       state.error = action.payload;
       state.preloader = false;
       Alert.alert("Упс, что-то пошло не так! Не удалось загрузить данные");
     });
-    builder.addCase(getWorkShops.pending, (state, action) => {
+    builder.addCase(getWorkShopsForRevision.pending, (state, action) => {
       state.preloader = true;
     });
 

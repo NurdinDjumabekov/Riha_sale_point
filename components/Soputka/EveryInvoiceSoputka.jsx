@@ -56,7 +56,7 @@ export const EveryInvoiceSoputka = ({ forAddTovar, navigation }) => {
             >
               {listProductTT?.map((item, index) => (
                 <EveryProduct
-                  key={item?.guid}
+                  key={`${item?.guid}${index}`}
                   obj={item}
                   index={index}
                   checkComponent={checkComponent}

@@ -70,6 +70,7 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(47, 71, 190, 0.287)",
     marginBottom: 0,
   },
+
   arrowInner: {
     borderTopWidth: 3,
     borderRightWidth: 3,
@@ -81,9 +82,18 @@ const styles = StyleSheet.create({
     marginRight: 20,
     marginTop: 5,
   },
+
   textBtn: {
     fontSize: 18,
     fontWeight: "500",
     color: "#fff",
+  },
+
+  noneData: {
+    flex: 1,
+    // paddingTop: 300,
+    textAlign: "center",
+    fontSize: 20,
+    fontWeight: "500",
   },
 });

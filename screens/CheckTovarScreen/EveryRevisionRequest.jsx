@@ -207,6 +207,7 @@ const styles = StyleSheet.create({
     borderRadius: 7,
     backgroundColor: "rgba(95, 230, 165, 0.99)",
   },
+
   standartBox__inner: {
     position: "absolute",
     width: "100%",
@@ -215,6 +216,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     bottom: 3,
   },
+
   checkmark: {
     width: 15,
     height: 23,
@@ -226,8 +228,8 @@ const styles = StyleSheet.create({
   /////// checkbox
 
   sendBtn: {
-    backgroundColor: "#c2f8e2",
-    color: "#1ab782",
+    backgroundColor: "rgba(97 ,100, 239,0.7)",
+    color: "#fff",
     minWidth: "95%",
     alignSelf: "center",
   },

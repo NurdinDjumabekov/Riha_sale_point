@@ -57,7 +57,7 @@ export const totalSumEveryAccept = (list) => {
 };
 
 export const sumSoputkaProds = (arr) => {
-  return arr?.reduce((sum, item) => sum + item?.total, 0);
+  return arr?.reduce((sum, item) => sum + item?.total_soputka, 0);
 };
 
 ////////////////////////////////////////////////////////////////////
@@ -65,4 +65,22 @@ export const sumSoputkaProds = (arr) => {
 export const formatCount = (count) => {
   /// если больше 0, то округлять до 1го числа, а если его нет, то выводится просто целое число без 0
   return count % 1 === 0 ? count?.toFixed(0) : count?.toFixed(1);
+};
+
+/////////////////////////////// считаю общую саммму отдельно для кг и шт
+
+export const unitResultFN = (data) => {
+  return data?.reduce(
+    (acc, item) => {
+      if (item?.unit_codeid == 1) {
+        //// "шт"
+        acc.totalSht += item?.count;
+      } else if (item?.unit_codeid == 2) {
+        // "кг"
+        acc.totalKg += item?.count;
+      }
+      return acc;
+    },
+    { totalSht: 0, totalKg: 0 }
+  );
 };

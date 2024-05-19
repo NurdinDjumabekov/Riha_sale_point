@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { FlatList } from "react-native";
 import { RenderResult } from "../components/RenderResult";
 import { getAcceptProdInvoice } from "../store/reducers/requestSlice";
-import { totalSumEveryAccept } from "../helpers/amounts";
+import { unitResultFN } from "../helpers/amounts";
 
 export const EveryInvoiceAcceptScreen = ({ route, navigation }) => {
   //// каждый возврат накладной типо истории
@@ -25,6 +25,10 @@ export const EveryInvoiceAcceptScreen = ({ route, navigation }) => {
     return <Text style={styles.noneData}>Данные отсутствуют</Text>;
   }
 
+  console.log(newList, "listAcceptInvoiceProd");
+
+  const totals = unitResultFN(newList);
+
   return (
     <View style={styles.parent}>
       <FlatList
@@ -35,9 +39,11 @@ export const EveryInvoiceAcceptScreen = ({ route, navigation }) => {
         )}
         keyExtractor={(item) => item.codeid}
       />
-      <Text style={styles.result}>
-        {/* Итого: {totalSumEveryAccept(newList)} сом */}
-        Итого: {listAcceptInvoiceProd?.[0]?.total_price} сом
+      <Text style={styles.totalItemCount}>
+        Итого: {totals?.totalKg} кг и {totals?.totalSht} штук
+      </Text>
+      <Text style={styles.totalItemCount}>
+        Сумма: {listAcceptInvoiceProd?.[0]?.total_price} сом
       </Text>
     </View>
   );
@@ -52,14 +58,14 @@ const styles = StyleSheet.create({
     minWidth: "100%",
     width: "100%",
     paddingTop: 8,
+    marginBottom: 15,
   },
 
-  result: {
-    color: "#222",
+  totalItemCount: {
     fontSize: 18,
     fontWeight: "500",
-    textAlign: "right",
-    padding: 10,
+    color: "rgba(47, 71, 190, 0.991)",
+    paddingHorizontal: 10,
   },
 
   noneData: {

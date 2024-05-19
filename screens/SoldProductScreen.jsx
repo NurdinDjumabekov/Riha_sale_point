@@ -34,20 +34,22 @@ export const SoldProductScreen = ({ route }) => {
     return <Text style={styles.noneData}>Список пустой</Text>;
   }
 
+  console.log(listSoldProd, "listSoldProd");
+
   return (
     <View>
       <FlatList
         contentContainerStyle={styles.flatList}
         data={listSoldProd}
-        renderItem={({ item }) => (
+        renderItem={({ item, index }) => (
           <View style={styles.container}>
             <View style={styles.parentBlock}>
               <View style={styles.mainData}>
-                <Text style={styles.titleNum}>{item.codeid} </Text>
+                <Text style={styles.titleNum}>{index + 1} </Text>
                 <View>
                   <Text style={styles.titleDate}>{item.date || "..."}</Text>
                   <Text style={styles.totalPrice}>
-                    {item?.product_price} х {item?.count} ={" "}
+                    {item?.sale_price} х {item?.count} ={" "}
                     {formatCount(item?.total)} сом
                   </Text>
                 </View>

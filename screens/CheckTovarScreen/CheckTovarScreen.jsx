@@ -1,5 +1,5 @@
 ////// hooks
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 ///// tags
@@ -11,7 +11,6 @@ import { ViewButton } from "../../customsTags/ViewButton";
 import { clearListSellersPoints } from "../../store/reducers/requestSlice";
 import { getHistoryRevision } from "../../store/reducers/requestSlice";
 import { getSellersEveryPoint } from "../../store/reducers/requestSlice";
-import { getWorkShops } from "../../store/reducers/requestSlice";
 import { changeLocalData } from "../../store/reducers/saveDataSlice";
 
 ///// components
@@ -26,6 +25,8 @@ export const CheckTovarScreen = ({ navigation }) => {
   //// btns для создания ревии и просмотра запросов других продавцов)
 
   const dispatch = useDispatch();
+
+  const refAccord = useRef(null);
 
   const [workShop, setWorkShop] = useState(false);
 
@@ -45,9 +46,6 @@ export const CheckTovarScreen = ({ navigation }) => {
     const { seller_guid } = data;
     await getLocalDataUser({ changeLocalData, dispatch });
 
-    ////// get список цех0в
-    await dispatch(getWorkShops(seller_guid));
-
     ////// get список продавцов определенной точки
     await dispatch(getSellersEveryPoint(seller_guid));
 
@@ -59,11 +57,15 @@ export const CheckTovarScreen = ({ navigation }) => {
 
   const empty = listHistoryRevision?.length === 0;
 
+  const createZakaz = useCallback((index) => {
+    refAccord.current?.snapToIndex(index);
+  }, []);
+
   return (
     <>
       <View style={styles.container}>
         <View style={styles.actionBlock}>
-          <ViewButton styles={styles.btn} onclick={() => setWorkShop(true)}>
+          <ViewButton styles={styles.btn} onclick={() => createZakaz(0)}>
             Выбрать продавца для ревизии
           </ViewButton>
           <ViewButton styles={styles.btn} onclick={navLick}>
@@ -94,6 +96,7 @@ export const CheckTovarScreen = ({ navigation }) => {
         modalState={workShop}
         setModalState={setWorkShop}
         navigation={navigation}
+        refAccord={refAccord}
       />
       {/* /////для выбора цехов*/}
     </>

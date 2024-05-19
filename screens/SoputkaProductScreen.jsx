@@ -9,7 +9,7 @@ import {
 } from "../store/reducers/requestSlice";
 import ConfirmationModal from "../components/ConfirmationModal";
 import { ViewButton } from "../customsTags/ViewButton";
-import { sumSoputkaProds } from "../helpers/amounts";
+import { sumSoputkaProds, unitResultFN } from "../helpers/amounts";
 
 export const SoputkaProductScreen = ({ route, navigation }) => {
   //// список проданных продуктов
@@ -21,6 +21,8 @@ export const SoputkaProductScreen = ({ route, navigation }) => {
   const { preloader, listProdSoputka } = useSelector(
     (state) => state.requestSlice
   );
+
+  const newList = listProdSoputka?.[0]?.list;
 
   useEffect(() => getData(), [guidInvoice]);
 
@@ -39,8 +41,10 @@ export const SoputkaProductScreen = ({ route, navigation }) => {
     ///// подтверждение накладной сопутки
   };
 
-  const none = listProdSoputka?.[0]?.list?.length === 0;
-  const moreOne = listProdSoputka?.[0]?.list?.length > 0;
+  const totals = unitResultFN(newList);
+
+  const none = newList?.length === 0;
+  const moreOne = newList?.length > 0;
 
   return (
     <View>
@@ -50,7 +54,7 @@ export const SoputkaProductScreen = ({ route, navigation }) => {
         <View style={{ paddingBottom: 150 }}>
           <FlatList
             contentContainerStyle={styles.flatList}
-            data={listProdSoputka?.[0]?.list}
+            data={newList}
             renderItem={({ item, index }) => (
               <TouchableOpacity style={styles.container}>
                 <View style={styles.parentBlock}>
@@ -61,8 +65,8 @@ export const SoputkaProductScreen = ({ route, navigation }) => {
                         {item?.date || "..."}
                       </Text>
                       <Text style={styles.totalPrice}>
-                        {item?.product_price} х {item?.count} = {item?.total}{" "}
-                        сом
+                        {item?.product_price} сом х {item?.count} {item?.unit} ={" "}
+                        {item?.total_soputka} сом
                       </Text>
                     </View>
                   </View>
@@ -92,7 +96,10 @@ export const SoputkaProductScreen = ({ route, navigation }) => {
             }
           />
           <Text style={styles.totalItemSumm}>
-            Общая сумма: {sumSoputkaProds(listProdSoputka?.[0]?.list)} сом
+            Итого: {totals?.totalKg} кг и {totals?.totalSht} штук
+          </Text>
+          <Text style={styles.totalItemSumm}>
+            Сумма: {sumSoputkaProds(listProdSoputka?.[0]?.list)} сом
           </Text>
           {moreOne && (
             <ViewButton
@@ -190,14 +197,13 @@ const styles = StyleSheet.create({
     height: "100%",
   },
 
-  flatList: { width: "100%", paddingTop: 8 },
+  flatList: { width: "100%", paddingTop: 8, marginBottom: 10 },
 
   totalItemSumm: {
     fontSize: 18,
     fontWeight: "500",
     color: "rgba(47, 71, 190, 0.991)",
     paddingHorizontal: 10,
-    paddingVertical: 10,
   },
 
   //////////////////// krestik

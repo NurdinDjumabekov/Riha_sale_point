@@ -20,7 +20,11 @@ import {
 
 ////helpers
 import { listTableForAcceptInvoice } from "../helpers/Data";
-import { totalCountAccept, totalSumAccept } from "../helpers/amounts";
+import {
+  totalCountAccept,
+  totalSumAccept,
+  unitResultFN,
+} from "../helpers/amounts";
 
 import styled from "styled-components/native";
 
@@ -66,7 +70,7 @@ export const DetailedInvoice = ({ route, navigation }) => {
         return [
           `${index + 1}. ${item?.product_name}`,
           `${item?.product_price}`,
-          `${item?.count}`,
+          `${item?.count} ${item?.unit}`,
           // ` ${item?.codeid}}`,
           // `${item?.codeid}. ${item?.product_name}`,
           // `${item?.product_price}`,
@@ -88,7 +92,7 @@ export const DetailedInvoice = ({ route, navigation }) => {
 
   const windowWidth = Dimensions.get("window").width;
   // const arrWidth = [40, 14, 17, 17, 12]; //  проценты %
-  const arrWidth = [65, 20, 15]; //  проценты %
+  const arrWidth = [60, 20, 20]; //  проценты %
 
   // Преобразуем проценты в абсолютные значения ширины
   const resultWidths = arrWidth.map(
@@ -104,6 +108,10 @@ export const DetailedInvoice = ({ route, navigation }) => {
       const changeValue = product?.change;
       return changeValue !== 0 && changeValue !== "";
     });
+
+  const totals = unitResultFN(everyInvoice?.list);
+
+  const checkStatus = everyInvoice?.status !== 0;
 
   return (
     <ScrollView>
@@ -131,12 +139,10 @@ export const DetailedInvoice = ({ route, navigation }) => {
           <View>
             <View style={styles.blockTotal}>
               <Text style={styles.totalItemCount}>
-                {/* Сумма: {totalSumAccept(everyInvoice)} сом */}
-                Сумма: {everyInvoice?.total_price} сом
+                Итого: {totals?.totalKg} кг и {totals?.totalSht} штук
               </Text>
               <Text style={styles.totalItemCount}>
-                {/* Кол-во: {totalCountAccept(everyInvoice)} */}
-                Кол-во: {everyInvoice?.total_weight}
+                Сумма: {everyInvoice?.total_price} сом
               </Text>
             </View>
           </View>
@@ -148,11 +154,15 @@ export const DetailedInvoice = ({ route, navigation }) => {
             </View>
           </TouchableOpacity> */}
         </View>
-        <ViewButton styles={styles.sendBtn} onclick={clickOkay}>
-          Принять накладную
-        </ViewButton>
-        {/* {isTrue && (
-        )} */}
+        {checkStatus && (
+          <ViewButton styles={styles.sendBtn} onclick={clickOkay}>
+            Принять накладную
+          </ViewButton>
+        )}
+        {/* <Text style={styles.totalItemCount}>
+          Вы не можете принять накладную из-за того, что админ не подтвердил
+          отправку накладной
+        </Text> */}
       </View>
       <ConfirmationModal
         visible={modalVisibleOk}
@@ -237,7 +247,7 @@ const styles = StyleSheet.create({
   },
 
   blockTotal: {
-    paddingTop: 10,
+    paddingVertical: 10,
   },
 
   rowStyle: {
@@ -280,8 +290,8 @@ const styles = StyleSheet.create({
   /////// checkbox
 
   sendBtn: {
-    backgroundColor: "#c2f8e2",
-    color: "#1ab782",
+    backgroundColor: "rgba(97 ,100, 239,0.7)",
+    color: "#fff",
     minWidth: "95%",
     alignSelf: "center",
   },

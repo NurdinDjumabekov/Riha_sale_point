@@ -24,8 +24,6 @@ export const RevisionRequest = ({ navigation, route }) => {
 
   const widthMax = { minWidth: "100%", width: "100%" };
 
-  console.log(listRequestRevision, "listRequestRevision");
-
   return (
     <SafeAreaView>
       <View style={styles.parentBlock}>
@@ -39,7 +37,7 @@ export const RevisionRequest = ({ navigation, route }) => {
               disable={item?.status === 1 ? false : true}
             />
           )}
-          keyExtractor={(item) => item.guid}
+          keyExtractor={(item) => item?.guid}
         />
       </View>
     </SafeAreaView>

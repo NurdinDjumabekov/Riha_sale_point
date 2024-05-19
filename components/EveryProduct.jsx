@@ -5,8 +5,11 @@ import {
   changeTemporaryData,
 } from "../store/reducers/stateSlice";
 import { AddProductsTA } from "./TAComponents/AddProductsTA";
+import { useRoute } from "@react-navigation/native";
 
 export const EveryProduct = (props) => {
+  const route = useRoute();
+
   const { obj, index, checkComponent, forAddTovar } = props;
 
   const dispatch = useDispatch();
@@ -14,8 +17,14 @@ export const EveryProduct = (props) => {
 
   const addInTemporary = () => {
     dispatch(changeTemporaryData(obj));
-    dispatch(changeDataInputsInv({ price: obj?.product_price, ves: "" }));
+    if (route?.name === "Shipment") {
+      dispatch(changeDataInputsInv({ price: obj?.sale_price, ves: "" }));
+    } else {
+      dispatch(changeDataInputsInv({ price: obj?.product_price, ves: "" }));
+    }
   };
+
+  console.log(route.name, "useRoute");
 
   const isCheck = temporaryData?.guid === obj?.guid;
 

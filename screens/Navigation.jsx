@@ -40,6 +40,8 @@ export const Navigation = () => {
 
   const { data } = useSelector((state) => state.saveDataSlice);
 
+  console.log(data, "data");
+
   useEffect(() => {
     getLocalDataUser({ changeLocalData, dispatch });
   }, []);
@@ -185,7 +187,7 @@ export const Navigation = () => {
             <Stack.Screen
               name="InvoiceCheckScreen"
               component={InvoiceCheckScreen}
-              options={{ title: "Накладная для возврата" }}
+              options={{ title: "Накладная для ревизии" }}
             />
 
             <Stack.Screen

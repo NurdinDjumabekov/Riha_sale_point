@@ -79,7 +79,7 @@ export const listTableLeftoverst = [
 export const listTableForAcceptInvoice = [
   " Продукт",
   "Цена",
-  "Вес",
+  "Шт(кг)",
   // "Вес с усушкой",
   // "Вес принято",
   // "  ....",
@@ -93,11 +93,11 @@ export const listTableForReturnProd = [
   " ....",
 ];
 
-export const typeProd = {
-  1: "кг",
-  2: "шт",
-  /////count_type
-};
+// export const typeProd = {
+//   1: "шт",
+//   2: "кг",
+//   /////unit_codeid
+// };
 
 export const statusRevision = {
   1: "Не подтверждён",

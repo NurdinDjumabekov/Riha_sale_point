@@ -7,9 +7,6 @@ import { ViewButton } from "../../customsTags/ViewButton";
 //////// hooks
 import { useDispatch, useSelector } from "react-redux";
 
-//////// helpers
-import { typeProd } from "../../helpers/Data";
-
 //////// fns
 import {
   changeDataInputsInv,
@@ -48,13 +45,16 @@ export const AddProductsTA = (props) => {
       dataInputsInv?.price == 0 ||
       dataInputsInv?.ves == 0
     ) {
-      Alert.alert("Введите цену и вес (кол-во)!");
+      Alert.alert(
+        `Введите цену и ${obj?.unit_codeid == 1 ? "количество" : "вес"}`
+      );
     } else {
       const data = {
         guid: productGuid,
         count: dataInputsInv?.ves,
-        price: dataInputsInv?.price,
         invoice_guid: infoKassa?.guid,
+        price: obj?.product_price, //// цена изначальная (без добаки %)
+        sale_price: dataInputsInv?.price, //// цена с добавкой  %
       };
       if (checkComponent) {
         /// продажа
@@ -79,6 +79,9 @@ export const AddProductsTA = (props) => {
 
   const onClose = () => dispatch(changeTemporaryData({}));
 
+  console.log(dataInputsInv, "dataInputsInv");
+  console.log(obj, "obj");
+
   return (
     <Modal
       animationType="fade"
@@ -95,32 +98,32 @@ export const AddProductsTA = (props) => {
               <View style={[styles.line, styles.degMinus]} />
             </TouchableOpacity>
             {checkComponent && isCheck && (
-              <Text style={styles.leftovers}>Остаток: {obj.end_outcome}</Text>
+              <Text style={styles.leftovers}>
+                Остаток: {obj?.end_outcome} {obj?.unit}
+              </Text>
             )}
             <View style={styles.addDataBlock}>
               <View style={styles.inputBlock}>
                 <Text style={styles.inputTitle}>Введите цену</Text>
                 <TextInput
                   style={styles.input}
-                  value={`${dataInputsInv?.price?.toString()} сом`}
+                  // value={`${dataInputsInv?.price?.toString()} сом`}
+                  value={dataInputsInv?.price?.toString()}
                   onChangeText={(text) => onChange("price", text)}
                   keyboardType="numeric"
-                  placeholder="Цена"
                   maxLength={8}
                 />
               </View>
               <View style={styles.inputBlock}>
                 <Text style={styles.inputTitle}>
-                  Введите {typeProd?.[obj?.count_type] || "вес (кол-во)"}
+                  Введите{" "}
+                  {obj?.unit_codeid == 1 ? "кол-во товара" : "кг товара"}
                 </Text>
                 <TextInput
                   style={styles.input}
                   value={dataInputsInv?.ves}
                   onChangeText={(text) => onChange("ves", text)}
                   keyboardType="numeric"
-                  placeholder={`${
-                    typeProd?.[obj?.count_type] || "вес (кол-во)"
-                  }`}
                   maxLength={8}
                 />
               </View>
@@ -177,12 +180,12 @@ const styles = StyleSheet.create({
   },
 
   inputTitle: {
-    fontSize: 14,
+    fontSize: 13,
     fontWeight: "500",
     lineHeight: 15,
     color: "#222",
     marginBottom: 5,
-    paddingLeft: 5,
+    paddingLeft: 2,
   },
 
   inputBlock: {
