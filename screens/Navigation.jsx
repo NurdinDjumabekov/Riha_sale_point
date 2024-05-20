@@ -16,10 +16,7 @@ import { AcceptInvoiceHistory } from "../components/InvoiceTT/AcceptInvoiceHisto
 import { EveryInvoiceAcceptScreen } from "./EveryInvoiceAcceptScreen";
 import { PayMoneyScreen } from "./PayMoneyScreen";
 import { ReturnScreen } from "./ReturnScreen";
-import { ReturnProdScreen } from "./ReturnProdScreen";
-import { EveryListInvoiceReturn } from "../components/ReturnProducts/EveryListInvoiceReturn";
 import { HistoryBalance } from "./HistoryBalance";
-import UserInfo from "../components/Header/UserInfo";
 import { SoputkaScreen } from "./SoputkaScreen";
 import { AddProdSoputkaSrceen } from "./AddProdSoputkaSrceen";
 import { SoputkaProductScreen } from "./SoputkaProductScreen";
@@ -32,6 +29,10 @@ import { InvoiceCheckScreen } from "./CheckTovarScreen/InvoiceCheckScreen";
 import { ListCheckProdScreen } from "./CheckTovarScreen/ListCheckProdScreen";
 import { EveryRevisionRequest } from "./CheckTovarScreen/EveryRevisionRequest";
 import { RevisionRequest } from "./CheckTovarScreen/RevisionRequest";
+import { AddProdReturnSrceen } from "./AddProdReturnSrceen";
+import UserInfo from "../components/Header/UserInfo";
+import { ReturnProductScreen } from "./ReturnProductScreen";
+import { ReturnProdHistoryScreen } from "./ReturnProdHistoryScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -118,11 +119,13 @@ export const Navigation = () => {
               name="SoputkaProductScreen"
               component={SoputkaProductScreen}
               options={{ title: "Сопутствующие товары" }}
+              ////// список сопутствующих товаров
             />
 
             <Stack.Screen
               name="SoputkaProdHistoryScreen"
               component={SoputkaProdHistoryScreen}
+              ////// просмотр каждой истории сопутки
             />
 
             {/* /////////////////////// Остатки ///////////////////////*/}
@@ -165,14 +168,24 @@ export const Navigation = () => {
               component={ReturnScreen}
               options={{ title: "Возврат товара" }}
             />
+
             <Stack.Screen
-              name="ReturnProd"
-              component={ReturnProdScreen}
-              options={{ title: "Накладная для возврата" }}
+              name="AddProdReturnSrceen"
+              component={AddProdReturnSrceen}
+              options={{ title: "" }}
             />
+
             <Stack.Screen
-              name="listReturnProd"
-              component={EveryListInvoiceReturn}
+              name="ReturnProductScreen"
+              component={ReturnProductScreen}
+              options={{ title: "Товары для возврата" }}
+              ////// список товаров для возврата
+            />
+
+            <Stack.Screen
+              name="ReturnProdHistoryScreen"
+              component={ReturnProdHistoryScreen}
+              ////// просмотр каждой истории возврата накладной
             />
 
             {/* /////////////////////// CheckTovar /////////////////////// */}

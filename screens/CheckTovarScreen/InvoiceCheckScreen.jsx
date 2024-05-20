@@ -9,7 +9,6 @@ import { sendCheckListProduct } from "../../store/reducers/requestSlice";
 import { ScrollView } from "react-native";
 import { Dimensions } from "react-native";
 import { Row, Rows, Table, TableWrapper } from "react-native-table-component";
-import { CheckVes } from "../../components/ReturnProducts/CheckVes";
 import { changeActionsProducts } from "../../store/reducers/stateSlice";
 import { clearActionsProducts } from "../../store/reducers/stateSlice";
 
@@ -20,7 +19,12 @@ import { changeLocalData } from "../../store/reducers/saveDataSlice";
 ///// helpers
 import { listTableForReturnProd } from "../../helpers/Data";
 import { getLocalDataUser } from "../../helpers/returnDataUser";
-import { totalSumReturns, unitResultFN } from "../../helpers/amounts";
+import {
+  formatCount,
+  totalSumReturns,
+  unitResultFN,
+} from "../../helpers/amounts";
+import { CheckVes } from "../../components/CheckProd/CheckVes";
 
 export const InvoiceCheckScreen = ({ route, navigation }) => {
   const { invoice_guid, guidWorkShop, seller_guid_to } = route.params;
@@ -35,8 +39,6 @@ export const InvoiceCheckScreen = ({ route, navigation }) => {
 
   const { actionsProducts } = useSelector((state) => state.stateSlice);
   //// для ревизии списка товаров
-
-  const { data } = useSelector((state) => state.saveDataSlice);
 
   useEffect(() => {
     getData();
@@ -62,7 +64,8 @@ export const InvoiceCheckScreen = ({ route, navigation }) => {
       const tableDataList = listActionLeftovers?.map((item, index) => {
         return [
           `${index + 1}. ${item?.product_name}`,
-          `${item?.sale_price}`,
+          // `${item?.sale_price}`,
+          `${item?.price}`,
           `${item?.end_outcome}  ${item?.unit}`,
           <CheckVes guidProduct={item?.guid} />,
         ];
@@ -73,7 +76,8 @@ export const InvoiceCheckScreen = ({ route, navigation }) => {
     //////////////////////////////////////////////
     const products = listActionLeftovers?.map((i) => ({
       guid: i?.guid,
-      price: i?.sale_price,
+      // price: i?.sale_price,
+      price: i?.price,
       count: i?.end_outcome,
       unit_codeid: i?.unit_codeid,
     }));
@@ -101,9 +105,6 @@ export const InvoiceCheckScreen = ({ route, navigation }) => {
   const noneData = listData?.length === 0;
 
   const totals = unitResultFN(actionsProducts?.products);
-
-  // console.log(listActionLeftovers, "listActionLeftovers");
-  // console.log(actionsProducts?.products, "actionsProducts?.products");
 
   return (
     <ScrollView>
@@ -138,7 +139,8 @@ export const InvoiceCheckScreen = ({ route, navigation }) => {
           <View style={styles.divAction}>
             <View style={styles.blockTotal}>
               <Text style={styles.totalItemCount}>
-                Итого: {totals?.totalKg} кг и {totals?.totalSht} штук
+                Итого: {formatCount(totals?.totalKg)} кг и{" "}
+                {formatCount(totals?.totalSht)} штук
               </Text>
               <Text style={styles.totalItemCount}>
                 Сумма: {totalSumReturns(actionsProducts) || 0} сом

@@ -109,3 +109,17 @@ export const statusColor = {
   1: "red",
   2: "green",
 };
+
+// if (location === "Shipment") {
+//   /// продажа
+//   dispatch(addProductInvoiceTT({ data, getData }));
+// } else if (location === "AddProdSoputkaSrceen") {
+//   /// сопутка
+//   const obj = { ...data, ...forAddTovar };
+//   dispatch(addProductSoputkaTT({ obj, getData }));
+// } else if (location === "AddProdReturnSrceen") {
+//   /// возврат
+//   const obj = { ...data, ...forAddTovar };
+//   dispatch(addProductReturn({ obj, getData }));
+// }
+/// checkComponent

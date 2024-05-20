@@ -1,13 +1,8 @@
 import { StyleSheet, Text, View } from "react-native";
-import React from "react";
-import RNPickerSelect from "react-native-picker-select";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  getProductTT,
-  getCategoryTT,
-  getMyLeftovers,
-  clearLeftovers,
-} from "../store/reducers/requestSlice";
+import RNPickerSelect from "react-native-picker-select";
+import { getProductTT, getCategoryTT } from "../store/reducers/requestSlice";
+import { getMyLeftovers, clearLeftovers } from "../store/reducers/requestSlice";
 import { clearListCategory } from "../store/reducers/requestSlice";
 import { clearListProductTT } from "../store/reducers/requestSlice";
 import { changeActiveSelectCategory } from "../store/reducers/stateSlice";
@@ -15,7 +10,7 @@ import { changeActiveSelectWorkShop } from "../store/reducers/stateSlice";
 import { changeSearchProd } from "../store/reducers/stateSlice";
 import { changeTemporaryData } from "../store/reducers/stateSlice";
 
-export const ActionsEveryInvoice = ({ checkComponent, type }) => {
+export const ActionsEveryInvoice = ({ location, type }) => {
   const dispatch = useDispatch();
 
   const { listCategory, listWorkShopSale } = useSelector(
@@ -26,9 +21,6 @@ export const ActionsEveryInvoice = ({ checkComponent, type }) => {
     (state) => state.stateSlice
   );
 
-  // console.log(listWorkShopSale, "listWorkShopSale");
-  // console.log(listCategory, "listCategory");
-
   const { data } = useSelector((state) => state.saveDataSlice);
 
   const { seller_guid } = data;
@@ -37,7 +29,7 @@ export const ActionsEveryInvoice = ({ checkComponent, type }) => {
     if (value !== activeSelectCategory) {
       dispatch(clearListCategory()); //// очищаю список категорий перед отправкой запроса
       const send = { seller_guid, type, workshop_guid: value };
-      dispatch(getCategoryTT({ ...send, checkComponent }));
+      dispatch(getCategoryTT({ ...send, location }));
 
       dispatch(changeActiveSelectWorkShop(value));
       /// хранение активной категории, для сортировки товаров(храню guid категории)
@@ -49,14 +41,14 @@ export const ActionsEveryInvoice = ({ checkComponent, type }) => {
     if (value !== activeSelectCategory) {
       dispatch(clearListProductTT()); //// очищаю список товаров перед отправкой запроса
       dispatch(clearLeftovers()); //// очищаю массив данныз остатков
+      dispatch(changeActiveSelectCategory(value));
 
       if (type === "sale") {
-        dispatch(getProductTT({ guid: value, seller_guid, checkComponent }));
+        dispatch(getProductTT({ guid: value, seller_guid, location }));
       } else if (type === "leftovers") {
         dispatch(getMyLeftovers({ seller_guid, category_guid: value }));
       }
 
-      dispatch(changeActiveSelectCategory(value));
       /// хранение активной категории, для сортировки товаров(храню guid категории)
       clear();
     }
@@ -68,6 +60,9 @@ export const ActionsEveryInvoice = ({ checkComponent, type }) => {
     dispatch(changeTemporaryData({}));
     ////// очищаю временный данные для продажи
   };
+
+  // console.log(activeSelectCategory, "activeSelectCategory");
+  // console.log(activeSelectWorkShop, "activeSelectWorkShop");
 
   return (
     <View style={styles.parentSelects}>

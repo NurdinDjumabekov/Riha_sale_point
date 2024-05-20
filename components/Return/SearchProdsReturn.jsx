@@ -5,12 +5,11 @@ import { useDispatch, useSelector } from "react-redux";
 import searchIcon from "../../assets/icons/searchIcon.png";
 import { debounce } from "lodash";
 import { changeSearchProd } from "../../store/reducers/stateSlice";
-import { changeActiveSelectCategory } from "../../store/reducers/stateSlice";
 import { getLocalDataUser } from "../../helpers/returnDataUser";
 import { changeLocalData } from "../../store/reducers/saveDataSlice";
 import { searchProdTT } from "../../store/reducers/requestSlice";
 
-export const SearchProdsSale = ({ getData, location }) => {
+export const SearchProdsReturn = ({ getData, location }) => {
   const refInput = useRef();
 
   const dispatch = useDispatch();
@@ -19,33 +18,31 @@ export const SearchProdsSale = ({ getData, location }) => {
 
   const { data } = useSelector((state) => state.saveDataSlice);
 
-  const searchDataDebounce = useCallback(
+  const searchData = useCallback(
     debounce((text) => {
-      dispatch(changeActiveSelectCategory("0")); // Установка активной категории
-      getLocalDataUser({ changeLocalData, dispatch }); // Получение локальных данных пользователя
-      const sendData = { searchProd: text, seller_guid: data?.seller_guid }; // Подготовка данных для поиска
-      dispatch(searchProdTT({ ...sendData, location, type: 2 })); // Выполнение поиска с заданными параметрами (type: 2 поиск по основным цехам(не сопутки!))
+      if (text?.length > 1) {
+        getLocalDataUser({ changeLocalData, dispatch });
+        const sendData = { searchProd: text, seller_guid: data?.seller_guid };
+        dispatch(searchProdTT({ ...sendData, location, type: 1 }));
+      }
     }, 800),
-    []
+    [data]
   );
 
   const onChange = (text) => {
     dispatch(changeSearchProd(text));
-    searchDataDebounce(text);
-    // if (text === "") {
-    //   getData();
-    // }
+    text?.length === 0 ? getData() : searchData(text);
   };
 
   return (
     <View style={styles.blockSearch}>
       <TextInput
-        ref={refInput}
         style={styles.inputSearch}
         placeholderTextColor={"#222"}
         placeholder="Поиск товаров ..."
         onChangeText={onChange}
         value={searchProd}
+        ref={refInput}
       />
       <TouchableOpacity onPress={() => refInput?.current?.focus()}>
         <Image style={styles.iconSearch} source={searchIcon} />

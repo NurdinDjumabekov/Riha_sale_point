@@ -1,4 +1,4 @@
-import { Alert, StyleSheet, Text, View } from "react-native";
+import { Alert, FlatList, StyleSheet, Text, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { Modal } from "react-native";
 import { TouchableOpacity } from "react-native";
@@ -61,7 +61,30 @@ export const ModalPayTA = ({ modalState, setModalState, navigation }) => {
       >
         <View style={styles.modalInner} onPress={() => setModalState(true)}>
           <Text style={styles.titleSelect}>Выберите агента</Text>
-          <ScrollView style={styles.selectBlock}>
+          <View style={styles.selectBlock}>
+            <FlatList
+              // contentContainerStyle={styles.selectBlock}
+              data={[
+                ...listAgents,
+                ...listAgents,
+                ...listAgents,
+                ...listAgents,
+                ...listAgents,
+              ]}
+              renderItem={({ item }) => (
+                <ChoiceAgents
+                  item={item}
+                  setState={setObj}
+                  prev={obj}
+                  keyGuid={"agent_guid"}
+                  keyText={"agent"}
+                />
+              )}
+              keyExtractor={(item, index) => `${item.guid}${index}`}
+            />
+          </View>
+
+          {/* <ScrollView style={styles.selectBlock}>
             {listAgents?.map((item) => (
               <ChoiceAgents
                 item={item}
@@ -71,7 +94,7 @@ export const ModalPayTA = ({ modalState, setModalState, navigation }) => {
                 keyText={"agent"}
               />
             ))}
-          </ScrollView>
+          </ScrollView> */}
           <TextInput
             style={styles.inputNum}
             value={obj?.amount?.toString()}
@@ -126,7 +149,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     backgroundColor: "#f0f0f0",
     minHeight: 40,
-    maxHeight: 250,
+    maxHeight: 200,
   },
 
   inputNum: {

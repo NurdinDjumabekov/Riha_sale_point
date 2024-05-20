@@ -9,7 +9,7 @@ import { getLocalDataUser } from "../../helpers/returnDataUser";
 import { changeLocalData } from "../../store/reducers/saveDataSlice";
 import { searchProdTT } from "../../store/reducers/requestSlice";
 
-export const SearchProdsSoputka = ({ getData, checkComponent }) => {
+export const SearchProdsSoputka = ({ getData, location }) => {
   const refInput = useRef();
 
   const dispatch = useDispatch();
@@ -23,7 +23,7 @@ export const SearchProdsSoputka = ({ getData, checkComponent }) => {
       if (text?.length > 1) {
         getLocalDataUser({ changeLocalData, dispatch });
         const sendData = { searchProd: text, seller_guid: data?.seller_guid };
-        dispatch(searchProdTT({ ...sendData, checkComponent, type: 1 }));
+        dispatch(searchProdTT({ ...sendData, location, type: 1 }));
       }
     }, 800),
     [data]

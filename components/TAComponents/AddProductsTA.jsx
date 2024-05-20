@@ -8,24 +8,23 @@ import { ViewButton } from "../../customsTags/ViewButton";
 import { useDispatch, useSelector } from "react-redux";
 
 //////// fns
-import {
-  changeDataInputsInv,
-  changeSearchProd,
-  changeTemporaryData,
-} from "../../store/reducers/stateSlice";
+import { changeDataInputsInv } from "../../store/reducers/stateSlice";
+import { changeSearchProd } from "../../store/reducers/stateSlice";
+import { changeTemporaryData } from "../../store/reducers/stateSlice";
 import {
   addProductInvoiceTT,
-  addProductSoputkaTT,
-  getWorkShopsGorSale,
+  addProductReturn,
 } from "../../store/reducers/requestSlice";
+import { addProductSoputkaTT } from "../../store/reducers/requestSlice";
+import { getWorkShopsGorSale } from "../../store/reducers/requestSlice";
 import { getLocalDataUser } from "../../helpers/returnDataUser";
 import { changeLocalData } from "../../store/reducers/saveDataSlice";
 
 export const AddProductsTA = (props) => {
-  const { productGuid, checkComponent, forAddTovar, isCheck, obj } = props;
+  const { productGuid, location, forAddTovar, isCheck, obj } = props;
 
   //// для добавления продуктов в список
-  ///  checkComponent - true значит сопутка false - продажа
+  ///  location тут каждая страница, исходя их страницы я делаю действия
   const dispatch = useDispatch();
   const { data } = useSelector((state) => state.saveDataSlice);
 
@@ -53,16 +52,23 @@ export const AddProductsTA = (props) => {
         guid: productGuid,
         count: dataInputsInv?.ves,
         invoice_guid: infoKassa?.guid,
-        price: obj?.product_price, //// цена изначальная (без добаки %)
-        sale_price: dataInputsInv?.price, //// цена с добавкой  %
+        price: dataInputsInv?.price,
+
+        /// delete
+        // price: obj?.product_price, //// цена изначальная (без добаки %)
+        // sale_price: dataInputsInv?.price, //// цена с добавкой  %
       };
-      if (checkComponent) {
+      if (location === "Shipment") {
         /// продажа
         dispatch(addProductInvoiceTT({ data, getData }));
-      } else {
+      } else if (location === "AddProdSoputkaSrceen") {
         /// сопутка
         const obj = { ...data, ...forAddTovar };
         dispatch(addProductSoputkaTT({ obj, getData }));
+      } else if (location === "AddProdReturnSrceen") {
+        /// возврат
+        const obj = { ...data, ...forAddTovar };
+        dispatch(addProductReturn({ obj, getData }));
       }
     }
   };
@@ -71,16 +77,13 @@ export const AddProductsTA = (props) => {
     await getLocalDataUser({ changeLocalData, dispatch });
     const sendData = { seller_guid: data?.seller_guid, type: "sale" };
     // ////// внутри есть getCategoryTT и getProductTT
-    dispatch(getWorkShopsGorSale({ ...sendData, checkComponent }));
+    dispatch(getWorkShopsGorSale({ ...sendData, location }));
 
     dispatch(changeSearchProd(""));
     ////// очищаю поиск
   }; /// для вызова категорий и продуктов
 
   const onClose = () => dispatch(changeTemporaryData({}));
-
-  console.log(dataInputsInv, "dataInputsInv");
-  console.log(obj, "obj");
 
   return (
     <Modal
@@ -97,7 +100,7 @@ export const AddProductsTA = (props) => {
               <View style={[styles.line, styles.deg]} />
               <View style={[styles.line, styles.degMinus]} />
             </TouchableOpacity>
-            {checkComponent && isCheck && (
+            {location === "Shipment" && isCheck && (
               <Text style={styles.leftovers}>
                 Остаток: {obj?.end_outcome} {obj?.unit}
               </Text>

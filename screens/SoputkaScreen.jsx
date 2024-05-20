@@ -1,20 +1,24 @@
 import { useEffect, useState } from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import { SafeAreaView } from "react-native";
-import { FlatList } from "react-native";
-import { RefreshControl } from "react-native";
-import { getLocalDataUser } from "../helpers/returnDataUser";
-import { changeLocalData } from "../store/reducers/saveDataSlice";
-import { ViewButton } from "../customsTags/ViewButton";
-import {
-  clearListCategory,
-  clearListProductTT,
-  getHistorySoputka,
-  getListAgents,
-} from "../store/reducers/requestSlice";
+
+/////tags
+import { StyleSheet, Text, View } from "react-native";
+import { SafeAreaView, FlatList, RefreshControl } from "react-native";
+
+/////components
+import { AllHistoryInvoice } from "../common/AllHistoryInvoice";
 import { ModalCreateSoputka } from "../components/Soputka/ModalCreateSoputka";
-import { formatCount } from "../helpers/amounts";
+import { ViewButton } from "../customsTags/ViewButton";
+
+/////redux
+import { changeLocalData } from "../store/reducers/saveDataSlice";
+import { clearListCategory } from "../store/reducers/requestSlice";
+import { clearListProductTT } from "../store/reducers/requestSlice";
+import { getHistorySoputka } from "../store/reducers/requestSlice";
+import { getListAgents } from "../store/reducers/requestSlice";
+
+/////helpers
+import { getLocalDataUser } from "../helpers/returnDataUser";
 
 export const SoputkaScreen = ({ navigation }) => {
   //// Сопутка
@@ -43,12 +47,6 @@ export const SoputkaScreen = ({ navigation }) => {
     await dispatch(getListAgents(data?.seller_guid));
   };
 
-  const nav = (guidInvoice) => {
-    navigation.navigate("SoputkaProdHistoryScreen", { guidInvoice });
-    // console.log(guidInvoice, "guidInvoice");
-  };
-  // console.log(listHistorySoputka?.[0]?.invoice_guid, "listHistorySoputka");
-
   return (
     <>
       <SafeAreaView style={styles.container}>
@@ -65,34 +63,12 @@ export const SoputkaScreen = ({ navigation }) => {
           <FlatList
             data={listHistorySoputka}
             renderItem={({ item, index }) => (
-              <TouchableOpacity
-                style={styles.everyProd}
-                onPress={() => nav(item?.invoice_guid)}
-              >
-                <View style={styles.everyProdInner}>
-                  <View style={styles.blockTitle}>
-                    <View style={styles.blockTitleInner}>
-                      <Text style={styles.titleNum}>{index + 1} </Text>
-                      <View>
-                        <Text style={styles.date}>{item?.date}</Text>
-                        <Text style={styles.sum}>
-                          {formatCount(item?.total_price)} сом
-                        </Text>
-                      </View>
-                    </View>
-                  </View>
-                  <View style={styles.status}>
-                    {item?.status === 0 ? (
-                      <Text style={styles.bad}>Не подтверждено</Text>
-                    ) : (
-                      <Text style={styles.good}>Подтверждено</Text>
-                    )}
-                  </View>
-                </View>
-                {item?.comment && (
-                  <Text style={styles.comment}>{item?.comment}</Text>
-                )}
-              </TouchableOpacity>
+              <AllHistoryInvoice
+                item={item}
+                index={index}
+                keyLink={"SoputkaProdHistoryScreen"}
+                navigation={navigation}
+              />
             )}
             keyExtractor={(item) => item?.codeid}
             refreshControl={

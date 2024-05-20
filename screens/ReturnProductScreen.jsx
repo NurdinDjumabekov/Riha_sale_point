@@ -2,40 +2,38 @@ import { useEffect, useState } from "react";
 import { FlatList, StyleSheet, Text } from "react-native";
 import { View, TouchableOpacity, RefreshControl } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import { confirmSoputka } from "../store/reducers/requestSlice";
-import { deleteSoputkaProd } from "../store/reducers/requestSlice";
-import { getListSoputkaProd } from "../store/reducers/requestSlice";
+import { confirmReturn } from "../store/reducers/requestSlice";
+import { deleteReturnProd } from "../store/reducers/requestSlice";
+import { getListReturnProd } from "../store/reducers/requestSlice";
 import ConfirmationModal from "../components/ConfirmationModal";
 import { ViewButton } from "../customsTags/ViewButton";
 import { sumSoputkaProds, unitResultFN } from "../helpers/amounts";
 
-export const SoputkaProductScreen = ({ route, navigation }) => {
-  //// список проданных продуктов
+export const ReturnProductScreen = ({ route, navigation }) => {
+  //// список товаров для возврата
   const dispatch = useDispatch();
   const { guidInvoice } = route.params;
   const [modalItemGuid, setModalItemGuid] = useState(null); // Состояние для идентификатора элемента, для которого открывается модальное окно
   const [modalConfirm, setModalConfirm] = useState(false);
 
-  const { preloader, listProdSoputka } = useSelector(
+  const { preloader, listProdReturn } = useSelector(
     (state) => state.requestSlice
   );
 
-  const newList = listProdSoputka?.[0]?.list;
+  const newList = listProdReturn?.[0]?.list;
 
   useEffect(() => getData(), [guidInvoice]);
 
-  const getData = () => dispatch(getListSoputkaProd(guidInvoice));
+  const getData = () => dispatch(getListReturnProd(guidInvoice));
 
   const del = (product_guid) => {
-    dispatch(deleteSoputkaProd({ product_guid, getData }));
+    dispatch(deleteReturnProd({ product_guid, getData }));
     setModalItemGuid(null);
     ////// удаление продуктов сопутки
   };
 
-  // const { invoice_guid } = listProdSoputka?.[0];
-
   const confirmBtn = () => {
-    dispatch(confirmSoputka({ invoice_guid: guidInvoice, navigation }));
+    dispatch(confirmReturn({ invoice_guid: guidInvoice, navigation }));
     ///// подтверждение накладной сопутки
   };
 
@@ -175,7 +173,6 @@ const styles = StyleSheet.create({
   totalPrice: {
     fontSize: 14,
     fontWeight: "500",
-    // marginTop: 15,
     color: "rgba(12, 169, 70, 0.9)",
   },
 

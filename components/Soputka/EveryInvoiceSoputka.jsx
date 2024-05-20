@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useRoute } from "@react-navigation/native";
-import { RefreshControl, ScrollView } from "react-native";
+import { FlatList, RefreshControl, ScrollView } from "react-native";
 import { SafeAreaView, StyleSheet, Text, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { clearListProductTT } from "../../store/reducers/requestSlice";
@@ -13,13 +13,12 @@ export const EveryInvoiceSoputka = ({ forAddTovar, navigation }) => {
   const route = useRoute();
 
   /////////////////////////////////////////////////
-  const checkComponent = route.name === "Shipment";
+  const location = route.name;
   /////////////////////////////////////////////////
 
   const { preloader, listProductTT } = useSelector(
     (state) => state.requestSlice
   );
-  const { data } = useSelector((state) => state.saveDataSlice);
 
   const getData = () => {
     dispatch(changeSearchProd("")); ////// очищаю поиск
@@ -30,7 +29,7 @@ export const EveryInvoiceSoputka = ({ forAddTovar, navigation }) => {
     getData();
     navigation.setOptions({
       headerRight: () => (
-        <SearchProdsSoputka getData={getData} checkComponent={checkComponent} />
+        <SearchProdsSoputka getData={getData} location={location} />
       ),
     });
   }, []);
@@ -49,21 +48,21 @@ export const EveryInvoiceSoputka = ({ forAddTovar, navigation }) => {
           <Text style={styles.noneData}>Список пустой</Text>
         ) : (
           <View style={styles.blockSelectProd}>
-            <ScrollView
+            <FlatList
+              data={listProductTT}
+              renderItem={({ item, index }) => (
+                <EveryProduct
+                  obj={item}
+                  index={index}
+                  location={location}
+                  forAddTovar={forAddTovar}
+                />
+              )}
+              keyExtractor={(item, index) => `${item?.guid}${index}`}
               refreshControl={
                 <RefreshControl refreshing={preloader} onRefresh={getData} />
               }
-            >
-              {listProductTT?.map((item, index) => (
-                <EveryProduct
-                  key={`${item?.guid}${index}`}
-                  obj={item}
-                  index={index}
-                  checkComponent={checkComponent}
-                  forAddTovar={forAddTovar}
-                />
-              ))}
-            </ScrollView>
+            />
           </View>
         )}
       </SafeAreaView>

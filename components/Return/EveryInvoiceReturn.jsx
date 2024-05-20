@@ -1,18 +1,14 @@
-import { useCallback, useEffect } from "react";
-import { useFocusEffect, useRoute } from "@react-navigation/native";
-import { FlatList, RefreshControl, ScrollView } from "react-native";
+import { useEffect } from "react";
+import { useRoute } from "@react-navigation/native";
+import { FlatList, RefreshControl } from "react-native";
 import { SafeAreaView, StyleSheet, Text, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import { getWorkShopsGorSale } from "../../store/reducers/requestSlice";
+import { clearListProductTT } from "../../store/reducers/requestSlice";
 import { EveryProduct } from "../EveryProduct";
-import { changeLocalData } from "../../store/reducers/saveDataSlice";
 import { changeSearchProd } from "../../store/reducers/stateSlice";
+import { SearchProdsReturn } from "./SearchProdsReturn";
 
-import { ActionsEveryInvoice } from "../../common/ActionsEveryInvoice";
-import { getLocalDataUser } from "../../helpers/returnDataUser";
-import { SearchProdsSale } from "./SearchProdsSale";
-
-export const EveryInvoiceSale = ({ forAddTovar, navigation }) => {
+export const EveryInvoiceReturn = ({ forAddTovar, navigation }) => {
   const dispatch = useDispatch();
   const route = useRoute();
 
@@ -20,48 +16,33 @@ export const EveryInvoiceSale = ({ forAddTovar, navigation }) => {
   const location = route.name;
   /////////////////////////////////////////////////
 
-  const { preloader, listCategory, listProductTT } = useSelector(
+  const { preloader, listProductTT } = useSelector(
     (state) => state.requestSlice
   );
-  const { data } = useSelector((state) => state.saveDataSlice);
 
   const getData = () => {
-    const sendData = { seller_guid: data?.seller_guid, type: "sale" };
-    // ////// внутри есть getCategoryTT и getProductTT
-    dispatch(getWorkShopsGorSale({ ...sendData, location }));
-
-    dispatch(changeSearchProd(""));
-    ////// очищаю поиск
+    dispatch(changeSearchProd("")); ////// очищаю поиск
+    dispatch(clearListProductTT()); ////// очищаю список товаров
   };
 
-  // useEffect(() => {
-  //   navigation.setOptions({
-  //     headerRight: () => (
-  //       <SearchProdsSale getData={getData} location={location} />
-  //     ),
-  //   });
-  // }, []);
-
-  useFocusEffect(
-    useCallback(() => {
-      getData();
-    }, [])
-  );
-
-  const emptyData = listCategory?.length === 0;
+  useEffect(() => {
+    getData();
+    navigation.setOptions({
+      headerRight: () => (
+        <SearchProdsReturn getData={getData} location={location} />
+      ),
+    });
+  }, []);
 
   const emptyDataProd = listProductTT?.length === 0;
 
-  // if (emptyData) {
-  //   return <Text style={styles.noneData}>Список пустой</Text>;
-  // }
-
-  // console.log(listProductTT, "listProductTT");
+  if (emptyDataProd) {
+    return <Text style={styles.noneData}>Список пустой</Text>;
+  }
 
   return (
     <View style={styles.container}>
       <SafeAreaView style={styles.parentBlock}>
-        <ActionsEveryInvoice location={location} type={"sale"} />
         <Text style={styles.textTovar}>Список товаров</Text>
         {emptyDataProd ? (
           <Text style={styles.noneData}>Список пустой</Text>
@@ -103,7 +84,6 @@ const styles = StyleSheet.create({
 
   blockSelectProd: {
     flex: 1,
-    paddingBottom: 10,
   },
 
   textTovar: {

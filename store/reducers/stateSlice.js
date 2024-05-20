@@ -1,18 +1,15 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  dataLogin: {
-    login: "",
-    password: "",
-  },
+  dataLogin: { login: "", password: "" },
 
-  acceptConfirmInvoice: {
-    invoice_guid: "",
-    products: [],
-  }, // для подтверждения и принятия товаров ТА
+  acceptConfirmInvoice: { invoice_guid: "", products: [] },
+  // для подтверждения и принятия товаров ТА
 
   temporaryData: {}, ///// временные данные(после добавления сюда, они добавляются в список(listProductForTT))
+
   dataInputsInv: { price: "", ves: "" },
+
   listProductForTT: [],
 
   activeSelectCategory: "",

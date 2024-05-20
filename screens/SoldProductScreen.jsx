@@ -49,7 +49,7 @@ export const SoldProductScreen = ({ route }) => {
                 <View>
                   <Text style={styles.titleDate}>{item.date || "..."}</Text>
                   <Text style={styles.totalPrice}>
-                    {item?.sale_price} х {item?.count} ={" "}
+                    {item?.product_price} сом х {item?.count} {item?.unit} ={" "}
                     {formatCount(item?.total)} сом
                   </Text>
                 </View>

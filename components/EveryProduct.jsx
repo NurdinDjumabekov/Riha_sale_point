@@ -5,62 +5,43 @@ import {
   changeTemporaryData,
 } from "../store/reducers/stateSlice";
 import { AddProductsTA } from "./TAComponents/AddProductsTA";
-import { useRoute } from "@react-navigation/native";
 
 export const EveryProduct = (props) => {
-  const route = useRoute();
-
-  const { obj, index, checkComponent, forAddTovar } = props;
+  const { obj, index, location, forAddTovar } = props;
 
   const dispatch = useDispatch();
   const { temporaryData } = useSelector((state) => state.stateSlice);
 
   const addInTemporary = () => {
     dispatch(changeTemporaryData(obj));
-    if (route?.name === "Shipment") {
-      dispatch(changeDataInputsInv({ price: obj?.sale_price, ves: "" }));
-    } else {
-      dispatch(changeDataInputsInv({ price: obj?.product_price, ves: "" }));
-    }
+    dispatch(changeDataInputsInv({ price: obj?.product_price, ves: "" }));
   };
-
-  console.log(route.name, "useRoute");
 
   const isCheck = temporaryData?.guid === obj?.guid;
 
   return (
     <TouchableOpacity
       onPress={addInTemporary}
-      style={[styles.block, styles.blockMain, isCheck && styles.activeBlock]}
+      style={[styles.block, styles.blockMain]}
     >
       <View style={styles.blockMainInner}>
         <View>
           <View style={styles.mainContent}>
-            <Text style={[styles.title, isCheck && styles.activeTitle]}>
-              {index + 1}.{" "}
-            </Text>
-            <Text
-              style={[
-                styles.title,
-                isCheck && styles.activeTitle,
-                styles.width85,
-              ]}
-            >
+            <Text style={styles.title}>{index + 1}. </Text>
+            <Text style={[styles.title, styles.width85]}>
               {obj?.product_name}
             </Text>
           </View>
         </View>
-        {!isCheck && <View style={styles.arrow}></View>}
+        <View style={styles.arrow}></View>
       </View>
-      {Object.keys(temporaryData).length !== 0 && (
-        <AddProductsTA
-          productGuid={obj.guid}
-          obj={obj}
-          isCheck={isCheck}
-          checkComponent={checkComponent}
-          forAddTovar={forAddTovar}
-        />
-      )}
+      <AddProductsTA
+        productGuid={obj.guid}
+        obj={obj}
+        isCheck={isCheck}
+        location={location}
+        forAddTovar={forAddTovar}
+      />
     </TouchableOpacity>
   );
 };

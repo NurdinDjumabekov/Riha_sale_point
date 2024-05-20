@@ -1,32 +1,34 @@
 import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+
+//////tags
 import { Dimensions, RefreshControl, SafeAreaView } from "react-native";
 import { ScrollView, StyleSheet, Text } from "react-native";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  clearLeftovers,
-  clearListCategory,
-  clearListProductTT,
-  getWorkShopsGorSale,
-} from "../store/reducers/requestSlice";
 import { Table, Row, Rows, TableWrapper } from "react-native-table-component";
+
+//////fns
+import { clearLeftovers } from "../store/reducers/requestSlice";
+import { clearListCategory } from "../store/reducers/requestSlice";
+import { clearListProductTT } from "../store/reducers/requestSlice";
+import { getWorkShopsGorSale } from "../store/reducers/requestSlice";
+import { changeLocalData } from "../store/reducers/saveDataSlice";
+import { changeActiveSelectCategory } from "../store/reducers/stateSlice";
+import { changeActiveSelectWorkShop } from "../store/reducers/stateSlice";
+
+////helpers
 import { listTableLeftoverst } from "../helpers/Data";
 import { getLocalDataUser } from "../helpers/returnDataUser";
-import { changeLocalData } from "../store/reducers/saveDataSlice";
-import { ActionsEveryInvoice } from "../common/ActionsEveryInvoice";
-import {
-  changeActiveSelectCategory,
-  changeActiveSelectWorkShop,
-} from "../store/reducers/stateSlice";
 
-export const LeftoversScreen = ({ route }) => {
+/////// components
+import { ActionsEveryInvoice } from "../common/ActionsEveryInvoice";
+
+export const LeftoversScreen = () => {
   const dispatch = useDispatch();
   const { data } = useSelector((state) => state.saveDataSlice);
 
   const { preloader, listLeftovers } = useSelector(
     (state) => state.requestSlice
   );
-
-  const checkComponent = true;
 
   useEffect(() => {
     getData();
@@ -49,7 +51,7 @@ export const LeftoversScreen = ({ route }) => {
 
     const sendData = { seller_guid: data?.seller_guid, type: "leftovers" };
     // ////// внутри есть getCategoryTT и getProductTT
-    dispatch(getWorkShopsGorSale({ ...sendData, checkComponent }));
+    dispatch(getWorkShopsGorSale({ ...sendData, location: "Shipment" }));
   };
 
   const windowWidth = Dimensions.get("window").width;
@@ -59,7 +61,6 @@ export const LeftoversScreen = ({ route }) => {
     (percentage) => (percentage / 100) * windowWidth
   );
 
-  console.log(listLeftovers, "listLeftovers");
   return (
     <ScrollView
       style={styles.container}
@@ -69,10 +70,7 @@ export const LeftoversScreen = ({ route }) => {
       }
     >
       <SafeAreaView>
-        <ActionsEveryInvoice
-          type={"leftovers"}
-          checkComponent={checkComponent}
-        />
+        <ActionsEveryInvoice type={"leftovers"} location={"Shipment"} />
         {listLeftovers?.length === 0 ? (
           <Text style={styles.noneData}>Остатков нет...</Text>
         ) : (
@@ -85,7 +83,17 @@ export const LeftoversScreen = ({ route }) => {
             />
             <TableWrapper style={{ flexDirection: "row" }}>
               <Rows
-                data={listLeftovers}
+                data={listLeftovers?.map((item) => [
+                  item[0], // Товар
+                  item[1], // Остаток на начало
+                  <Text style={{ ...styles.textStyles, color: "green" }}>
+                    {item[2]}
+                  </Text>, // Приход
+                  <Text style={{ ...styles.textStyles, color: "red" }}>
+                    {item[3]}
+                  </Text>, // Расход
+                  item[4], // Остаток на конец
+                ])}
                 textStyle={styles.textStyles}
                 flexArr={resultWidths}
               />

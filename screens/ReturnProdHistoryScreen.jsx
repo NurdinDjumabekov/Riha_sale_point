@@ -1,21 +1,24 @@
-import { useEffect } from "react";
-import { RefreshControl, StyleSheet, Text, View } from "react-native";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  confirmSoputka,
-  deleteSoldProd,
-  deleteSoputkaProd,
-  getListSoputkaProd,
-} from "../store/reducers/requestSlice";
-import { ViewButton } from "../customsTags/ViewButton";
-import { formatCount, sumSoputkaProds, unitResultFN } from "../helpers/amounts";
-import ConfirmationModal from "../components/ConfirmationModal";
-import { useState } from "react";
-import { TouchableOpacity } from "react-native";
-import { ScrollView } from "react-native";
+import { useEffect, useState } from "react";
 
-export const SoputkaProdHistoryScreen = ({ navigation, route }) => {
-  //// история каждой накладной сапутки
+import { useDispatch, useSelector } from "react-redux";
+//////tags
+import { RefreshControl, StyleSheet, Text, View } from "react-native";
+import { TouchableOpacity, ScrollView } from "react-native";
+
+////redux
+import { confirmReturn } from "../store/reducers/requestSlice";
+import { deleteReturnProd } from "../store/reducers/requestSlice";
+import { getListReturnProd } from "../store/reducers/requestSlice";
+
+////helpers
+import { formatCount, sumSoputkaProds, unitResultFN } from "../helpers/amounts";
+
+//////components
+import { ViewButton } from "../customsTags/ViewButton";
+import ConfirmationModal from "../components/ConfirmationModal";
+
+export const ReturnProdHistoryScreen = ({ navigation, route }) => {
+  ////  просмотр каждой истории возврата накладной
   const dispatch = useDispatch();
   const { guidInvoice } = route.params;
 
@@ -23,35 +26,35 @@ export const SoputkaProdHistoryScreen = ({ navigation, route }) => {
 
   const [confirm, setConfirm] = useState(false); // Состояние для идентификатора элемента, для которого открывается модальное окно
 
-  const { preloader, listProdSoputka } = useSelector(
+  const { preloader, listProdReturn } = useSelector(
     (state) => state.requestSlice
   );
 
   useEffect(() => {
-    navigation.setOptions({ title: `${listProdSoputka?.[0]?.date}` });
-  }, [listProdSoputka?.[0]?.date]);
+    navigation.setOptions({ title: `${listProdReturn?.[0]?.date}` });
+  }, [listProdReturn?.[0]?.date]);
 
   useEffect(() => getData(), []);
 
   const getData = () => {
-    dispatch(getListSoputkaProd(guidInvoice));
+    dispatch(getListReturnProd(guidInvoice));
   };
 
   const confirmBtn = () => {
-    dispatch(confirmSoputka({ invoice_guid: guidInvoice, navigation }));
-    /// подтверждение накладной сопутки
+    dispatch(confirmReturn({ invoice_guid: guidInvoice, navigation }));
+    /// подтверждение накладной возврата
   };
 
   const addProd = () => {
     const forAddTovar = { invoice_guid: guidInvoice };
     navigation?.navigate("AddProdSoputkaSrceen", { forAddTovar });
-    /// д0бавление товара в накладную сопутки
+    /// д0бавление товара в накладную возврата
   };
 
   const del = (product_guid) => {
-    dispatch(deleteSoputkaProd({ product_guid, getData }));
+    dispatch(deleteReturnProd({ product_guid, getData }));
     setModalItemGuid(null);
-    /// удаление товара в накладную сопутки
+    /// удаление товара в накладную возврата
   };
 
   const status = listProdSoputka?.[0]?.status === 0; /// 0 - не подтверждён
@@ -62,7 +65,7 @@ export const SoputkaProdHistoryScreen = ({ navigation, route }) => {
 
   return (
     <>
-      <View style={styles.container}>
+      <View>
         <ScrollView
           style={styles.historyParent}
           refreshControl={
@@ -94,7 +97,7 @@ export const SoputkaProdHistoryScreen = ({ navigation, route }) => {
               </View>
               <ConfirmationModal
                 visible={modalItemGuid === item.guid}
-                message="Отменить продажу ?"
+                message="Отменить возврат ?"
                 onYes={() => del(item.guid)}
                 onNo={() => setModalItemGuid(null)}
                 onClose={() => setModalItemGuid(null)}
@@ -134,10 +137,6 @@ export const SoputkaProdHistoryScreen = ({ navigation, route }) => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    // flex: 1,
-  },
-
   historyParent: {
     minWidth: "100%",
     width: "100%",

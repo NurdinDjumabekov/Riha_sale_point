@@ -5,7 +5,7 @@ import { changeActionsProducts } from "../../store/reducers/stateSlice";
 export const CheckVes = ({ guidProduct }) => {
   ///// изменение веса для в0врата и ревизии накладной
   const dispatch = useDispatch();
-  
+
   const { actionsProducts } = useSelector((state) => state.stateSlice);
 
   const checkInput = (text) => {

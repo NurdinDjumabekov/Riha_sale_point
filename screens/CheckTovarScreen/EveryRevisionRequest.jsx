@@ -91,7 +91,7 @@ export const EveryRevisionRequest = ({ route, navigation }) => {
                 Сумма: {everyRequestRevision?.total_price} сом
               </Text>
               <Text style={styles.totalItemCount}>
-                Кол-во: {everyRequestRevision?.total_weight}
+                Кол-во: {everyRequestRevision?.total_count}
               </Text>
             </View>
           </View>
