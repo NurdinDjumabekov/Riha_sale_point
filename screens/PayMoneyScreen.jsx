@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { FlatList, StyleSheet, Text, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { SafeAreaView } from "react-native";
 import { RefreshControl } from "react-native";
@@ -7,12 +7,9 @@ import { getLocalDataUser } from "../helpers/returnDataUser";
 import { changeLocalData } from "../store/reducers/saveDataSlice";
 import { ModalPayTA } from "../components/ModalPayTA";
 import { ViewButton } from "../customsTags/ViewButton";
-import {
-  clearListAgents,
-  getHistoryBalance,
-  getListAgents,
-} from "../store/reducers/requestSlice";
-import { ScrollView } from "react-native";
+import { clearListAgents } from "../store/reducers/requestSlice";
+import { getHistoryBalance } from "../store/reducers/requestSlice";
+import { getListAgents } from "../store/reducers/requestSlice";
 
 export const PayMoneyScreen = ({ navigation }) => {
   //// оплата ТА (принятие денег ТА)
@@ -47,32 +44,34 @@ export const PayMoneyScreen = ({ navigation }) => {
           </ViewButton>
         </View>
         <Text style={styles.title}>История оплат</Text>
-        <ScrollView
-          refreshControl={
-            <RefreshControl refreshing={preloader} onRefresh={getData} />
-          }
-          style={styles.listContent}
-        >
-          {listHistoryBalance?.map((item, index) => (
-            <View style={styles.everyProd}>
-              <View style={styles.everyProdInner}>
-                <View style={styles.blockTitle}>
-                  <View style={styles.blockTitleInner}>
-                    <Text style={styles.titleNum}>
-                      {listHistoryBalance.length - index}{" "}
-                    </Text>
-                    <Text style={styles.date}>{item?.date_system}</Text>
+        <View style={styles.listContent}>
+          <FlatList
+            data={listHistoryBalance}
+            renderItem={({ item, index }) => (
+              <View style={styles.everyProd}>
+                <View style={styles.everyProdInner}>
+                  <View style={styles.blockTitle}>
+                    <View style={styles.blockTitleInner}>
+                      <Text style={styles.titleNum}>
+                        {listHistoryBalance.length - index}{" "}
+                      </Text>
+                      <Text style={styles.date}>{item?.date_system}</Text>
+                    </View>
+                    <Text style={styles.comment}>{item.comment || "..."}</Text>
                   </View>
-                  <Text style={styles.comment}>{item.comment || "..."}</Text>
-                </View>
-                <View style={styles.status}>
-                  <Text style={styles.good}>Успешно</Text>
-                  <Text style={styles.sum}>{item.total} сом</Text>
+                  <View style={styles.status}>
+                    <Text style={styles.good}>Успешно</Text>
+                    <Text style={styles.sum}>{item.total} сом</Text>
+                  </View>
                 </View>
               </View>
-            </View>
-          ))}
-        </ScrollView>
+            )}
+            keyExtractor={(item, index) => `${item.guid}${index}`}
+            refreshControl={
+              <RefreshControl refreshing={preloader} onRefresh={getData} />
+            }
+          />
+        </View>
       </SafeAreaView>
       <ModalPayTA
         modalState={modalState}

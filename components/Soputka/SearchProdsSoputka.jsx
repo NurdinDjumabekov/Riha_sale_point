@@ -24,6 +24,7 @@ export const SearchProdsSoputka = ({ getData, location }) => {
         getLocalDataUser({ changeLocalData, dispatch });
         const sendData = { searchProd: text, seller_guid: data?.seller_guid };
         dispatch(searchProdTT({ ...sendData, location, type: 1 }));
+        // Выполнение поиска с заданными параметрами (type: 1 поиск по сопутке!)
       }
     }, 800),
     [data]

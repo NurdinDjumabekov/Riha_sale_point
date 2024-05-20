@@ -95,7 +95,7 @@ export const ReturnProductScreen = ({ route, navigation }) => {
             Итого: {totals?.totalKg} кг и {totals?.totalSht} штук
           </Text>
           <Text style={styles.totalItemSumm}>
-            Сумма: {sumSoputkaProds(listProdSoputka?.[0]?.list)} сом
+            Сумма: {sumSoputkaProds(listProdReturn?.[0]?.list)} сом
           </Text>
           {moreOne && (
             <ViewButton

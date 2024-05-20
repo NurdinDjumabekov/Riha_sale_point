@@ -1,6 +1,6 @@
 import { useCallback, useEffect } from "react";
 import { useFocusEffect, useRoute } from "@react-navigation/native";
-import { FlatList, RefreshControl, ScrollView } from "react-native";
+import { FlatList, RefreshControl } from "react-native";
 import { SafeAreaView, StyleSheet, Text, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { getWorkShopsGorSale } from "../../store/reducers/requestSlice";

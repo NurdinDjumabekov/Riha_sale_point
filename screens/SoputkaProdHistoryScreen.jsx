@@ -1,18 +1,19 @@
-import { useEffect } from "react";
-import { RefreshControl, StyleSheet, Text, View } from "react-native";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  confirmSoputka,
-  deleteSoldProd,
-  deleteSoputkaProd,
-  getListSoputkaProd,
-} from "../store/reducers/requestSlice";
+
+///tags
+import { FlatList, RefreshControl, StyleSheet } from "react-native";
+import { TouchableOpacity, Text, View } from "react-native";
 import { ViewButton } from "../customsTags/ViewButton";
-import { formatCount, sumSoputkaProds, unitResultFN } from "../helpers/amounts";
 import ConfirmationModal from "../components/ConfirmationModal";
-import { useState } from "react";
-import { TouchableOpacity } from "react-native";
-import { ScrollView } from "react-native";
+
+////redux
+import { confirmSoputka } from "../store/reducers/requestSlice";
+import { deleteSoputkaProd } from "../store/reducers/requestSlice";
+import { getListSoputkaProd } from "../store/reducers/requestSlice";
+
+////helpers
+import { formatCount, sumSoputkaProds, unitResultFN } from "../helpers/amounts";
 
 export const SoputkaProdHistoryScreen = ({ navigation, route }) => {
   //// история каждой накладной сапутки
@@ -63,45 +64,47 @@ export const SoputkaProdHistoryScreen = ({ navigation, route }) => {
   return (
     <>
       <View style={styles.container}>
-        <ScrollView
-          style={styles.historyParent}
-          refreshControl={
-            <RefreshControl refreshing={preloader} onRefresh={getData} />
-          }
-        >
-          {listData?.map((item, index) => (
-            <>
-              <View style={styles.EveryInner}>
-                <View style={styles.mainData}>
-                  <View style={styles.mainDataInner}>
-                    <Text style={styles.titleNum}>{index + 1}</Text>
-                    <Text style={styles.sum}>
-                      {item.product_price} сом х {item.count} {item?.unit} ={" "}
-                      {formatCount(item.total_soputka)} сом
-                    </Text>
+        <View style={[styles.historyParent, !status && styles.more]}>
+          <FlatList
+            data={listData}
+            renderItem={({ item, index }) => (
+              <>
+                <View style={styles.EveryInner}>
+                  <View style={styles.mainData}>
+                    <View style={styles.mainDataInner}>
+                      <Text style={styles.titleNum}>{index + 1}</Text>
+                      <Text style={styles.sum}>
+                        {item?.product_price} сом х {item?.count} {item?.unit} ={" "}
+                        {formatCount(item?.total_soputka)} сом
+                      </Text>
+                    </View>
+                    {status && (
+                      <TouchableOpacity
+                        style={styles.krest}
+                        onPress={() => setModalItemGuid(item?.guid)}
+                      >
+                        <View style={[styles.line, styles.deg]} />
+                        <View style={[styles.line, styles.degMinus]} />
+                      </TouchableOpacity>
+                    )}
                   </View>
-                  {status && (
-                    <TouchableOpacity
-                      style={styles.krest}
-                      onPress={() => setModalItemGuid(item?.guid)}
-                    >
-                      <View style={[styles.line, styles.deg]} />
-                      <View style={[styles.line, styles.degMinus]} />
-                    </TouchableOpacity>
-                  )}
+                  <Text style={styles.title}>{item?.product_name}</Text>
                 </View>
-                <Text style={styles.title}>{item.product_name}</Text>
-              </View>
-              <ConfirmationModal
-                visible={modalItemGuid === item.guid}
-                message="Отменить продажу ?"
-                onYes={() => del(item.guid)}
-                onNo={() => setModalItemGuid(null)}
-                onClose={() => setModalItemGuid(null)}
-              />
-            </>
-          ))}
-        </ScrollView>
+                <ConfirmationModal
+                  visible={modalItemGuid == item?.guid}
+                  message="Отменить возврат ?"
+                  onYes={() => del(item?.guid)}
+                  onNo={() => setModalItemGuid(null)}
+                  onClose={() => setModalItemGuid(null)}
+                />
+              </>
+            )}
+            keyExtractor={(item, index) => `${item.guid}${index}`}
+            refreshControl={
+              <RefreshControl refreshing={preloader} onRefresh={getData} />
+            }
+          />
+        </View>
         <Text style={styles.totalItemSumm}>
           Итого: {totals?.totalKg} кг и {totals?.totalSht} штук
         </Text>
@@ -135,7 +138,7 @@ export const SoputkaProdHistoryScreen = ({ navigation, route }) => {
 
 const styles = StyleSheet.create({
   container: {
-    // flex: 1,
+    flex: 1,
   },
 
   historyParent: {
@@ -144,8 +147,10 @@ const styles = StyleSheet.create({
     paddingBottom: 20,
     borderTopWidth: 1,
     borderColor: "rgba(47, 71, 190, 0.587)",
-    maxHeight: "90%",
+    maxHeight: "83%",
   },
+
+  more: { maxHeight: "88%" },
 
   EveryInner: {
     backgroundColor: "rgba(162, 178, 238, 0.102)",

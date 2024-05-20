@@ -1,13 +1,10 @@
-import { StyleSheet, Text, View } from "react-native";
-import { useDispatch, useSelector } from "react-redux";
-import { Modal } from "react-native";
-import { TouchableOpacity } from "react-native";
-import { TextInput } from "react-native";
-import { ViewButton } from "../../customsTags/ViewButton";
 import { useState } from "react";
+import { FlatList, StyleSheet, Text, View } from "react-native";
+import { useDispatch, useSelector } from "react-redux";
+import { Modal, Alert } from "react-native";
+import { TouchableOpacity, TextInput } from "react-native";
+import { ViewButton } from "../../customsTags/ViewButton";
 import { createInvoiceSoputkaTT } from "../../store/reducers/requestSlice";
-import { ScrollView } from "react-native";
-import { Alert } from "react-native";
 import { ChoiceAgents } from "../ChoiceAgents";
 
 export const ModalCreateSoputka = (props) => {
@@ -52,17 +49,22 @@ export const ModalCreateSoputka = (props) => {
       >
         <View style={styles.modalInner} onPress={() => setModalState(true)}>
           <Text style={styles.titleSelect}>Выберите агента</Text>
-          <ScrollView style={styles.selectBlock}>
-            {listAgents?.map((item) => (
-              <ChoiceAgents
-                item={item}
-                setState={setObj}
-                prev={obj}
-                keyGuid={"agent_guid"}
-                keyText={"agent"}
-              />
-            ))}
-          </ScrollView>
+          <View style={styles.selectBlock}>
+            <FlatList
+              data={listAgents}
+              renderItem={({ item }) => (
+                <ChoiceAgents
+                  item={item}
+                  setState={setObj}
+                  prev={obj}
+                  keyGuid={"agent_guid"}
+                  keyText={"agent"}
+                />
+              )}
+              keyExtractor={(item, index) => `${item.guid}${index}`}
+            />
+          </View>
+
           <TextInput
             style={styles.inputComm}
             value={obj?.comment?.toString()}

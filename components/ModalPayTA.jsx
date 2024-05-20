@@ -1,11 +1,8 @@
 import { Alert, FlatList, StyleSheet, Text, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import { Modal } from "react-native";
-import { TouchableOpacity } from "react-native";
-import { TextInput } from "react-native";
+import { Modal, TextInput, TouchableOpacity } from "react-native";
 import { ViewButton } from "../customsTags/ViewButton";
 import { acceptMoney } from "../store/reducers/requestSlice";
-import { ScrollView } from "react-native";
 import { ChoiceAgents } from "./ChoiceAgents";
 import { useState } from "react";
 
@@ -63,14 +60,7 @@ export const ModalPayTA = ({ modalState, setModalState, navigation }) => {
           <Text style={styles.titleSelect}>Выберите агента</Text>
           <View style={styles.selectBlock}>
             <FlatList
-              // contentContainerStyle={styles.selectBlock}
-              data={[
-                ...listAgents,
-                ...listAgents,
-                ...listAgents,
-                ...listAgents,
-                ...listAgents,
-              ]}
+              data={listAgents}
               renderItem={({ item }) => (
                 <ChoiceAgents
                   item={item}
@@ -83,18 +73,6 @@ export const ModalPayTA = ({ modalState, setModalState, navigation }) => {
               keyExtractor={(item, index) => `${item.guid}${index}`}
             />
           </View>
-
-          {/* <ScrollView style={styles.selectBlock}>
-            {listAgents?.map((item) => (
-              <ChoiceAgents
-                item={item}
-                setState={setObj}
-                prev={obj}
-                keyGuid={"agent_guid"}
-                keyText={"agent"}
-              />
-            ))}
-          </ScrollView> */}
           <TextInput
             style={styles.inputNum}
             value={obj?.amount?.toString()}
@@ -149,7 +127,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     backgroundColor: "#f0f0f0",
     minHeight: 40,
-    maxHeight: 200,
+    maxHeight: 180,
   },
 
   inputNum: {
