@@ -1,10 +1,16 @@
+////// hooks
 import { useEffect } from "react";
-import { StyleSheet, Text, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import { FlatList } from "react-native";
+
+////// tags
+import { StyleSheet, Text, View, FlatList } from "react-native";
+
+////// components
 import { RenderResult } from "../components/RenderResult";
 import { getAcceptProdInvoice } from "../store/reducers/requestSlice";
-import { unitResultFN } from "../helpers/amounts";
+
+////// helpers
+import { formatCount, unitResultFN } from "../helpers/amounts";
 
 export const EveryInvoiceAcceptScreen = ({ route, navigation }) => {
   //// каждый возврат накладной типо истории
@@ -25,8 +31,6 @@ export const EveryInvoiceAcceptScreen = ({ route, navigation }) => {
     return <Text style={styles.noneData}>Данные отсутствуют</Text>;
   }
 
-  console.log(newList, "listAcceptInvoiceProd");
-
   const totals = unitResultFN(newList);
 
   return (
@@ -37,14 +41,17 @@ export const EveryInvoiceAcceptScreen = ({ route, navigation }) => {
         renderItem={({ item, index }) => (
           <RenderResult item={item} index={index} />
         )}
-        keyExtractor={(item) => item.codeid}
+        keyExtractor={(item, index) => `${item.guid}${index}`}
       />
-      <Text style={styles.totalItemCount}>
-        Итого: {totals?.totalKg} кг и {totals?.totalSht} штук
-      </Text>
-      <Text style={styles.totalItemCount}>
-        Сумма: {listAcceptInvoiceProd?.[0]?.total_price} сом
-      </Text>
+      <View style={styles.results}>
+        <Text style={styles.totalItemCount}>
+          Итого: {formatCount(totals?.totalKg)} кг и{" "}
+          {formatCount(totals?.totalSht)} штук
+        </Text>
+        <Text style={styles.totalItemCount}>
+          Сумма: {formatCount(listAcceptInvoiceProd?.[0]?.total_price)} сом
+        </Text>
+      </View>
     </View>
   );
 };
@@ -59,6 +66,10 @@ const styles = StyleSheet.create({
     width: "100%",
     paddingTop: 8,
     marginBottom: 15,
+  },
+
+  results: {
+    paddingTop: 5,
   },
 
   totalItemCount: {

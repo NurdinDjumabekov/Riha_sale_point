@@ -123,3 +123,29 @@ export const statusColor = {
 //   dispatch(addProductReturn({ obj, getData }));
 // }
 /// checkComponent
+
+const arr = {
+  category_guid: "431DDF84-D43F-4BB7-89A6-03DB425F8EBA",
+  category_name: "Другое",
+  codeid: "754",
+  date_system: "21.05.2024 22:50",
+  end_outcome: 1000000,
+  end_outcome_rev: 0,
+  guid: "673389A5-F3DE-11EE-8424-000C292CE9DF",
+  income: 1000000,
+  name: "Торговая Точка1",
+  outcome: 0,
+  point_guid: "E7458A29-6F7F-4364-A96D-ED878812F0CF",
+  price: 1,
+  product_guid: "BFC6940E-BFE2-479E-B47D-E62789E5B7BF",
+  product_name: "Филе куриное от Апашки кг",
+  sale_price: 1,
+  seller_fio: "ТЕСТ СТАРЫЙ ПРОДАВЕЦ",
+  seller_guid: "8F0B54CF-122F-4738-B332-8D5BD944F5C0",
+  start_outcome: 0,
+  status: 0,
+  unit: "кг",
+  unit_codeid: "2",
+  workshop: "МЗ",
+  workshop_guid: "6E1487DD-5A24-11ED-83AE-000C292CE9DF",
+};

@@ -7,6 +7,7 @@ import { clearListProductTT } from "../../store/reducers/requestSlice";
 import { EveryProduct } from "../EveryProduct";
 import { changeSearchProd } from "../../store/reducers/stateSlice";
 import { SearchProdsReturn } from "./SearchProdsReturn";
+import { AddProductsTA } from "../TAComponents/AddProductsTA";
 
 export const EveryInvoiceReturn = ({ forAddTovar, navigation }) => {
   const dispatch = useDispatch();
@@ -51,12 +52,7 @@ export const EveryInvoiceReturn = ({ forAddTovar, navigation }) => {
             <FlatList
               data={listProductTT}
               renderItem={({ item, index }) => (
-                <EveryProduct
-                  obj={item}
-                  index={index}
-                  location={location}
-                  forAddTovar={forAddTovar}
-                />
+                <EveryProduct obj={item} index={index} />
               )}
               keyExtractor={(item, index) => `${item?.guid}${index}`}
               refreshControl={
@@ -66,6 +62,7 @@ export const EveryInvoiceReturn = ({ forAddTovar, navigation }) => {
           </View>
         )}
       </SafeAreaView>
+      <AddProductsTA location={location} forAddTovar={forAddTovar} />
     </View>
   );
 };

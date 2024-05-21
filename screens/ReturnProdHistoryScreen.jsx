@@ -45,7 +45,7 @@ export const ReturnProdHistoryScreen = ({ navigation, route }) => {
 
   const addProd = () => {
     const forAddTovar = { invoice_guid: guidInvoice };
-    navigation?.navigate("AddProdSoputkaSrceen", { forAddTovar });
+    navigation?.navigate("AddProdReturnSrceen", { forAddTovar });
     /// д0бавление товара в накладную возврата
   };
 
@@ -74,7 +74,7 @@ export const ReturnProdHistoryScreen = ({ navigation, route }) => {
                     <View style={styles.mainDataInner}>
                       <Text style={styles.titleNum}>{index + 1}</Text>
                       <Text style={styles.sum}>
-                        {item?.product_price} сом х {item?.count} {item?.unit} ={" "}
+                        {item?.sale_price} сом х {item?.count} {item?.unit} ={" "}
                         {formatCount(item?.total_soputka)} сом
                       </Text>
                     </View>

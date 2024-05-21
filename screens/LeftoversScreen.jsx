@@ -2,9 +2,8 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 //////tags
-import { Dimensions, RefreshControl, SafeAreaView } from "react-native";
-import { ScrollView, StyleSheet, Text } from "react-native";
-import { Table, Row, Rows, TableWrapper } from "react-native-table-component";
+import { SafeAreaView } from "react-native";
+import { StyleSheet, Text } from "react-native";
 
 //////fns
 import { clearLeftovers } from "../store/reducers/requestSlice";
@@ -16,19 +15,18 @@ import { changeActiveSelectCategory } from "../store/reducers/stateSlice";
 import { changeActiveSelectWorkShop } from "../store/reducers/stateSlice";
 
 ////helpers
-import { listTableLeftoverst } from "../helpers/Data";
 import { getLocalDataUser } from "../helpers/returnDataUser";
 
 /////// components
 import { ActionsEveryInvoice } from "../common/ActionsEveryInvoice";
+import { TablesLeftovers } from "./Tables/TablesLeftovers";
+import { View } from "react-native";
 
 export const LeftoversScreen = () => {
   const dispatch = useDispatch();
   const { data } = useSelector((state) => state.saveDataSlice);
 
-  const { preloader, listLeftovers } = useSelector(
-    (state) => state.requestSlice
-  );
+  const { listLeftovers } = useSelector((state) => state.requestSlice);
 
   useEffect(() => {
     getData();
@@ -54,76 +52,23 @@ export const LeftoversScreen = () => {
     dispatch(getWorkShopsGorSale({ ...sendData, location: "Shipment" }));
   };
 
-  const windowWidth = Dimensions.get("window").width;
-  const arrWidth = [35, 19, 14, 14, 18]; //  проценты %
-
-  const resultWidths = arrWidth.map(
-    (percentage) => (percentage / 100) * windowWidth
-  );
-
   return (
-    <ScrollView
-      style={styles.container}
-      scrollEventThrottle={400}
-      refreshControl={
-        <RefreshControl refreshing={preloader} onRefresh={getData} />
-      }
-    >
-      <SafeAreaView>
-        <ActionsEveryInvoice type={"leftovers"} location={"Shipment"} />
-        {listLeftovers?.length === 0 ? (
-          <Text style={styles.noneData}>Остатков нет...</Text>
-        ) : (
-          <Table borderStyle={styles.styleHeadTable}>
-            <Row
-              data={listTableLeftoverst}
-              style={styles.head}
-              textStyle={{ margin: 3, fontSize: 13, fontWeight: 500 }}
-              flexArr={resultWidths}
-            />
-            <TableWrapper style={{ flexDirection: "row" }}>
-              <Rows
-                data={listLeftovers?.map((item) => [
-                  item[0], // Товар
-                  item[1], // Остаток на начало
-                  <Text style={{ ...styles.textStyles, color: "green" }}>
-                    {item[2]}
-                  </Text>, // Приход
-                  <Text style={{ ...styles.textStyles, color: "red" }}>
-                    {item[3]}
-                  </Text>, // Расход
-                  item[4], // Остаток на конец
-                ])}
-                textStyle={styles.textStyles}
-                flexArr={resultWidths}
-              />
-            </TableWrapper>
-          </Table>
-        )}
-      </SafeAreaView>
-    </ScrollView>
+    <SafeAreaView style={styles.container}>
+      <ActionsEveryInvoice type={"leftovers"} location={"Shipment"} />
+      {listLeftovers?.length === 0 ? (
+        <Text style={styles.noneData}>Остатков нет...</Text>
+      ) : (
+        <TablesLeftovers arr={listLeftovers} />
+      )}
+    </SafeAreaView>
   );
 };
 
-// data={listLeftovers?.map((item) => [
-//   item[0], // Товар
-//   item[1], // Остаток на начало
-//   <Text style={{ ...styles.textStyles, color: "green" }}>
-//     {item[2]}
-//   </Text>, // Приход
-//   <Text style={{ ...styles.textStyles, color: "red" }}>
-//     {item[3]}
-//   </Text>, // Расход
-//   item[4], // Остаток на конец
-// ])}
-
 const styles = StyleSheet.create({
   container: {
-    paddingLeft: 1,
-    paddingRight: 1,
+    flex: 1,
     paddingTop: 10,
-    paddingBottom: 30,
-    marginBottom: 20,
+    marginBottom: 10,
   },
 
   choiceCateg: {

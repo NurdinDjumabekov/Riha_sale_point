@@ -58,7 +58,7 @@ export const totalSumEveryAccept = (list) => {
 };
 
 export const sumSoputkaProds = (arr) => {
-  return arr?.reduce((sum, item) => sum + item?.total_soputka, 0);
+  return arr?.reduce((sum, item) => +sum + +item?.total_soputka, 0);
 };
 
 ////////////////////////////////////////////////////////////////////

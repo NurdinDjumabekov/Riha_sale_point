@@ -1,22 +1,15 @@
 import { StyleSheet, TouchableOpacity, View, Text } from "react-native";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  clearListCategory,
-  clearListProductTT,
-  createInvoiceTT,
-} from "../store/reducers/requestSlice";
 import { useEffect } from "react";
-import { changeTemporaryData } from "../store/reducers/stateSlice";
+import { useDispatch } from "react-redux";
+import { clearListCategory } from "../store/reducers/requestSlice";
+import { clearListProductTT } from "../store/reducers/requestSlice";
+import { clearTemporaryData } from "../store/reducers/stateSlice";
 import { transformDate } from "../helpers/transformDate";
-import { getLocalDataUser } from "../helpers/returnDataUser";
-import { changeLocalData } from "../store/reducers/saveDataSlice";
 import { EveryInvoiceSoputka } from "../components/Soputka/EveryInvoiceSoputka";
 
 export const AddProdSoputkaSrceen = ({ navigation, route }) => {
   const dispatch = useDispatch();
   const { forAddTovar } = route.params; //// хранятся данные накладной сапутки
-
-  const { data } = useSelector((state) => state.saveDataSlice);
 
   useEffect(() => {
     defaultActive();
@@ -31,9 +24,7 @@ export const AddProdSoputkaSrceen = ({ navigation, route }) => {
     };
   }, []);
 
-  const defaultActive = () => {
-    dispatch(changeTemporaryData({})); // очищаю активный продукт
-  };
+  const defaultActive = () => dispatch(clearTemporaryData()); // очищаю активный продукт
 
   const listProdSale = () => {
     navigation.navigate("SoputkaProductScreen", {

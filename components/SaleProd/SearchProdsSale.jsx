@@ -24,8 +24,8 @@ export const SearchProdsSale = ({ getData, location }) => {
       dispatch(changeActiveSelectCategory("0")); // Установка активной категории
       getLocalDataUser({ changeLocalData, dispatch }); // Получение локальных данных пользователя
       const sendData = { searchProd: text, seller_guid: data?.seller_guid }; // Подготовка данных для поиска
-      dispatch(searchProdTT({ ...sendData, location, type: 2 }));
-      // Выполнение поиска с заданными параметрами (type: 2 поиск по основным цехам(не сопутки!))
+      dispatch(searchProdTT({ ...sendData, location }));
+      // Выполнение поиска с заданными параметрами
     }, 800),
     []
   );

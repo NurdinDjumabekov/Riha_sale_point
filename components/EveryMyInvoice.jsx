@@ -9,6 +9,7 @@ export const EveryMyInvoice = ({ obj, navigation }) => {
   //// 1(не принятые накладные),
   //// 2(принятые накладные)
   //// список загрузок(накладных)
+  //
   const dispatch = useDispatch();
 
   const objType = {
@@ -54,10 +55,12 @@ export const EveryMyInvoice = ({ obj, navigation }) => {
             <Text style={styles.titleDate}>{obj.date}</Text>
           </View>
         </View>
-        {obj.comment?.length !== 0 && (
+        {!!obj?.comment ? (
           <Text style={styles.comments} numberOfLines={4} ellipsizeMode="tail">
             {obj.comment}
           </Text>
+        ) : (
+          <Text style={styles.comments}> ...</Text>
         )}
       </View>
       <View style={styles.mainDataArrow}>

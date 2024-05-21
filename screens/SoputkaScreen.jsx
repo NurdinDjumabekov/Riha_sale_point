@@ -70,7 +70,7 @@ export const SoputkaScreen = ({ navigation }) => {
                 navigation={navigation}
               />
             )}
-            keyExtractor={(item) => item?.codeid}
+            keyExtractor={(item, index) => `${item.guid}${index}`}
             refreshControl={
               <RefreshControl refreshing={preloader} onRefresh={getData} />
             }

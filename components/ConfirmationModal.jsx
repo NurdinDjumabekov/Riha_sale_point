@@ -1,45 +1,7 @@
 import React from "react";
-import { Modal, View, Text, TouchableWithoutFeedback } from "react-native";
-import styled from "styled-components/native";
+import { TouchableWithoutFeedback, StyleSheet } from "react-native";
+import { Modal, View, Text } from "react-native";
 import { ViewButton } from "../customsTags/ViewButton";
-
-const BackgroundOverlay = styled.View`
-  flex: 1;
-  background-color: rgba(0, 0, 0, 0.5);
-  justify-content: center;
-  align-items: center;
-`;
-
-const Container = styled.View`
-  background-color: #fff;
-  padding: 20px 50px;
-  border-radius: 10px;
-  max-width: 90%;
-`;
-
-const ButtonContainer = styled.View`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  gap: 20px;
-  margin-top: 20px;
-`;
-
-const Title = styled.Text`
-  font-size: 20px;
-  font-weight: 500;
-  text-align: center;
-`;
-
-const btns = {
-  color: "#fff",
-  elevation: 2,
-  fontSize: 20,
-  width: 90,
-  paddingBottom: 8,
-  paddingTop: 6,
-};
 
 const ConfirmationModal = ({ visible, message, onYes, onNo, onClose }) => {
   return (
@@ -50,28 +12,67 @@ const ConfirmationModal = ({ visible, message, onYes, onNo, onClose }) => {
       onRequestClose={onClose}
     >
       <TouchableWithoutFeedback onPress={onClose}>
-        <BackgroundOverlay>
-          <Container>
-            <Title>{message}</Title>
-            <ButtonContainer>
-              <ViewButton
-                onclick={onYes}
-                styles={{ ...btns, backgroundColor: "green" }}
-              >
+        <View style={styles.parent}>
+          <View style={styles.container}>
+            <Text style={styles.title}>{message}</Text>
+            <View style={styles.buttonContainer}>
+              <ViewButton onclick={onYes} styles={[styles.btns, styles.green]}>
                 Да
               </ViewButton>
-              <ViewButton
-                onclick={onNo}
-                styles={{ ...btns, backgroundColor: "red" }}
-              >
+              <ViewButton onclick={onNo} styles={[styles.btns, styles.red]}>
                 Нет
               </ViewButton>
-            </ButtonContainer>
-          </Container>
-        </BackgroundOverlay>
+            </View>
+          </View>
+        </View>
       </TouchableWithoutFeedback>
     </Modal>
   );
 };
 
 export default ConfirmationModal;
+
+const styles = StyleSheet.create({
+  parent: {
+    flex: 1,
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+
+  container: {
+    backgroundColor: "#fff",
+    paddingVertical: 20,
+    paddingHorizontal: 50,
+    borderRadius: 10,
+    maxWidth: "90%",
+  },
+
+  title: {
+    fontSize: 20,
+    fontWeight: "500",
+    textAlign: "center",
+  },
+
+  buttonContainer: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 20,
+    marginTop: 20,
+  },
+
+  btns: {
+    color: "#fff",
+    elevation: 2,
+    fontSize: 20,
+    width: 90,
+    paddingBottom: 8,
+    paddingTop: 6,
+  },
+
+  red: { backgroundColor: "red" },
+
+  green: { backgroundColor: "green" },
+});

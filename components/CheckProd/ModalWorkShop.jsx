@@ -112,7 +112,7 @@ export const ModalWorkShop = (props) => {
           <Text style={styles.titleSelect}>Выберите продавца для ревизии</Text>
           <BottomSheetFlatList
             data={listSellersPoints}
-            keyExtractor={(item) => item?.guid}
+            keyExtractor={(item, index) => `${item.guid}${index}`}
             renderItem={selectSeller}
             contentContainerStyle={styles.selectBlock}
           />
@@ -134,7 +134,7 @@ export const ModalWorkShop = (props) => {
               <Text style={styles.titleSelect}>Выберите цех</Text>
               <BottomSheetFlatList
                 data={listWorkShop}
-                keyExtractor={(item) => item?.guid}
+                keyExtractor={(item, index) => `${item.guid}${index}`}
                 renderItem={selectWorkShop}
                 contentContainerStyle={styles.selectBlock}
               />

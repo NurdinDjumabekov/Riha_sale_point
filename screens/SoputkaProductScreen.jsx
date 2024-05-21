@@ -42,14 +42,15 @@ export const SoputkaProductScreen = ({ route, navigation }) => {
   const totals = unitResultFN(newList);
 
   const none = newList?.length === 0;
+
   const moreOne = newList?.length > 0;
 
   return (
-    <View>
+    <View style={styles.main}>
       {none ? (
         <Text style={styles.noneData}>Список пустой</Text>
       ) : (
-        <View style={{ paddingBottom: 150 }}>
+        <View style={styles.flatListParent}>
           <FlatList
             contentContainerStyle={styles.flatList}
             data={newList}
@@ -63,7 +64,7 @@ export const SoputkaProductScreen = ({ route, navigation }) => {
                         {item?.date || "..."}
                       </Text>
                       <Text style={styles.totalPrice}>
-                        {item?.product_price} сом х {item?.count} {item?.unit} ={" "}
+                        {item?.sale_price} сом х {item?.count} {item?.unit} ={" "}
                         {item?.total_soputka} сом
                       </Text>
                     </View>
@@ -88,25 +89,27 @@ export const SoputkaProductScreen = ({ route, navigation }) => {
                 />
               </TouchableOpacity>
             )}
-            keyExtractor={(item) => item?.codeid}
+            keyExtractor={(item, index) => `${item.guid}${index}`}
             refreshControl={
               <RefreshControl refreshing={preloader} onRefresh={getData} />
             }
           />
-          <Text style={styles.totalItemSumm}>
-            Итого: {totals?.totalKg} кг и {totals?.totalSht} штук
-          </Text>
-          <Text style={styles.totalItemSumm}>
-            Сумма: {sumSoputkaProds(listProdSoputka?.[0]?.list)} сом
-          </Text>
-          {moreOne && (
-            <ViewButton
-              styles={styles.sendBtn}
-              onclick={() => setModalConfirm(true)}
-            >
-              Подтвердить
-            </ViewButton>
-          )}
+          <View style={styles.actionBlock}>
+            <Text style={styles.totalItemSumm}>
+              Итого: {totals?.totalKg} кг и {totals?.totalSht} штук
+            </Text>
+            <Text style={styles.totalItemSumm}>
+              Сумма: {sumSoputkaProds(listProdSoputka?.[0]?.list)} сом
+            </Text>
+            {moreOne && (
+              <ViewButton
+                styles={styles.sendBtn}
+                onclick={() => setModalConfirm(true)}
+              >
+                Подтвердить
+              </ViewButton>
+            )}
+          </View>
         </View>
       )}
       <ConfirmationModal
@@ -121,6 +124,8 @@ export const SoputkaProductScreen = ({ route, navigation }) => {
 };
 
 const styles = StyleSheet.create({
+  main: { flex: 1 },
+
   container: {
     backgroundColor: "rgba(162, 178, 238, 0.102)",
     minWidth: "100%",
@@ -195,7 +200,11 @@ const styles = StyleSheet.create({
     height: "100%",
   },
 
+  flatListParent: { maxHeight: "93%" },
+
   flatList: { width: "100%", paddingTop: 8, marginBottom: 10 },
+
+  actionBlock: { paddingVertical: 13 },
 
   totalItemSumm: {
     fontSize: 18,

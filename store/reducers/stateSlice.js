@@ -3,12 +3,15 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   dataLogin: { login: "", password: "" },
 
-  acceptConfirmInvoice: { invoice_guid: "", products: [] },
+  acceptConfirmInvoice: { invoice_guid: "" },
   // для подтверждения и принятия товаров ТА
 
-  temporaryData: {}, ///// временные данные(после добавления сюда, они добавляются в список(listProductForTT))
-
-  dataInputsInv: { price: "", ves: "" },
+  temporaryData: {
+    price: "",
+    ves: "",
+    guid: "",
+  },
+  ///// временные данные для добавление товаров в сопутку, возврат и продажу
 
   listProductForTT: [],
 
@@ -52,11 +55,15 @@ const stateSlice = createSlice({
     },
 
     clearAcceptInvoiceTT: (state) => {
-      state.acceptConfirmInvoice = { invoice_guid: "", products: [] };
+      state.acceptConfirmInvoice = { invoice_guid: "" };
     },
 
     changeTemporaryData: (state, action) => {
       state.temporaryData = action.payload;
+    },
+
+    clearTemporaryData: (state, action) => {
+      state.temporaryData = { price: "", ves: "", guid: "" };
     },
 
     changeListProductForTT: (state, action) => {
@@ -74,14 +81,6 @@ const stateSlice = createSlice({
       if (indexToRemove !== -1) {
         state.listProductForTT.splice(indexToRemove, 1);
       }
-    },
-
-    changeDataInputsInv: (state, action) => {
-      state.dataInputsInv = action.payload;
-    },
-
-    clearDataInputsInv: (state, action) => {
-      state.dataInputsInv = { price: "", ves: "" };
     },
 
     changeActiveSelectCategory: (state, action) => {
@@ -129,8 +128,7 @@ export const {
   changeListProductForTT,
   addListProductForTT,
   removeListProductForTT,
-  changeDataInputsInv,
-  clearDataInputsInv,
+  clearTemporaryData,
   changeActiveSelectCategory,
   changeActiveSelectWorkShop,
   changeSearchProd,

@@ -11,7 +11,8 @@ export const RenderResult = ({ item, index }) => {
         <Text style={styles.titleHistory}>{item.product_name}</Text>
         <View style={styles.everyProdInner}>
           <Text style={styles.koll}>
-            {item?.price} х {count} = {formatCount(+item?.price * count)} сом
+            {item?.sale_price} х {count} ={" "}
+            {formatCount(+item?.sale_price * count)} сом
           </Text>
         </View>
       </View>

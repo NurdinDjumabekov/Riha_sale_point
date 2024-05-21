@@ -5,10 +5,12 @@ import { getProductTT, getCategoryTT } from "../store/reducers/requestSlice";
 import { getMyLeftovers, clearLeftovers } from "../store/reducers/requestSlice";
 import { clearListCategory } from "../store/reducers/requestSlice";
 import { clearListProductTT } from "../store/reducers/requestSlice";
-import { changeActiveSelectCategory } from "../store/reducers/stateSlice";
+import {
+  changeActiveSelectCategory,
+  clearTemporaryData,
+} from "../store/reducers/stateSlice";
 import { changeActiveSelectWorkShop } from "../store/reducers/stateSlice";
 import { changeSearchProd } from "../store/reducers/stateSlice";
-import { changeTemporaryData } from "../store/reducers/stateSlice";
 
 export const ActionsEveryInvoice = ({ location, type }) => {
   const dispatch = useDispatch();
@@ -43,9 +45,9 @@ export const ActionsEveryInvoice = ({ location, type }) => {
       dispatch(clearLeftovers()); //// очищаю массив данныз остатков
       dispatch(changeActiveSelectCategory(value));
 
-      if (type === "sale") {
+      if (type == "sale") {
         dispatch(getProductTT({ guid: value, seller_guid, location }));
-      } else if (type === "leftovers") {
+      } else if (type == "leftovers") {
         dispatch(getMyLeftovers({ seller_guid, category_guid: value }));
       }
 
@@ -57,7 +59,7 @@ export const ActionsEveryInvoice = ({ location, type }) => {
   const clear = () => {
     dispatch(changeSearchProd(""));
     ////// очищаю поиск
-    dispatch(changeTemporaryData({}));
+    dispatch(clearTemporaryData());
     ////// очищаю временный данные для продажи
   };
 

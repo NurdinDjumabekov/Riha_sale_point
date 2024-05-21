@@ -1,12 +1,12 @@
 import { StyleSheet, TouchableOpacity, View, Text } from "react-native";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { clearListCategory } from "../store/reducers/requestSlice";
 import { clearListProductTT } from "../store/reducers/requestSlice";
 import { createInvoiceTT } from "../store/reducers/requestSlice";
-import { useEffect } from "react";
+import { clearTemporaryData } from "../store/reducers/stateSlice";
 import { changeActiveSelectCategory } from "../store/reducers/stateSlice";
 import { changeActiveSelectWorkShop } from "../store/reducers/stateSlice";
-import { changeTemporaryData } from "../store/reducers/stateSlice";
 import { getLocalDataUser } from "../helpers/returnDataUser";
 import { changeLocalData } from "../store/reducers/saveDataSlice";
 import { EveryInvoiceSale } from "../components/SaleProd/EveryInvoiceSale";
@@ -37,7 +37,7 @@ export const MyShipmentScreen = ({ navigation }) => {
     await dispatch(createInvoiceTT(data?.seller_guid));
   };
 
-  const clearStates = () => dispatch(changeTemporaryData({})); // очищаю активный продукт
+  const clearStates = () => dispatch(clearTemporaryData()); // очищаю активный продукт
 
   const listProdSale = () => {
     navigation.navigate("SoldProduct", {
@@ -62,6 +62,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#ebeef2",
   },
+
   arrow: {
     display: "flex",
     flexDirection: "row",
@@ -72,6 +73,7 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(12, 169, 70, 0.486)",
     marginBottom: 0,
   },
+
   arrowInner: {
     borderTopWidth: 3,
     borderRightWidth: 3,
@@ -83,6 +85,7 @@ const styles = StyleSheet.create({
     marginRight: 20,
     marginTop: 5,
   },
+
   textBtn: {
     fontSize: 18,
     fontWeight: "500",

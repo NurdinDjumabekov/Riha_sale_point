@@ -39,7 +39,7 @@ export const ListExpense = ({ getData }) => {
             )}
           </View>
         )}
-        keyExtractor={(item) => item.guid}
+        keyExtractor={(item, index) => `${item.guid}${index}`}
         refreshControl={
           <RefreshControl refreshing={preloader} onRefresh={() => getData()} />
         }

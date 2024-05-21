@@ -1,13 +1,21 @@
 import React, { useCallback, useRef } from "react";
+import { debounce } from "lodash";
+
+///// tags
 import { StyleSheet, Image, View } from "react-native";
 import { TextInput, TouchableOpacity } from "react-native";
+
+////// redux
 import { useDispatch, useSelector } from "react-redux";
-import searchIcon from "../../assets/icons/searchIcon.png";
-import { debounce } from "lodash";
 import { changeSearchProd } from "../../store/reducers/stateSlice";
-import { getLocalDataUser } from "../../helpers/returnDataUser";
 import { changeLocalData } from "../../store/reducers/saveDataSlice";
 import { searchProdTT } from "../../store/reducers/requestSlice";
+
+///// helpers
+import { getLocalDataUser } from "../../helpers/returnDataUser";
+
+///// imgs
+import searchIcon from "../../assets/icons/searchIcon.png";
 
 export const SearchProdsSoputka = ({ getData, location }) => {
   const refInput = useRef();

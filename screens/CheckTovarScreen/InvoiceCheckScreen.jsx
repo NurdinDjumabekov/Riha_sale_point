@@ -1,30 +1,26 @@
-import { useEffect, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
+
+////hooks
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  changeListActionLeftovers,
-  getLeftoversForCheck,
-} from "../../store/reducers/requestSlice";
+
+////fns
+import { changeListActionLeftovers } from "../../store/reducers/requestSlice";
+import { getLeftoversForCheck } from "../../store/reducers/requestSlice";
 import { sendCheckListProduct } from "../../store/reducers/requestSlice";
-import { ScrollView } from "react-native";
-import { Dimensions } from "react-native";
-import { Row, Rows, Table, TableWrapper } from "react-native-table-component";
 import { changeActionsProducts } from "../../store/reducers/stateSlice";
 import { clearActionsProducts } from "../../store/reducers/stateSlice";
 
+///// components
 import { ViewButton } from "../../customsTags/ViewButton";
 import ConfirmationModal from "../../components/ConfirmationModal";
 import { changeLocalData } from "../../store/reducers/saveDataSlice";
 
 ///// helpers
-import { listTableForReturnProd } from "../../helpers/Data";
 import { getLocalDataUser } from "../../helpers/returnDataUser";
-import {
-  formatCount,
-  totalSumReturns,
-  unitResultFN,
-} from "../../helpers/amounts";
-import { CheckVes } from "../../components/CheckProd/CheckVes";
+import { totalSumReturns } from "../../helpers/amounts";
+import { formatCount, unitResultFN } from "../../helpers/amounts";
+import { TablesRevision } from "../Tables/TablesRevision";
 
 export const InvoiceCheckScreen = ({ route, navigation }) => {
   const { invoice_guid, guidWorkShop, seller_guid_to } = route.params;
@@ -32,7 +28,6 @@ export const InvoiceCheckScreen = ({ route, navigation }) => {
 
   const dispatch = useDispatch();
 
-  const [listData, setListData] = useState([]);
   const [modalSend, setModalSend] = useState(false);
 
   const { listActionLeftovers } = useSelector((state) => state.requestSlice);
@@ -53,30 +48,15 @@ export const InvoiceCheckScreen = ({ route, navigation }) => {
   const getData = async () => {
     await getLocalDataUser({ changeLocalData, dispatch });
 
-    // const obj = { seller_guid: data?.seller_guid, guidWorkShop };
     const obj = { seller_guid: seller_guid_to, guidWorkShop };
     await dispatch(getLeftoversForCheck(obj));
     /// get остатки разделенные по цехам для ревизии
   };
 
   useEffect(() => {
-    if (listActionLeftovers) {
-      const tableDataList = listActionLeftovers?.map((item, index) => {
-        return [
-          `${index + 1}. ${item?.product_name}`,
-          // `${item?.sale_price}`,
-          `${item?.price}`,
-          `${item?.end_outcome}  ${item?.unit}`,
-          <CheckVes guidProduct={item?.guid} />,
-        ];
-      });
-      setListData(tableDataList);
-    }
-
     //////////////////////////////////////////////
     const products = listActionLeftovers?.map((i) => ({
       guid: i?.guid,
-      // price: i?.sale_price,
       price: i?.price,
       count: i?.end_outcome,
       unit_codeid: i?.unit_codeid,
@@ -94,53 +74,21 @@ export const InvoiceCheckScreen = ({ route, navigation }) => {
     closeModal();
   };
 
-  const windowWidth = Dimensions.get("window").width;
-  const arrWidth = [47, 13, 20, 20]; //  проценты %
-  // Преобразуем проценты в абсолютные значения ширины
-
-  const resultWidths = arrWidth.map(
-    (percentage) => (percentage / 100) * windowWidth
-  );
-
-  const noneData = listData?.length === 0;
+  const noneData = listActionLeftovers?.length === 0;
 
   const totals = unitResultFN(actionsProducts?.products);
 
   return (
-    <ScrollView>
+    <View style={styles.main}>
       <View style={styles.container}>
-        <Table>
-          <Row
-            data={listTableForReturnProd}
-            style={styles.head}
-            textStyle={styles.textTitle}
-            widthArr={resultWidths}
-          />
-          <TableWrapper>
-            <Rows
-              data={listData?.map((item) => [
-                item[0], // Продукт
-                <Text style={{ ...styles.text, color: "green", marginLeft: 8 }}>
-                  {item[1]}
-                </Text>, // Цена
-                <Text style={{ ...styles.text, color: "green", marginLeft: 8 }}>
-                  {item[2]}
-                </Text>, // В наличии
-                item[3], // Возврат
-                item[4], // ....
-              ])}
-              textStyle={styles.text}
-              widthArr={resultWidths}
-              style={styles.rowStyle}
-            />
-          </TableWrapper>
-        </Table>
+        <TablesRevision arr={listActionLeftovers} />
+
         {!noneData && (
           <View style={styles.divAction}>
             <View style={styles.blockTotal}>
               <Text style={styles.totalItemCount}>
-                Итого: {formatCount(totals?.totalKg)} кг и{" "}
-                {formatCount(totals?.totalSht)} штук
+                Итого: {formatCount(+totals?.totalKg)} кг и{" "}
+                {formatCount(+totals?.totalSht)} штук
               </Text>
               <Text style={styles.totalItemCount}>
                 Сумма: {totalSumReturns(actionsProducts) || 0} сом
@@ -166,18 +114,19 @@ export const InvoiceCheckScreen = ({ route, navigation }) => {
         onNo={closeModal}
         onClose={closeModal}
       />
-    </ScrollView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
+  main: { flex: 1 },
+
   container: {
     flex: 1,
     minWidth: "100%",
     marginBottom: 20,
     marginTop: 0,
     borderRadius: 8,
-    paddingBottom: 102,
     paddingTop: 5,
   },
 
@@ -213,7 +162,9 @@ const styles = StyleSheet.create({
     width: "100%",
     paddingRight: 20,
     paddingLeft: 10,
-    marginTop: 10,
+    // marginTop: 10,
+    borderTopColor: "#222",
+    borderTopWidth: 1,
   },
 
   blockTotal: {
@@ -257,7 +208,8 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: "#fff",
     width: "95%",
-    paddingTop: 10,
+    paddingTop: 14,
+    paddingBottom: 14,
     borderRadius: 10,
     fontWeight: 600,
     backgroundColor: "rgba(97 ,100, 239,0.7)",

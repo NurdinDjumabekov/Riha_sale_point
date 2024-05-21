@@ -30,7 +30,7 @@ export const ListCheckProdScreen = ({ route, navigation }) => {
             renderItem={({ item, index }) => (
               <RenderResult item={item} index={index} />
             )}
-            keyExtractor={(item) => item.codeid}
+            keyExtractor={(item, index) => `${item.guid}${index}`}
           />
           <Text style={styles.result}>
             Итого: {totalLidtCountReturns(listProdReturn?.[0]?.list)} сом

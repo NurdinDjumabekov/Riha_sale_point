@@ -8,56 +8,57 @@ import { ViewButton } from "../../customsTags/ViewButton";
 import { useDispatch, useSelector } from "react-redux";
 
 //////// fns
-import { changeDataInputsInv } from "../../store/reducers/stateSlice";
 import { changeSearchProd } from "../../store/reducers/stateSlice";
+import { clearTemporaryData } from "../../store/reducers/stateSlice";
 import { changeTemporaryData } from "../../store/reducers/stateSlice";
-import {
-  addProductInvoiceTT,
-  addProductReturn,
-} from "../../store/reducers/requestSlice";
+import { addProductReturn } from "../../store/reducers/requestSlice";
+import { addProductInvoiceTT } from "../../store/reducers/requestSlice";
 import { addProductSoputkaTT } from "../../store/reducers/requestSlice";
 import { getWorkShopsGorSale } from "../../store/reducers/requestSlice";
+
+///////// helpers
 import { getLocalDataUser } from "../../helpers/returnDataUser";
 import { changeLocalData } from "../../store/reducers/saveDataSlice";
 
 export const AddProductsTA = (props) => {
-  const { productGuid, location, forAddTovar, isCheck, obj } = props;
+  const { location, forAddTovar } = props;
 
   //// для добавления продуктов в список
   ///  location тут каждая страница, исходя их страницы я делаю действия
   const dispatch = useDispatch();
   const { data } = useSelector((state) => state.saveDataSlice);
 
-  const { dataInputsInv } = useSelector((state) => state.stateSlice);
+  const { temporaryData } = useSelector((state) => state.stateSlice);
+
   const { infoKassa } = useSelector((state) => state.requestSlice);
 
   const onChange = (name, text) => {
     if (/^\d*\.?\d*$/.test(text)) {
-      dispatch(changeDataInputsInv({ ...dataInputsInv, [name]: text }));
+      dispatch(changeTemporaryData({ ...temporaryData, [name]: text }));
     }
   };
 
   const addInInvoice = () => {
     if (
-      dataInputsInv?.price === "" ||
-      dataInputsInv?.ves === "" ||
-      dataInputsInv?.price == 0 ||
-      dataInputsInv?.ves == 0
+      temporaryData?.price === "" ||
+      temporaryData?.ves === "" ||
+      temporaryData?.price == 0 ||
+      temporaryData?.ves == 0
     ) {
       Alert.alert(
-        `Введите цену и ${obj?.unit_codeid == 1 ? "количество" : "вес"}`
+        `Введите цену и ${
+          temporaryData?.unit_codeid == 1 ? "количество" : "вес"
+        }`
       );
     } else {
       const data = {
-        guid: productGuid,
-        count: dataInputsInv?.ves,
+        guid: temporaryData?.guid,
+        count: temporaryData?.ves,
         invoice_guid: infoKassa?.guid,
-        price: dataInputsInv?.price,
-
-        /// delete
-        // price: obj?.product_price, //// цена изначальная (без добаки %)
-        // sale_price: dataInputsInv?.price, //// цена с добавкой  %
+        price: temporaryData?.price,
+        sale_price: temporaryData?.sale_price,
       };
+
       if (location === "Shipment") {
         /// продажа
         dispatch(addProductInvoiceTT({ data, getData }));
@@ -83,26 +84,28 @@ export const AddProductsTA = (props) => {
     ////// очищаю поиск
   }; /// для вызова категорий и продуктов
 
-  const onClose = () => dispatch(changeTemporaryData({}));
+  const onClose = () => dispatch(clearTemporaryData());
+
+  console.log(temporaryData, "temporaryData");
 
   return (
     <Modal
       animationType="fade"
       transparent={true}
-      visible={isCheck}
+      visible={!!temporaryData?.guid}
       onRequestClose={onClose}
     >
       <TouchableWithoutFeedback onPress={onClose}>
         <View style={styles.parennt}>
           <View style={styles.child}>
-            <Text style={styles.title}>{obj?.product_name}</Text>
+            <Text style={styles.title}>{temporaryData?.product_name}</Text>
             <TouchableOpacity style={styles.krest} onPress={() => onClose()}>
               <View style={[styles.line, styles.deg]} />
               <View style={[styles.line, styles.degMinus]} />
             </TouchableOpacity>
-            {location === "Shipment" && isCheck && (
+            {location === "Shipment" && (
               <Text style={styles.leftovers}>
-                Остаток: {obj?.end_outcome} {obj?.unit}
+                Остаток: {temporaryData?.end_outcome} {temporaryData?.unit}
               </Text>
             )}
             <View style={styles.addDataBlock}>
@@ -110,8 +113,7 @@ export const AddProductsTA = (props) => {
                 <Text style={styles.inputTitle}>Введите цену</Text>
                 <TextInput
                   style={styles.input}
-                  // value={`${dataInputsInv?.price?.toString()} сом`}
-                  value={dataInputsInv?.price?.toString()}
+                  value={`${temporaryData?.price?.toString()} сом`}
                   onChangeText={(text) => onChange("price", text)}
                   keyboardType="numeric"
                   maxLength={8}
@@ -120,11 +122,13 @@ export const AddProductsTA = (props) => {
               <View style={styles.inputBlock}>
                 <Text style={styles.inputTitle}>
                   Введите{" "}
-                  {obj?.unit_codeid == 1 ? "кол-во товара" : "кг товара"}
+                  {temporaryData?.unit_codeid == 1
+                    ? "кол-во товара"
+                    : "вес товара"}
                 </Text>
                 <TextInput
                   style={styles.input}
-                  value={dataInputsInv?.ves}
+                  value={temporaryData?.ves}
                   onChangeText={(text) => onChange("ves", text)}
                   keyboardType="numeric"
                   maxLength={8}

@@ -74,7 +74,7 @@ export const SoputkaProdHistoryScreen = ({ navigation, route }) => {
                     <View style={styles.mainDataInner}>
                       <Text style={styles.titleNum}>{index + 1}</Text>
                       <Text style={styles.sum}>
-                        {item?.product_price} сом х {item?.count} {item?.unit} ={" "}
+                        {item?.sale_price} сом х {item?.count} {item?.unit} ={" "}
                         {formatCount(item?.total_soputka)} сом
                       </Text>
                     </View>

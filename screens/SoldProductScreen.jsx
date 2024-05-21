@@ -34,7 +34,7 @@ export const SoldProductScreen = ({ route }) => {
     return <Text style={styles.noneData}>Список пустой</Text>;
   }
 
-  console.log(listSoldProd, "listSoldProd");
+  // console.log(listSoldProd, "listSoldProd");
 
   return (
     <View>
@@ -74,7 +74,7 @@ export const SoldProductScreen = ({ route }) => {
             />
           </View>
         )}
-        keyExtractor={(item) => item?.codeid}
+        keyExtractor={(item, index) => `${item.guid}${index}`}
         refreshControl={
           <RefreshControl refreshing={preloader} onRefresh={getData} />
         }

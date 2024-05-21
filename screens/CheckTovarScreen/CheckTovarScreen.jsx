@@ -85,7 +85,7 @@ export const CheckTovarScreen = ({ navigation }) => {
                 disable={true}
               />
             )}
-            keyExtractor={(item) => item?.codeid}
+            keyExtractor={(item, index) => `${item.guid}${index}`}
             refreshControl={
               <RefreshControl refreshing={preloader} onRefresh={getData} />
             }

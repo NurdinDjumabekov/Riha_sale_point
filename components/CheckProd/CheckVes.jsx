@@ -12,7 +12,7 @@ export const CheckVes = ({ guidProduct }) => {
     if (/^\d*\.?\d*$/.test(text) || text === "") {
       const products = actionsProducts?.products?.map((i) => ({
         ...i,
-        count: i?.guid === guidProduct ? text : i?.count,
+        count: i?.guid === guidProduct ? +text : +i?.count,
       }));
       dispatch(changeActionsProducts({ ...actionsProducts, products }));
       ///// для возврата и ревизии накладной с продуктами
@@ -30,7 +30,7 @@ export const CheckVes = ({ guidProduct }) => {
         value={changeCount?.[0]?.count?.toString()}
         onChangeText={checkInput}
         keyboardType="numeric"
-        maxLength={6}
+        maxLength={8}
       />
     </View>
   );
@@ -39,13 +39,13 @@ export const CheckVes = ({ guidProduct }) => {
 const styles = StyleSheet.create({
   standartBox: {
     position: "relative",
-    width: 55,
-    height: 25,
+    width: "100%",
+    height: 30,
     borderWidth: 1,
     borderColor: "rgb(206 217 230)",
     borderRadius: 5,
     justifyContent: "center",
-    paddingHorizontal: 5,
+    paddingHorizontal: 3,
   },
 
   input: {

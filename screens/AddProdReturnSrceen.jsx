@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { clearListProductTT } from "../store/reducers/requestSlice";
 import { clearListCategory } from "../store/reducers/requestSlice";
-import { changeTemporaryData } from "../store/reducers/stateSlice";
+import { clearTemporaryData } from "../store/reducers/stateSlice";
 import { transformDate } from "../helpers/transformDate";
 import { EveryInvoiceReturn } from "../components/Return/EveryInvoiceReturn";
 
@@ -25,7 +25,7 @@ export const AddProdReturnSrceen = ({ navigation, route }) => {
     };
   }, []);
 
-  const defaultActive = () => dispatch(changeTemporaryData({}));
+  const defaultActive = () => dispatch(clearTemporaryData());
   // очищаю активный продукт
 
   const listProdReturn = () => {

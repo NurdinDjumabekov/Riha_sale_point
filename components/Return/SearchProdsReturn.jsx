@@ -23,8 +23,8 @@ export const SearchProdsReturn = ({ getData, location }) => {
       if (text?.length > 1) {
         getLocalDataUser({ changeLocalData, dispatch });
         const sendData = { searchProd: text, seller_guid: data?.seller_guid };
-        dispatch(searchProdTT({ ...sendData, location, type: 3 }));
-        // Выполнение поиска с заданными параметрами (type: 3 поиск по своим товарам, которые есть в наличии)
+        dispatch(searchProdTT({ ...sendData, location }));
+        // Выполнение поиска с заданными параметрами
       }
     }, 800),
     [data]

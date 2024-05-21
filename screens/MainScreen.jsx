@@ -52,7 +52,7 @@ export const MainScreen = ({ navigation }) => {
             renderItem={({ item }) => (
               <EveryCategory obj={item} navigation={navigation} />
             )}
-            keyExtractor={(item) => item.codeid}
+            keyExtractor={(item, index) => `${item.guid}${index}`}
             numColumns={2}
             refreshControl={
               <RefreshControl refreshing={preloader} onRefresh={getData} />

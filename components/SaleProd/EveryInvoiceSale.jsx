@@ -11,6 +11,7 @@ import { changeSearchProd } from "../../store/reducers/stateSlice";
 import { ActionsEveryInvoice } from "../../common/ActionsEveryInvoice";
 import { getLocalDataUser } from "../../helpers/returnDataUser";
 import { SearchProdsSale } from "./SearchProdsSale";
+import { AddProductsTA } from "../TAComponents/AddProductsTA";
 
 export const EveryInvoiceSale = ({ forAddTovar, navigation }) => {
   const dispatch = useDispatch();
@@ -42,11 +43,14 @@ export const EveryInvoiceSale = ({ forAddTovar, navigation }) => {
   //   });
   // }, []);
 
-  useFocusEffect(
-    useCallback(() => {
-      getData();
-    }, [])
-  );
+  useEffect(() => {
+    getData();
+  }, []);
+
+  // useFocusEffect(
+  //   useCallback(() => {
+  //   }, [])
+  // );
 
   const emptyData = listCategory?.length === 0;
 
@@ -70,12 +74,7 @@ export const EveryInvoiceSale = ({ forAddTovar, navigation }) => {
             <FlatList
               data={listProductTT}
               renderItem={({ item, index }) => (
-                <EveryProduct
-                  obj={item}
-                  index={index}
-                  location={location}
-                  forAddTovar={forAddTovar}
-                />
+                <EveryProduct obj={item} index={index} />
               )}
               keyExtractor={(item, index) => `${item?.guid}${index}`}
               refreshControl={
@@ -85,6 +84,7 @@ export const EveryInvoiceSale = ({ forAddTovar, navigation }) => {
           </View>
         )}
       </SafeAreaView>
+      <AddProductsTA location={location} forAddTovar={forAddTovar} />
     </View>
   );
 };

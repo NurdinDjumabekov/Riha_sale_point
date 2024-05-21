@@ -41,11 +41,9 @@ export const Navigation = () => {
 
   const { data } = useSelector((state) => state.saveDataSlice);
 
-  console.log(data, "data");
+  // console.log(data, "data");
 
-  useEffect(() => {
-    getLocalDataUser({ changeLocalData, dispatch });
-  }, []);
+  useEffect(() => getLocalDataUser({ changeLocalData, dispatch }), []);
 
   const checkLogin = !data?.seller_guid;
 
@@ -55,7 +53,6 @@ export const Navigation = () => {
       <Stack.Navigator
         screenOptions={{ headerStyle: { backgroundColor: "#fff" } }}
       >
-        {/* {false ? ( */}
         {checkLogin ? (
           <Stack.Screen
             name="Login"

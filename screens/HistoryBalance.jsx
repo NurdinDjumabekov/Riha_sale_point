@@ -1,8 +1,9 @@
-import { FlatList, RefreshControl, StyleSheet, Text } from "react-native";
-import { useDispatch, useSelector } from "react-redux";
+import { FlatList, StyleSheet, Text } from "react-native";
+import { View, RefreshControl } from "react-native";
 
+import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
-import { View } from "react-native";
+
 import { getLocalDataUser } from "../helpers/returnDataUser";
 import { changeLocalData } from "../store/reducers/saveDataSlice";
 import { getHistoryBalance } from "../store/reducers/requestSlice";
@@ -17,9 +18,7 @@ export const HistoryBalance = () => {
 
   //   console.log(listHistoryBalance, "listHistoryBalance");
 
-  useEffect(() => {
-    getData();
-  }, []);
+  useEffect(() => getData(), []);
 
   const getData = async () => {
     await getLocalDataUser({ changeLocalData, dispatch });
@@ -47,7 +46,7 @@ export const HistoryBalance = () => {
             </View>
           </View>
         )}
-        keyExtractor={(item) => item?.codeid}
+        keyExtractor={(item, index) => `${item.guid}${index}`}
         refreshControl={
           <RefreshControl refreshing={preloader} onRefresh={getData} />
         }

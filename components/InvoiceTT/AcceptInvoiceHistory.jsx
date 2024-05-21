@@ -33,7 +33,7 @@ export const AcceptInvoiceHistory = ({ navigation }) => {
         renderItem={({ item }) => (
           <EveryMyInvoice obj={item} navigation={navigation} />
         )}
-        keyExtractor={(item) => item.codeid}
+        keyExtractor={(item, index) => `${item.guid}${index}`}
         refreshControl={
           <RefreshControl refreshing={preloader} onRefresh={getData} />
         }

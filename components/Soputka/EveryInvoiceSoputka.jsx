@@ -7,6 +7,7 @@ import { clearListProductTT } from "../../store/reducers/requestSlice";
 import { EveryProduct } from "../EveryProduct";
 import { changeSearchProd } from "../../store/reducers/stateSlice";
 import { SearchProdsSoputka } from "./SearchProdsSoputka";
+import { AddProductsTA } from "../TAComponents/AddProductsTA";
 
 export const EveryInvoiceSoputka = ({ forAddTovar, navigation }) => {
   const dispatch = useDispatch();
@@ -40,6 +41,8 @@ export const EveryInvoiceSoputka = ({ forAddTovar, navigation }) => {
     return <Text style={styles.noneData}>Список пустой</Text>;
   }
 
+  console.log("asdasdas");
+
   return (
     <View style={styles.container}>
       <SafeAreaView style={styles.parentBlock}>
@@ -66,6 +69,7 @@ export const EveryInvoiceSoputka = ({ forAddTovar, navigation }) => {
           </View>
         )}
       </SafeAreaView>
+      <AddProductsTA location={location} forAddTovar={forAddTovar} />
     </View>
   );
 };

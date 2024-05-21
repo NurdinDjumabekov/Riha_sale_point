@@ -7,7 +7,7 @@ import { EveryMyInvoice } from "../components/EveryMyInvoice";
 import { getLocalDataUser } from "../helpers/returnDataUser";
 import { changeLocalData } from "../store/reducers/saveDataSlice";
 
-export const MyApplicationScreen = ({ navigation, route }) => {
+export const MyApplicationScreen = ({ navigation }) => {
   /// загрузки
   const dispatch = useDispatch();
 
@@ -16,12 +16,12 @@ export const MyApplicationScreen = ({ navigation, route }) => {
   );
   const { data } = useSelector((state) => state.saveDataSlice);
 
-  useEffect(() => getData(), []);
-
   const getData = async () => {
     await getLocalDataUser({ changeLocalData, dispatch });
     await dispatch(getMyInvoice(data?.seller_guid));
   };
+
+  useEffect(() => getData(), []);
 
   const getHistory = () => navigation.navigate("InvoiceHistory");
 
@@ -40,7 +40,7 @@ export const MyApplicationScreen = ({ navigation, route }) => {
           renderItem={({ item }) => (
             <EveryMyInvoice obj={item} navigation={navigation} />
           )}
-          keyExtractor={(item) => item.guid}
+          keyExtractor={(item, index) => `${item.guid}${index}`}
           refreshControl={
             <RefreshControl refreshing={preloader} onRefresh={getData} />
           }
