@@ -1,8 +1,8 @@
 /////////////////////////////// ReturnProdScreen
 ///checkcheck
-export const totalSumReturns = (list) => {
-  const totalSum = list?.products?.reduce(
-    (total, item) => total + +item?.price * +item?.count,
+export const totalSumRevision = (list) => {
+  const totalSum = list?.reduce(
+    (total, item) => total + +item?.price * +item?.change_end_outcome,
     0
   );
 
@@ -79,6 +79,22 @@ export const unitResultFN = (data) => {
       } else if (item?.unit_codeid == 2) {
         // "кг"
         acc.totalKg += item?.count;
+      }
+      return acc;
+    },
+    { totalSht: 0, totalKg: 0 }
+  );
+};
+
+export const unitRevisions = (data) => {
+  return data?.reduce(
+    (acc, item) => {
+      if (item?.unit_codeid == 1) {
+        //// "шт"
+        acc.totalSht += +item?.change_end_outcome;
+      } else if (item?.unit_codeid == 2) {
+        // "кг"
+        acc.totalKg += +item?.change_end_outcome;
       }
       return acc;
     },

@@ -8,26 +8,19 @@ import { useDispatch, useSelector } from "react-redux";
 import { changeListActionLeftovers } from "../../store/reducers/requestSlice";
 import { getLeftoversForCheck } from "../../store/reducers/requestSlice";
 import { sendCheckListProduct } from "../../store/reducers/requestSlice";
-import { changeActionsProducts } from "../../store/reducers/stateSlice";
-import { clearActionsProducts } from "../../store/reducers/stateSlice";
 
 ///// components
 import { ViewButton } from "../../customsTags/ViewButton";
 import ConfirmationModal from "../../components/ConfirmationModal";
-import { changeLocalData } from "../../store/reducers/saveDataSlice";
 
 ///// helpers
-import { getLocalDataUser } from "../../helpers/returnDataUser";
-import { totalSumReturns } from "../../helpers/amounts";
-import { formatCount, unitResultFN } from "../../helpers/amounts";
+import { totalSumRevision, unitRevisions } from "../../helpers/amounts";
+import { formatCount } from "../../helpers/amounts";
 import { TablesRevision } from "../Tables/TablesRevision";
-import { ScrollView } from "react-native";
 
 export const InvoiceCheckScreen = ({ route, navigation }) => {
   const { invoice_guid, guidWorkShop, seller_guid_to } = route.params;
   //// список товаров для ревизии
-
-  const [keyboard, setKeyboard] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -35,58 +28,42 @@ export const InvoiceCheckScreen = ({ route, navigation }) => {
 
   const { listActionLeftovers } = useSelector((state) => state.requestSlice);
 
-  const { actionsProducts } = useSelector((state) => state.stateSlice);
-  //// для ревизии списка товаров
-
   useEffect(() => {
     getData();
 
     return () => {
-      dispatch(clearActionsProducts());
-      dispatch(changeListActionLeftovers());
+      dispatch(changeListActionLeftovers([]));
     };
     ///// очищаю список товаров, которые я отпрвляю для ревизии
   }, []);
 
   const getData = async () => {
-    await getLocalDataUser({ changeLocalData, dispatch });
-
     const obj = { seller_guid: seller_guid_to, guidWorkShop };
     await dispatch(getLeftoversForCheck(obj));
     /// get остатки разделенные по цехам для ревизии
   };
 
-  useEffect(() => {
-    //////////////////////////////////////////////
-    const products = listActionLeftovers?.map((i) => ({
-      guid: i?.guid,
-      price: i?.price,
-      count: i?.end_outcome,
-      unit_codeid: i?.unit_codeid,
-    }));
-
-    const newData = { ...actionsProducts, invoice_guid, products };
-
-    dispatch(changeActionsProducts(newData)); //// сразу присваиваю guid накладной
-  }, [listActionLeftovers]);
-
   const closeModal = () => setModalSend(false);
 
   const sendData = () => {
-    dispatch(sendCheckListProduct({ actionsProducts, navigation }));
+    //////////////////////////////////////////////
+    const products = listActionLeftovers?.map((props) => {
+      const { guid, price, change_end_outcome, unit_codeid } = props;
+      return { guid, price, count: change_end_outcome, unit_codeid };
+    });
+    const data = { invoice_guid, products };
+    dispatch(sendCheckListProduct({ data, navigation }));
     closeModal();
   };
 
   const noneData = listActionLeftovers?.length === 0;
 
-  const totals = unitResultFN(actionsProducts?.products);
-
-  // console.log(keyboard, "keyboard");
+  const totals = unitRevisions(listActionLeftovers);
 
   return (
     <View style={styles.main}>
       <View style={styles.container}>
-        <TablesRevision arr={listActionLeftovers} setKeyboard={setKeyboard} />
+        <TablesRevision arr={listActionLeftovers} />
         {!noneData && (
           <View style={styles.divAction}>
             <View style={styles.blockTotal}>
@@ -95,7 +72,7 @@ export const InvoiceCheckScreen = ({ route, navigation }) => {
                 {formatCount(+totals?.totalSht)} штук
               </Text>
               <Text style={styles.totalItemCount}>
-                Сумма: {totalSumReturns(actionsProducts) || 0} сом
+                Сумма: {totalSumRevision(listActionLeftovers) || 0} сом
               </Text>
             </View>
           </View>

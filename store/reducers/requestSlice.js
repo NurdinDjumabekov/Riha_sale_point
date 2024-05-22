@@ -1006,7 +1006,6 @@ export const getLeftoversForCheck = createAsyncThunk(
   "getLeftoversForCheck",
   async function (props, { dispatch, rejectWithValue }) {
     const { seller_guid, guidWorkShop } = props;
-
     try {
       const response = await axios({
         method: "GET",
@@ -1028,13 +1027,13 @@ export const getLeftoversForCheck = createAsyncThunk(
 export const sendCheckListProduct = createAsyncThunk(
   "sendCheckListProduct",
   async function (props, { dispatch, rejectWithValue }) {
-    const { actionsProducts, navigation } = props;
+    const { data, navigation } = props;
 
     try {
       const response = await axios({
         method: "POST",
         url: `${API}/tt/create_revision_product`,
-        data: actionsProducts,
+        data,
       });
       if (response.status >= 200 && response.status < 300) {
         if (+response?.data?.result === 1) {
@@ -1790,9 +1789,10 @@ const requestSlice = createSlice({
     /////// getLeftoversForCheck
     builder.addCase(getLeftoversForCheck.fulfilled, (state, action) => {
       state.preloader = false;
-      state.listActionLeftovers = action.payload?.filter(
-        (item) => item?.end_outcome !== 0
-      );
+      state.listActionLeftovers = action.payload?.map((item) => ({
+        ...item,
+        change_end_outcome: item?.end_outcome,
+      }));
       ////// проверяю на наличие, если end_outcome === 0 (остаток товара),
       ////// то не добалять его в массив для в0зврата товара
     });
@@ -1887,7 +1887,7 @@ const requestSlice = createSlice({
       state.listSellersPoints = [];
     },
     changeListActionLeftovers: (state, action) => {
-      state.listActionLeftovers = [];
+      state.listActionLeftovers = action.payload;
     },
     clearListAgents: (state, action) => {
       state.listAgents = action.payload;
