@@ -1,11 +1,18 @@
-import { TouchableWithoutFeedback } from "react-native";
-import { TouchableOpacity } from "react-native";
+import { useState } from "react";
+import { StyleSheet, TouchableWithoutFeedback } from "react-native";
 import { Text } from "react-native";
 
 export const ViewButton = ({ children, styles, onclick }) => {
-  // console.log(styles, "styles");
+  const [anim, setAnim] = useState(false);
+  const handleClick = () => {
+    setAnim(true);
+    onclick();
+    setTimeout(() => {
+      setAnim(false);
+    }, 500);
+  };
   return (
-    <TouchableWithoutFeedback onPress={onclick}>
+    <TouchableWithoutFeedback onPress={handleClick}>
       <Text
         style={[
           {
@@ -18,11 +25,9 @@ export const ViewButton = ({ children, styles, onclick }) => {
             fontSize: 20,
             backgroundColor: styles?.backgroundColor || "#000",
             fontWeight: 700,
-            // marginHorizontal: 80,
-            // minWidth: "100%",
-            // width: 250,
           },
           styles,
+          anim && myStyles.btn,
         ]}
       >
         {children}
@@ -30,3 +35,7 @@ export const ViewButton = ({ children, styles, onclick }) => {
     </TouchableWithoutFeedback>
   );
 };
+
+const myStyles = StyleSheet.create({
+  btn: { opacity: 0.5 },
+});

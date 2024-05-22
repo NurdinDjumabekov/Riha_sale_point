@@ -6,11 +6,7 @@ const initialState = {
   acceptConfirmInvoice: { invoice_guid: "" },
   // для подтверждения и принятия товаров ТА
 
-  temporaryData: {
-    price: "",
-    ves: "",
-    guid: "",
-  },
+  temporaryData: { price: "", ves: "", guid: "" },
   ///// временные данные для добавление товаров в сопутку, возврат и продажу
 
   listProductForTT: [],
@@ -23,11 +19,7 @@ const initialState = {
 
   searchProd: "", /// для текста поиска продуктов
 
-  expense: {
-    expense_type: "",
-    comment: "",
-    amount: "",
-  }, /// данные суммы расходов каждой ТТ
+  expense: { expense_type: "", comment: "", amount: "" }, /// данные суммы расходов каждой ТТ
 };
 
 const stateSlice = createSlice({
@@ -38,11 +30,9 @@ const stateSlice = createSlice({
       state.dataLogin = action.payload;
     },
     clearLogin: (state) => {
-      state.dataLogin = {
-        login: "",
-        password: "",
-      };
+      state.dataLogin = { login: "", password: "" };
     },
+
     changeAcceptInvoiceTT: (state, action) => {
       state.acceptConfirmInvoice = action.payload;
     },

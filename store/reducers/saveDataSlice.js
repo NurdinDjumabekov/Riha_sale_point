@@ -1,12 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  data: {
-    //// данные пользователя
-    seller_guid: "",
-    seller_fio: "",
-    point_name: "",
-  },
+  data: { seller_guid: "", seller_fio: "", point_name: "" },
+  //// данные пользователя
 };
 
 const saveDataSlice = createSlice({
