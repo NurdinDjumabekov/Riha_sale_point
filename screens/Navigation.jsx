@@ -222,7 +222,7 @@ export const Navigation = () => {
           </>
         )}
       </Stack.Navigator>
-      <StatusBar theme="auto" />
+      <StatusBar theme="auto" backgroundColor="rgba(47, 71, 190, 0.287)" />
     </NavigationContainer>
   );
 };

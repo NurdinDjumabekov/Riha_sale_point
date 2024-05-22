@@ -1,8 +1,9 @@
-import { View, StyleSheet, TextInput } from "react-native";
+import { View, StyleSheet, TextInput, Keyboard } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { changeActionsProducts } from "../../store/reducers/stateSlice";
+import { useEffect } from "react";
 
-export const CheckVes = ({ guidProduct }) => {
+export const CheckVes = ({ guidProduct, setKeyboard }) => {
   ///// изменение веса для в0врата и ревизии накладной
   const dispatch = useDispatch();
 
@@ -18,6 +19,26 @@ export const CheckVes = ({ guidProduct }) => {
       ///// для возврата и ревизии накладной с продуктами
     }
   };
+
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      "keyboardDidShow",
+      () => {
+        setKeyboard(true);
+      }
+    );
+    const keyboardDidHideListener = Keyboard.addListener(
+      "keyboardDidHide",
+      () => {
+        setKeyboard(false);
+      }
+    );
+
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    };
+  }, []);
 
   const changeCount = actionsProducts?.products?.filter(
     (item) => item?.guid === guidProduct

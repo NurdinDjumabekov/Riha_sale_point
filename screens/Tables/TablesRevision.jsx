@@ -1,11 +1,19 @@
 import React from "react";
-import { FlatList, StyleSheet, Text, View } from "react-native";
+import { FlatList, Keyboard, KeyboardAvoidingView } from "react-native";
+import { StyleSheet, Text, View, Platform } from "react-native";
 import { CheckVes } from "../../components/CheckProd/CheckVes";
+import { Dimensions } from "react-native";
+const { height } = Dimensions.get("window");
 
-export const TablesRevision = ({ arr }) => {
-  console.log(arr, "arr");
+export const TablesRevision = ({ arr, setKeyboard }) => {
   return (
-    <View style={styles.parentFlatList}>
+    <KeyboardAvoidingView
+      behavior={"height"}
+      // resetScrollToCoords={{ x: 0, y: 0 }}
+      // scrollEnabled={false}
+      // style={{ ...styles.parentFlatList, height }}
+      style={styles.parentFlatList}
+    >
       <View style={[styles.mainBlock, styles.more]}>
         <Text style={[styles.name, styles.moreText]}>Товар</Text>
         <Text style={[styles.price, styles.moreText]}>Цена</Text>
@@ -15,26 +23,28 @@ export const TablesRevision = ({ arr }) => {
       <FlatList
         data={arr}
         renderItem={({ item, index }) => (
-          <View style={styles.mainBlock}>
+          <View style={styles.mainBlock} onPress={Keyboard.dismiss}>
             <Text style={styles.name}>
               {index + 1}. {item?.product_name}
             </Text>
             <Text style={styles.price}>{item?.price}</Text>
             <Text style={styles.count}>{item?.end_outcome}</Text>
             <View style={styles.input}>
-              <CheckVes guidProduct={item?.guid} />
+              <CheckVes guidProduct={item?.guid} setKeyboard={setKeyboard} />
             </View>
           </View>
         )}
         keyExtractor={(item, index) => `${item.guid}${index}`}
       />
-    </View>
+    </KeyboardAvoidingView>
   );
 };
 
 const styles = StyleSheet.create({
   parentFlatList: {
     maxHeight: "75%",
+    // maxHeight: "100%",
+    // backgroundColor: "red",
   },
 
   mainBlock: {

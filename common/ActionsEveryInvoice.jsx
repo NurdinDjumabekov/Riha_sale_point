@@ -46,9 +46,11 @@ export const ActionsEveryInvoice = ({ location, type }) => {
       dispatch(changeActiveSelectCategory(value));
 
       if (type == "sale") {
-        dispatch(getProductTT({ guid: value, seller_guid, location }));
+        const obj = { workshop_guid: activeSelectWorkShop, location };
+        dispatch(getProductTT({ ...obj, guid: value, seller_guid }));
       } else if (type == "leftovers") {
-        dispatch(getMyLeftovers({ seller_guid, category_guid: value }));
+        const obj = { workshop_guid: activeSelectWorkShop, seller_guid };
+        dispatch(getMyLeftovers({ ...obj, category_guid: value }));
       }
 
       /// хранение активной категории, для сортировки товаров(храню guid категории)

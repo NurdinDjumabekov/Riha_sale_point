@@ -21,10 +21,13 @@ import { getLocalDataUser } from "../../helpers/returnDataUser";
 import { totalSumReturns } from "../../helpers/amounts";
 import { formatCount, unitResultFN } from "../../helpers/amounts";
 import { TablesRevision } from "../Tables/TablesRevision";
+import { ScrollView } from "react-native";
 
 export const InvoiceCheckScreen = ({ route, navigation }) => {
   const { invoice_guid, guidWorkShop, seller_guid_to } = route.params;
   //// список товаров для ревизии
+
+  const [keyboard, setKeyboard] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -78,11 +81,12 @@ export const InvoiceCheckScreen = ({ route, navigation }) => {
 
   const totals = unitResultFN(actionsProducts?.products);
 
+  // console.log(keyboard, "keyboard");
+
   return (
     <View style={styles.main}>
       <View style={styles.container}>
-        <TablesRevision arr={listActionLeftovers} />
-
+        <TablesRevision arr={listActionLeftovers} setKeyboard={setKeyboard} />
         {!noneData && (
           <View style={styles.divAction}>
             <View style={styles.blockTotal}>
@@ -162,7 +166,6 @@ const styles = StyleSheet.create({
     width: "100%",
     paddingRight: 20,
     paddingLeft: 10,
-    // marginTop: 10,
     borderTopColor: "#222",
     borderTopWidth: 1,
   },

@@ -53,6 +53,7 @@ export const ModalWorkShop = (props) => {
         onPress={() => choiceSeller(item?.guid)}
       >
         <Text style={styles.selectText}>{item?.fio}</Text>
+        <View style={styles.arrow} />
       </TouchableOpacity>
     ),
     [obj]
@@ -80,6 +81,7 @@ export const ModalWorkShop = (props) => {
         onPress={() => choiceWorkShop(item?.workshop_guid)}
       >
         <Text style={styles.selectText}>{item?.workshop}</Text>
+        <View style={styles.arrow} />
       </TouchableOpacity>
     ),
     [obj]
@@ -156,12 +158,18 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     marginVertical: 1,
     backgroundColor: "rgba(199, 210, 254, 0.718)",
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingRight: 30,
+    alignItems: "center",
   },
 
   selectText: {
     fontSize: 15,
     fontWeight: "600",
     color: "rgba(47, 71, 190, 0.672)",
+    maxWidth: "90%",
   },
 
   titleSelect: {
@@ -187,6 +195,16 @@ const styles = StyleSheet.create({
   parent: {
     flex: 1,
     paddingBottom: 20,
+  },
+
+  arrow: {
+    borderTopWidth: 3,
+    borderRightWidth: 3,
+    borderColor: "#fff",
+    height: 16,
+    width: 16,
+    borderRadius: 3,
+    transform: [{ rotate: "45deg" }],
   },
 
   noneData: {
