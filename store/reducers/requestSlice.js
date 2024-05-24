@@ -240,6 +240,8 @@ export const getCategoryTT = createAsyncThunk(
       ? `${API}/tt/get_category?seller_guid=${seller_guid}&workshop_guid=${workshop_guid}` //// для пр0дажи и возрата
       : `${API}/tt/get_category_all`; //// для сопутки
 
+    console.log(urlLink, "urlLink getCategoryTT");
+
     try {
       const response = await axios(urlLink);
       if (response.status >= 200 && response.status < 300) {
@@ -274,15 +276,13 @@ export const getProductTT = createAsyncThunk(
   async function (props, { dispatch, rejectWithValue }) {
     const { guid, seller_guid, location, workshop_guid } = props;
 
-    console.log(
-      `${API}/tt/get_product?categ_guid=${guid}&seller_guid=${seller_guid}&workshop_guid=${workshop_guid}`
-    );
-
     const check = location == "Shipment" || location == "AddProdReturnSrceen"; ///// продажа и возрат
 
     const urlLink = check
       ? `${API}/tt/get_product?categ_guid=${guid}&seller_guid=${seller_guid}&workshop_guid=${workshop_guid}` ///// продажа и возрат
       : `${API}/tt/get_product_all?categ_guid=${guid}&workshop_guid=${workshop_guid}`; //// для сопутки
+
+    console.log(urlLink, "urlLink getProductTT");
     try {
       const response = await axios(urlLink);
       if (response.status >= 200 && response.status < 300) {
@@ -302,13 +302,36 @@ export const searchProdTT = createAsyncThunk(
   /// для поиска товаров
   async function (props, { dispatch, rejectWithValue }) {
     const { searchProd, seller_guid, location } = props;
-    const check = location === "Shipment" || location === "AddProdReturnSrceen";
+    const check = location === "AddProdReturnSrceen";
     const urlLink = check
-      ? `${API}/tt/get_product?search=${searchProd}&seller_guid=${seller_guid}` //// для пр0дажи и возврата
+      ? `${API}/tt/get_product?search=${searchProd}&seller_guid=${seller_guid}` //// для возврата
       : `${API}/tt/get_product_all?search=${searchProd}&seller_guid=${seller_guid}`; //// для сопутки
     try {
       const response = await axios(urlLink);
       if (response.status >= 200 && response.status < 300) {
+        return response?.data;
+      } else {
+        throw Error(`Error: ${response.status}`);
+      }
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+/// searchProdSale
+///// для поиска товаров только в продаже!
+export const searchProdSale = createAsyncThunk(
+  "searchProdSale",
+  /// для поиска товаров
+  async function (props, { dispatch, rejectWithValue }) {
+    const { text, seller_guid } = props;
+    try {
+      const response = await axios(
+        `${API}/tt/get_product?search=${text}&seller_guid=${seller_guid}`
+      );
+      if (response.status >= 200 && response.status < 300) {
+        console.log(response?.data, "response?.data");
         return response?.data;
       } else {
         throw Error(`Error: ${response.status}`);
@@ -977,8 +1000,8 @@ export const createInvoiceCheck = createAsyncThunk(
         method: "POST",
         url: `${API}/tt/create_revision_invoice`,
         data: {
-          seller_guid_to,
-          seller_guid_from,
+          seller_guid_to, ///// старый продавец
+          seller_guid_from, ///// новый продавец
           comment: "",
         },
       });
@@ -1156,6 +1179,8 @@ const initialState = {
   listProductTT: [], //  список продуктов ТА (cписок прод-тов отсортированные селектами)
   listLeftovers: [], // список остатков
   listSoldProd: [], /// список проданных товаров
+
+  listProdSearch: [], /// храню данные поиска в продаже товара
 
   listInvoiceEveryTT: [], /// список накладных каждой ТТ(типо истории)
   listCategExpense: [],
@@ -1371,6 +1396,23 @@ const requestSlice = createSlice({
       // state.preloader = false;
     });
     builder.addCase(searchProdTT.pending, (state, action) => {
+      // state.preloader = true;
+    });
+
+    /////// searchProdSale
+    builder.addCase(searchProdSale.fulfilled, (state, action) => {
+      // state.preloader = false;
+      state.listProdSearch = action.payload;
+      if (action.payload?.length === 0) {
+        Alert.alert("По вашему запросу ничего не найдено (");
+      }
+    });
+    builder.addCase(searchProdSale.rejected, (state, action) => {
+      state.error = action.payload;
+      // state.preloader = false;
+      state.listProdSearch = [];
+    });
+    builder.addCase(searchProdSale.pending, (state, action) => {
       // state.preloader = true;
     });
 
@@ -1868,29 +1910,41 @@ const requestSlice = createSlice({
     changePreloader: (state, action) => {
       state.preloader = action.payload;
     },
+
     changeListInvoices: (state, action) => {
       state.listMyInvoice = action.payload;
     },
+
     clearLeftovers: (state, action) => {
       state.listLeftovers = [];
     },
+
     clearListProductTT: (state, action) => {
       state.listProductTT = [];
     },
+
     clearListCategory: (state, action) => {
       state.listCategory = [];
     },
+
     changeListSellersPoints: (state, action) => {
       state.listSellersPoints = action.payload;
     },
+
     clearListSellersPoints: (state, action) => {
       state.listSellersPoints = [];
     },
+
     changeListActionLeftovers: (state, action) => {
       state.listActionLeftovers = action.payload;
     },
+
     clearListAgents: (state, action) => {
       state.listAgents = action.payload;
+    },
+
+    clearListProdSearch: (state, action) => {
+      state.listProdSearch = [];
     },
   },
 });
@@ -1905,6 +1959,7 @@ export const {
   clearListSellersPoints,
   changeListActionLeftovers,
   clearListAgents,
+  clearListProdSearch,
 } = requestSlice.actions;
 
 export default requestSlice.reducer;

@@ -19,7 +19,6 @@ export const MainScreen = ({ navigation }) => {
   useFocusEffect(
     useCallback(() => {
       getData();
-      // console.log("restartBalance");
     }, [])
   );
 
@@ -27,8 +26,6 @@ export const MainScreen = ({ navigation }) => {
     await getLocalDataUser({ changeLocalData, dispatch });
     await dispatch(getBalance(data?.seller_guid));
   };
-
-  // console.log(data, "data");
 
   const goPage = () => navigation.navigate("HistoryBalance");
 

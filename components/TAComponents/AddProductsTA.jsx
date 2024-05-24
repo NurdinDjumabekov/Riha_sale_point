@@ -19,6 +19,7 @@ import { getWorkShopsGorSale } from "../../store/reducers/requestSlice";
 ///////// helpers
 import { getLocalDataUser } from "../../helpers/returnDataUser";
 import { changeLocalData } from "../../store/reducers/saveDataSlice";
+import { useEffect, useRef } from "react";
 
 export const AddProductsTA = (props) => {
   const { location, forAddTovar } = props;
@@ -26,6 +27,9 @@ export const AddProductsTA = (props) => {
   //// для добавления продуктов в список
   ///  location тут каждая страница, исходя их страницы я делаю действия
   const dispatch = useDispatch();
+
+  const refInput = useRef(null);
+
   const { data } = useSelector((state) => state.saveDataSlice);
 
   const { temporaryData } = useSelector((state) => state.stateSlice);
@@ -86,7 +90,13 @@ export const AddProductsTA = (props) => {
 
   const onClose = () => dispatch(clearTemporaryData());
 
-  console.log(temporaryData, "temporaryData");
+  useEffect(() => {
+    if (!!temporaryData?.guid) {
+      setTimeout(() => {
+        refInput?.current?.focus();
+      }, 1000);
+    }
+  }, [temporaryData?.guid]);
 
   return (
     <Modal
@@ -128,6 +138,7 @@ export const AddProductsTA = (props) => {
                 </Text>
                 <TextInput
                   style={styles.input}
+                  ref={refInput}
                   value={temporaryData?.ves}
                   onChangeText={(text) => onChange("ves", text)}
                   keyboardType="numeric"

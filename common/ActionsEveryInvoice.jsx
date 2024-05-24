@@ -67,6 +67,7 @@ export const ActionsEveryInvoice = ({ location, type }) => {
 
   // console.log(activeSelectCategory, "activeSelectCategory");
   // console.log(activeSelectWorkShop, "activeSelectWorkShop");
+  // console.log(listCategory, "listCategory");
 
   return (
     <View style={styles.parentSelects}>

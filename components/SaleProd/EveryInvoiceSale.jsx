@@ -1,17 +1,29 @@
+////hooks
 import { useCallback, useEffect } from "react";
 import { useFocusEffect, useRoute } from "@react-navigation/native";
-import { FlatList, RefreshControl } from "react-native";
-import { SafeAreaView, StyleSheet, Text, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import { getWorkShopsGorSale } from "../../store/reducers/requestSlice";
-import { EveryProduct } from "../EveryProduct";
-import { changeLocalData } from "../../store/reducers/saveDataSlice";
-import { changeSearchProd } from "../../store/reducers/stateSlice";
 
-import { ActionsEveryInvoice } from "../../common/ActionsEveryInvoice";
+///tags
+import { FlatList, Image, RefreshControl } from "react-native";
+import { SafeAreaView, StyleSheet, Text, View } from "react-native";
+import { TouchableOpacity } from "react-native";
+
+///helpers
 import { getLocalDataUser } from "../../helpers/returnDataUser";
+
+/// components
+import { ActionsEveryInvoice } from "../../common/ActionsEveryInvoice";
 import { SearchProdsSale } from "./SearchProdsSale";
 import { AddProductsTA } from "../TAComponents/AddProductsTA";
+import { EveryProduct } from "../EveryProduct";
+
+/////fns
+import { getWorkShopsGorSale } from "../../store/reducers/requestSlice";
+import { changeSearchProd } from "../../store/reducers/stateSlice";
+import { changeLocalData } from "../../store/reducers/saveDataSlice";
+
+/////imgs
+import searchIcon from "../../assets/icons/searchIcon.png";
 
 export const EveryInvoiceSale = ({ forAddTovar, navigation }) => {
   const dispatch = useDispatch();
@@ -35,13 +47,24 @@ export const EveryInvoiceSale = ({ forAddTovar, navigation }) => {
     ////// очищаю поиск
   };
 
-  // useEffect(() => {
-  //   navigation.setOptions({
-  //     headerRight: () => (
-  //       <SearchProdsSale getData={getData} location={location} />
-  //     ),
-  //   });
-  // }, []);
+  const navSearch = () => {
+    navigation.navigate("SaleSearchScreen");
+    dispatch(changeSearchProd(""));
+    ////// очищаю поиск
+  };
+
+  useEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <TouchableOpacity style={styles.searchBlock} onPress={navSearch}>
+          <Text>Поиск товаров ...</Text>
+          <View onPress={() => {}}>
+            <Image style={styles.iconSearch} source={searchIcon} />
+          </View>
+        </TouchableOpacity>
+      ),
+    });
+  }, []);
 
   useEffect(() => {
     getData();
@@ -124,5 +147,21 @@ const styles = StyleSheet.create({
     fontWeight: "500",
     color: "#222",
     height: "100%",
+  },
+
+  searchBlock: {
+    height: 45,
+    width: "90%",
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingLeft: 0,
+    marginRight: -20,
+  },
+
+  iconSearch: {
+    width: 30,
+    height: 30,
   },
 });

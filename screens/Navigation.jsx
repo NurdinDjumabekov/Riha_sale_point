@@ -33,6 +33,7 @@ import { AddProdReturnSrceen } from "./AddProdReturnSrceen";
 import UserInfo from "../components/Header/UserInfo";
 import { ReturnProductScreen } from "./ReturnProductScreen";
 import { ReturnProdHistoryScreen } from "./ReturnProdHistoryScreen";
+import SaleSearchScreen from "./SaleScreen/SaleSearchScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -137,6 +138,13 @@ export const Navigation = () => {
               name="Shipment"
               component={MyShipmentScreen}
               options={{ title: "Продажи" }}
+            />
+
+            <Stack.Screen
+              name="SaleSearchScreen"
+              component={SaleSearchScreen}
+              options={{ title: "" }}
+              ////// поиск товаров для продажи
             />
 
             <Stack.Screen

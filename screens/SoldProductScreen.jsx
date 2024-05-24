@@ -21,9 +21,11 @@ export const SoldProductScreen = ({ route }) => {
     (state) => state.requestSlice
   );
 
-  useEffect(() => getData(), [guidInvoice]);
-
   const getData = () => dispatch(getListSoldProd(guidInvoice));
+
+  useEffect(() => {
+    getData();
+  }, [guidInvoice]);
 
   const del = (product_guid) => {
     dispatch(deleteSoldProd({ product_guid, getData }));

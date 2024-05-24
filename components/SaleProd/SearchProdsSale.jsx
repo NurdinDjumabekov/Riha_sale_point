@@ -1,16 +1,27 @@
-import React, { useCallback, useRef } from "react";
+////hooks
+import React, { useCallback, useEffect, useRef } from "react";
+import { useDispatch, useSelector } from "react-redux";
+
+//// tags
 import { StyleSheet, Image, View } from "react-native";
 import { TextInput, TouchableOpacity } from "react-native";
-import { useDispatch, useSelector } from "react-redux";
-import searchIcon from "../../assets/icons/searchIcon.png";
-import { debounce } from "lodash";
-import { changeSearchProd } from "../../store/reducers/stateSlice";
-import { changeActiveSelectCategory } from "../../store/reducers/stateSlice";
-import { getLocalDataUser } from "../../helpers/returnDataUser";
-import { changeLocalData } from "../../store/reducers/saveDataSlice";
-import { searchProdTT } from "../../store/reducers/requestSlice";
 
-export const SearchProdsSale = ({ getData, location }) => {
+///// components
+import {
+  clearListProdSearch,
+  searchProdSale,
+} from "../../store/reducers/requestSlice";
+
+/////helpers
+import { debounce } from "lodash";
+
+/////fns
+import { changeSearchProd } from "../../store/reducers/stateSlice";
+
+////imgs
+import searchIcon from "../../assets/icons/searchIcon.png";
+
+export const SearchProdsSale = ({}) => {
   const refInput = useRef();
 
   const dispatch = useDispatch();
@@ -19,23 +30,30 @@ export const SearchProdsSale = ({ getData, location }) => {
 
   const { data } = useSelector((state) => state.saveDataSlice);
 
-  const searchDataDebounce = useCallback(
+  const searchData = useCallback(
     debounce((text) => {
-      dispatch(changeActiveSelectCategory("0")); // Установка активной категории
-      getLocalDataUser({ changeLocalData, dispatch }); // Получение локальных данных пользователя
-      const sendData = { searchProd: text, seller_guid: data?.seller_guid }; // Подготовка данных для поиска
-      dispatch(searchProdTT({ ...sendData, location }));
-      // Выполнение поиска с заданными параметрами
+      if (text?.length > 1) {
+        const sendData = { text, seller_guid: data?.seller_guid };
+        // Подготовка данных для поиска
+        dispatch(searchProdSale({ ...sendData }));
+        // Выполнение поиска с заданными параметрами
+      }
     }, 800),
     []
   );
 
+  const focus = () => refInput?.current?.focus();
+
+  useEffect(() => {
+    setTimeout(() => {
+      focus();
+    }, 1000);
+  }, []);
+
   const onChange = (text) => {
     dispatch(changeSearchProd(text));
-    searchDataDebounce(text);
-    // if (text === "") {
-    //   getData();
-    // }
+    searchData(text);
+    text?.length === 0 ? dispatch(clearListProdSearch()) : searchData(text);
   };
 
   return (
@@ -48,7 +66,7 @@ export const SearchProdsSale = ({ getData, location }) => {
         onChangeText={onChange}
         value={searchProd}
       />
-      <TouchableOpacity onPress={() => refInput?.current?.focus()}>
+      <TouchableOpacity onPress={focus}>
         <Image style={styles.iconSearch} source={searchIcon} />
       </TouchableOpacity>
     </View>
@@ -74,6 +92,7 @@ const styles = StyleSheet.create({
     color: "#000",
     width: "100%",
   },
+
   iconSearch: {
     width: 30,
     height: 30,

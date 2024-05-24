@@ -17,6 +17,11 @@ export const MyShipmentScreen = ({ navigation }) => {
   const { infoKassa } = useSelector((state) => state.requestSlice);
   const { data } = useSelector((state) => state.saveDataSlice);
 
+  const getData = async () => {
+    await getLocalDataUser({ changeLocalData, dispatch });
+    await dispatch(createInvoiceTT(data?.seller_guid));
+  };
+
   useEffect(() => {
     clearStates();
     getData();
@@ -31,11 +36,6 @@ export const MyShipmentScreen = ({ navigation }) => {
       /// очищаю цеха, для сортировки товаров по категориям
     };
   }, []);
-
-  const getData = async () => {
-    await getLocalDataUser({ changeLocalData, dispatch });
-    await dispatch(createInvoiceTT(data?.seller_guid));
-  };
 
   const clearStates = () => dispatch(clearTemporaryData()); // очищаю активный продукт
 

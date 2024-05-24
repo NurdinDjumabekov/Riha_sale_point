@@ -10,8 +10,9 @@ export const TablesRevision = ({ arr }) => {
 
   const addTenporaryData = (data) => {
     setObjTemporary(data);
-    inputRef?.current?.focus();
-    console.log(inputRef, "inputRef");
+    setTimeout(() => {
+      inputRef?.current?.focus();
+    }, 1000);
   };
 
   return (
@@ -117,6 +118,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 3,
     // paddingTop: 5,
     borderRadius: 5,
+    // backgroundColor: "red",
   },
 
   countReturnText: {
