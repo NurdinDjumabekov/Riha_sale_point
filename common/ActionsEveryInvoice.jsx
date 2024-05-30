@@ -1,14 +1,17 @@
+///tags
 import { StyleSheet, Text, View } from "react-native";
-import { useDispatch, useSelector } from "react-redux";
 import RNPickerSelect from "react-native-picker-select";
+
+///// hooks
+import { useDispatch, useSelector } from "react-redux";
+
+/////fns
 import { getProductTT, getCategoryTT } from "../store/reducers/requestSlice";
 import { getMyLeftovers, clearLeftovers } from "../store/reducers/requestSlice";
 import { clearListCategory } from "../store/reducers/requestSlice";
 import { clearListProductTT } from "../store/reducers/requestSlice";
-import {
-  changeActiveSelectCategory,
-  clearTemporaryData,
-} from "../store/reducers/stateSlice";
+import { changeActiveSelectCategory } from "../store/reducers/stateSlice";
+import { clearTemporaryData } from "../store/reducers/stateSlice";
 import { changeActiveSelectWorkShop } from "../store/reducers/stateSlice";
 import { changeSearchProd } from "../store/reducers/stateSlice";
 
@@ -31,7 +34,10 @@ export const ActionsEveryInvoice = ({ location, type }) => {
     if (value !== activeSelectCategory) {
       dispatch(clearListCategory()); //// очищаю список категорий перед отправкой запроса
       const send = { seller_guid, type, workshop_guid: value };
-      dispatch(getCategoryTT({ ...send, location }));
+
+      setTimeout(() => {
+        dispatch(getCategoryTT({ ...send, location }));
+      }, 300);
 
       dispatch(changeActiveSelectWorkShop(value));
       /// хранение активной категории, для сортировки товаров(храню guid категории)
@@ -45,13 +51,15 @@ export const ActionsEveryInvoice = ({ location, type }) => {
       dispatch(clearLeftovers()); //// очищаю массив данныз остатков
       dispatch(changeActiveSelectCategory(value));
 
-      if (type == "sale") {
-        const obj = { workshop_guid: activeSelectWorkShop, location };
-        dispatch(getProductTT({ ...obj, guid: value, seller_guid }));
-      } else if (type == "leftovers") {
-        const obj = { workshop_guid: activeSelectWorkShop, seller_guid };
-        dispatch(getMyLeftovers({ ...obj, category_guid: value }));
-      }
+      setTimeout(() => {
+        if (type == "sale") {
+          const obj = { workshop_guid: activeSelectWorkShop, location };
+          dispatch(getProductTT({ ...obj, guid: value, seller_guid }));
+        } else if (type == "leftovers") {
+          const obj = { workshop_guid: activeSelectWorkShop, seller_guid };
+          dispatch(getMyLeftovers({ ...obj, category_guid: value }));
+        }
+      }, 300);
 
       /// хранение активной категории, для сортировки товаров(храню guid категории)
       clear();

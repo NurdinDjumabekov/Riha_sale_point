@@ -215,8 +215,11 @@ export const getWorkShopsGorSale = createAsyncThunk(
       );
       if (response.status >= 200 && response.status < 300) {
         const { workshop_guid } = response?.data?.[0];
-        await dispatch(changeActiveSelectWorkShop(workshop_guid));
-        await dispatch(getCategoryTT({ ...props, workshop_guid }));
+        dispatch(changeActiveSelectWorkShop(workshop_guid));
+
+        if (workshop_guid) {
+          dispatch(getCategoryTT({ ...props, workshop_guid }));
+        }
         return response.data;
       } else {
         throw Error(`Error: ${response.status}`);
@@ -248,16 +251,22 @@ export const getCategoryTT = createAsyncThunk(
         const category_guid = response.data?.[0]?.category_guid || "";
         dispatch(changeActiveSelectCategory(category_guid)); /// исользую в продаже и в остатках
 
+        console.log(workshop_guid, "workshop_guid");
+
         if (type === "leftovers") {
-          const obj = { seller_guid, category_guid, workshop_guid };
-          await dispatch(getMyLeftovers(obj));
-          //// для страницы остатков вызываю первую категорию
+          if (category_guid) {
+            const obj = { seller_guid, category_guid, workshop_guid };
+            dispatch(getMyLeftovers(obj));
+            //// для страницы остатков вызываю первую категорию
+          }
         } else if (type === "sale") {
-          ////// для продажи и с0путки
-          const sedData = { guid: category_guid, seller_guid, location };
-          await dispatch(getProductTT({ ...sedData, workshop_guid }));
-          //// get список продуктов сопутки по категориям
-          //// сразу подставляю первую категорию
+          if (category_guid) {
+            ////// для продажи и с0путки
+            const sedData = { guid: category_guid, seller_guid, location };
+            dispatch(getProductTT({ ...sedData, workshop_guid }));
+            //// get список продуктов сопутки по категориям
+            //// сразу подставляю первую категорию
+          }
         }
         return response?.data;
       } else {
@@ -348,9 +357,10 @@ export const getMyLeftovers = createAsyncThunk(
   async function (props, { dispatch, rejectWithValue }) {
     const { seller_guid, category_guid, workshop_guid } = props;
 
-    console.log(
-      `${API}/tt/get_report_leftovers?seller_guid=${seller_guid}&categ_guid=${category_guid}&workshop_guid=${workshop_guid}`
-    );
+    console.log(category_guid, "category_guid");
+    // console.log(
+    //   `${API}/tt/get_report_leftovers?seller_guid=${seller_guid}&categ_guid=${category_guid}&workshop_guid=${workshop_guid}`
+    // );
     try {
       const response = await axios({
         method: "GET",
@@ -1372,24 +1382,24 @@ const requestSlice = createSlice({
 
     ////// getProductTT
     builder.addCase(getProductTT.fulfilled, (state, action) => {
-      state.preloader = false;
+      // state.preloader = false;
       state.listProductTT = action.payload;
     });
     builder.addCase(getProductTT.rejected, (state, action) => {
       state.error = action.payload;
-      state.preloader = false;
+      // state.preloader = false;
     });
     builder.addCase(getProductTT.pending, (state, action) => {
-      state.preloader = true;
+      // state.preloader = true;
     });
 
     //////// searchProdTT
     builder.addCase(searchProdTT.fulfilled, (state, action) => {
       // state.preloader = false;
       state.listProductTT = action.payload;
-      if (action.payload?.length === 0) {
-        Alert.alert("По вашему запросу ничего не найдено (");
-      }
+      // if (action.payload?.length === 0) {
+      //   Alert.alert("По вашему запросу ничего не найдено (");
+      // }
     });
     builder.addCase(searchProdTT.rejected, (state, action) => {
       state.error = action.payload;
@@ -1403,9 +1413,9 @@ const requestSlice = createSlice({
     builder.addCase(searchProdSale.fulfilled, (state, action) => {
       // state.preloader = false;
       state.listProdSearch = action.payload;
-      if (action.payload?.length === 0) {
-        Alert.alert("По вашему запросу ничего не найдено (");
-      }
+      // if (action.payload?.length === 0) {
+      //   Alert.alert("По вашему запросу ничего не найдено (");
+      // }
     });
     builder.addCase(searchProdSale.rejected, (state, action) => {
       state.error = action.payload;
@@ -1418,16 +1428,16 @@ const requestSlice = createSlice({
 
     //////// getMyLeftovers
     builder.addCase(getMyLeftovers.fulfilled, (state, action) => {
-      state.preloader = false;
+      // state.preloader = false;
       state.listLeftovers = action?.payload;
     });
     builder.addCase(getMyLeftovers.rejected, (state, action) => {
       state.error = action.payload;
-      state.preloader = false;
+      // state.preloader = false;
       Alert.alert("Упс, что-то пошло не так! Не удалось загрузить данные");
     });
     builder.addCase(getMyLeftovers.pending, (state, action) => {
-      state.preloader = true;
+      // state.preloader = true;
     });
 
     /////// getActionsLeftovers

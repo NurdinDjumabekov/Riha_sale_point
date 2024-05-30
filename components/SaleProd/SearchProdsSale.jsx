@@ -7,10 +7,8 @@ import { StyleSheet, Image, View } from "react-native";
 import { TextInput, TouchableOpacity } from "react-native";
 
 ///// components
-import {
-  clearListProdSearch,
-  searchProdSale,
-} from "../../store/reducers/requestSlice";
+import { clearListProdSearch } from "../../store/reducers/requestSlice";
+import { searchProdSale } from "../../store/reducers/requestSlice";
 
 /////helpers
 import { debounce } from "lodash";
@@ -38,7 +36,7 @@ export const SearchProdsSale = ({}) => {
         dispatch(searchProdSale({ ...sendData }));
         // Выполнение поиска с заданными параметрами
       }
-    }, 800),
+    }, 500),
     []
   );
 
