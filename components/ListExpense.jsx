@@ -12,6 +12,12 @@ export const ListExpense = ({ getData }) => {
     return <Text style={styles.noneData}>Список пустой</Text>;
   }
 
+  const objType = {
+    0: { text: "Ожидание", color: "red" },
+    1: { text: "Отменено админом", color: "red" },
+    2: { text: "Одобрено", color: "green" },
+  };
+
   return (
     <View style={styles.parentBlock}>
       <FlatList
@@ -27,8 +33,8 @@ export const ListExpense = ({ getData }) => {
                 </Text>
               </View>
               <View style={styles.blockTitle}>
-                <Text style={item?.status ? styles.noo : styles.good}>
-                  {+item?.status === 1 ? "Отменено админом" : "Одобрено"}
+                <Text style={styles?.[`${objType?.[+item?.status]?.color}`]}>
+                  {objType?.[+item?.status]?.text}
                 </Text>
                 <Text style={styles.date}>{item.date_system}</Text>
                 <Text style={styles.sum}>{item.amount} сом</Text>
@@ -100,8 +106,6 @@ const styles = StyleSheet.create({
   blockTitle: { width: "60%" },
 
   flatlist: { width: "100%", paddingTop: 8 },
-  good: { color: "rgba(12, 169, 70, 0.9)" },
-  noo: { color: "red" },
 
   commentAdmin: {
     fontSize: 16,
@@ -116,4 +120,8 @@ const styles = StyleSheet.create({
     color: "#222",
     height: "100%",
   },
+
+  red: { color: "red" },
+
+  green: { color: "rgba(12, 169, 70, 0.9)" },
 });

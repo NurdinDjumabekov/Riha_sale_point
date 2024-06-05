@@ -28,8 +28,6 @@ export const CheckTovarScreen = ({ navigation }) => {
 
   const refAccord = useRef(null);
 
-  const [workShop, setWorkShop] = useState(false);
-
   const { data } = useSelector((state) => state.saveDataSlice);
   const { preloader, listHistoryRevision } = useSelector(
     (state) => state.requestSlice
@@ -92,12 +90,7 @@ export const CheckTovarScreen = ({ navigation }) => {
           />
         </View>
       </View>
-      <ModalWorkShop
-        modalState={workShop}
-        setModalState={setWorkShop}
-        navigation={navigation}
-        refAccord={refAccord}
-      />
+      <ModalWorkShop navigation={navigation} refAccord={refAccord} />
       {/* /////для выбора цехов*/}
     </>
   );

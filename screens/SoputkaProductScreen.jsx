@@ -7,7 +7,7 @@ import { deleteSoputkaProd } from "../store/reducers/requestSlice";
 import { getListSoputkaProd } from "../store/reducers/requestSlice";
 import ConfirmationModal from "../components/ConfirmationModal";
 import { ViewButton } from "../customsTags/ViewButton";
-import { sumSoputkaProds, unitResultFN } from "../helpers/amounts";
+import { formatCount, sumSoputkaProds, unitResultFN } from "../helpers/amounts";
 
 export const SoputkaProductScreen = ({ route, navigation }) => {
   //// список проданных продуктов
@@ -95,9 +95,13 @@ export const SoputkaProductScreen = ({ route, navigation }) => {
             }
           />
           <View style={styles.actionBlock}>
-            <Text style={styles.totalItemSumm}>
-              Итого: {totals?.totalKg} кг и {totals?.totalSht} штук
-            </Text>
+            {(!!+totals?.totalKg || !!+totals?.totalSht) && (
+              <Text style={styles.totalItemSumm}>
+                Итого:{" "}
+                {!!+totals?.totalKg && `${formatCount(totals?.totalKg)} кг ,`}
+                {!!+totals?.totalSht && `${formatCount(totals?.totalSht)} штук`}
+              </Text>
+            )}
             <Text style={styles.totalItemSumm}>
               Сумма: {sumSoputkaProds(listProdSoputka?.[0]?.list)} сом
             </Text>

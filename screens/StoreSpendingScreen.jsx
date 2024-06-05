@@ -1,32 +1,38 @@
+/////tags
 import { StyleSheet, View, TextInput, Text } from "react-native";
-import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { changeExpense } from "../store/reducers/stateSlice";
-import {
-  addExpenseTT,
-  getExpense,
-  getSelectExpense,
-} from "../store/reducers/requestSlice";
 import { ViewButton } from "../customsTags/ViewButton";
-import { ListExpense } from "../components/ListExpense";
 import { Alert } from "react-native";
 import RNPickerSelect from "react-native-picker-select";
-import { getLocalDataUser } from "../helpers/returnDataUser";
+
+////hooks
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+
+////fns
+import { changeExpense } from "../store/reducers/stateSlice";
+import { addExpenseTT, getExpense } from "../store/reducers/requestSlice";
+import { getSelectExpense } from "../store/reducers/requestSlice";
+
+//////components
+import { ListExpense } from "../components/ListExpense";
 import { changeLocalData } from "../store/reducers/saveDataSlice";
 
-export const StoreSpendingScreen = ({ navigation }) => {
+//////helpers
+import { getLocalDataUser } from "../helpers/returnDataUser";
+
+export const StoreSpendingScreen = () => {
   const dispatch = useDispatch();
   const { data } = useSelector((state) => state.saveDataSlice);
   const { expense } = useSelector((state) => state.stateSlice);
   const { listCategExpense } = useSelector((state) => state.requestSlice);
-
-  useEffect(() => getData(), []);
 
   const getData = async () => {
     await getLocalDataUser({ changeLocalData, dispatch });
     await dispatch(getSelectExpense()); ///  список селекта расходов ТТ(их траты)
     await dispatch(getExpense(data?.seller_guid)); /// список расходов ТТ(их траты)
   };
+
+  useEffect(() => getData(), []);
 
   const addExpense = () => {
     if (expense?.amount === "" || expense?.amount == "0") {

@@ -6,26 +6,26 @@ import { useDispatch, useSelector } from "react-redux";
 import { StyleSheet, Text, View, FlatList } from "react-native";
 
 ////// components
-import { RenderResult } from "../components/RenderResult";
-import { getAcceptProdInvoice } from "../store/reducers/requestSlice";
+import { RenderResult } from "../../components/RenderResult";
+import { getAcceptProdInvoiceRetrn } from "../../store/reducers/requestSlice";
 
 ////// helpers
-import { formatCount, unitResultFN } from "../helpers/amounts";
+import { formatCount, unitResultFN } from "../../helpers/amounts";
 
-export const EveryInvoiceAcceptScreen = ({ route, navigation }) => {
+export const EveryReturnScreen = ({ route, navigation }) => {
   //// каждый возврат накладной типо истории
   const dispatch = useDispatch();
   const { codeid, guid } = route.params; /// guid - накладной
 
-  const { listAcceptInvoiceProd } = useSelector((state) => state.requestSlice);
+  const { listAcceptReturnProd } = useSelector((state) => state.requestSlice);
 
   useEffect(() => {
     navigation.setOptions({
       title: `Накладная №${codeid}`,
     });
-    dispatch(getAcceptProdInvoice(guid));
+    dispatch(getAcceptProdInvoiceRetrn(guid));
   }, []);
-  const newList = listAcceptInvoiceProd?.[0]?.list;
+  const newList = listAcceptReturnProd?.[0]?.list;
 
   if (newList?.length === 0) {
     return <Text style={styles.noneData}>Данные отсутствуют</Text>;
@@ -52,7 +52,7 @@ export const EveryInvoiceAcceptScreen = ({ route, navigation }) => {
           </Text>
         )}
         <Text style={styles.totalItemCount}>
-          Сумма: {formatCount(listAcceptInvoiceProd?.[0]?.total_price)} сом
+          Сумма: {formatCount(listAcceptReturnProd?.[0]?.total_price)} сом
         </Text>
       </View>
     </View>

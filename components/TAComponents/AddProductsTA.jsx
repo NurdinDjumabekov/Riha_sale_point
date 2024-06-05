@@ -98,6 +98,8 @@ export const AddProductsTA = (props) => {
     }
   }, [temporaryData?.guid]);
 
+  // console.log(temporaryData,"temporaryData");
+
   return (
     <Modal
       animationType="fade"

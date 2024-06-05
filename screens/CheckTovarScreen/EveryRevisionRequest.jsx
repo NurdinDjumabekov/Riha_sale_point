@@ -12,7 +12,7 @@ import { acceptInvoiceRevision } from "../../store/reducers/requestSlice";
 import { getEveryRevisionRequest } from "../../store/reducers/requestSlice";
 
 ////helpers
-import { unitResultFN } from "../../helpers/amounts";
+import { formatCount, unitResultFN } from "../../helpers/amounts";
 
 export const EveryRevisionRequest = ({ route, navigation }) => {
   const { invoice_guid, disable } = route.params;
@@ -50,9 +50,13 @@ export const EveryRevisionRequest = ({ route, navigation }) => {
         </View>
         <MyTable arr={everyRequestRevision?.list} />
         <View style={styles.actionBlock}>
-          <Text style={styles.totalItemCount}>
-            Итого: {totals?.totalKg} кг и {totals?.totalSht} штук
-          </Text>
+          {(!!+totals?.totalKg || !!+totals?.totalSht) && (
+            <Text style={styles.totalItemCount}>
+              Итого:{" "}
+              {!!+totals?.totalKg && `${formatCount(totals?.totalKg)} кг ,`}
+              {!!+totals?.totalSht && `${formatCount(totals?.totalSht)} штук`}
+            </Text>
+          )}
           <Text style={styles.totalItemCount}>
             Сумма: {everyRequestRevision?.total_price} сом
           </Text>

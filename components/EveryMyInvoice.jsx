@@ -1,41 +1,84 @@
+//// tags
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { clearAcceptInvoiceTT } from "../store/reducers/stateSlice";
+
+//// hooks
 import { useDispatch } from "react-redux";
-import { changePreloader } from "../store/reducers/requestSlice";
 import { formatCount } from "../helpers/amounts";
 
-export const EveryMyInvoice = ({ obj, navigation }) => {
+/////fns
+import { clearAcceptInvoiceTT } from "../store/reducers/stateSlice";
+import { changePreloader } from "../store/reducers/requestSlice";
+
+/////helpers
+import { useRoute } from "@react-navigation/native";
+
+export const EveryMyInvoice = (props) => {
+  //// для принятия накладных и возврата товара
+
   //// status - 0(накладные только для просмотра),
   //// 1(не принятые накладные),
   //// 2(принятые накладные)
-  //// список загрузок(накладных)
-  //
+
+  const route = useRoute();
   const dispatch = useDispatch();
 
+  /////////////////////////////////////////////////
+  const location = route.name; ///// MyReturnsScreen и Application
+  const check = location == "MyReturnsScreen";
+  /////////////////////////////////////////////////
+
+  const { obj, navigation, screns } = props;
+
   const objType = {
-    0: { text: "На складе", color: "#222" },
+    0: { text: "На складе", color: "red" },
     1: { text: "Отгружено", color: "red" },
     2: { text: "Принято", color: "green" },
   };
 
-  const statusInfo = objType[obj?.status];
+  const objTypeReturn = {
+    1: { text: "Ожидание", color: "red" },
+    2: { text: "Принято", color: "green" },
+  };
+
+  const statusInfo = objType?.[obj?.status] || {
+    text: "Отклонено",
+    color: "red",
+  };
+
+  const statusReturns = objTypeReturn?.[obj?.status] || {
+    text: "Отклонено",
+    color: "red",
+  };
+
+  const checkStyle = check ? statusReturns : statusInfo;
 
   const lookInvoice = () => {
-    if (+obj?.status === 1 || +obj?.status === 0) {
-      /// if накладная отгружена для ТА
-      navigation.navigate("detailedInvoice", {
-        date: obj?.date,
-        guid: obj?.guid,
-        status: obj?.status,
-      });
-      dispatch(clearAcceptInvoiceTT());
-      dispatch(changePreloader(true)); /// чтобы вначале не показывался пустой массив
-    } else if (+obj?.status === 2) {
-      /// if накладная уже принята
-      navigation.navigate("EveryInvoiceHistory", {
-        codeid: obj?.codeid,
-        guid: obj?.guid, /// guid - накладной
-      });
+    const { date, guid, status, codeid } = obj;
+    console.log(obj, "obj");
+    if (check) {
+      if (status == 1) {
+        /// if накладная отгружена для ТА
+        const dataSend = { date, guid, status };
+        navigation.navigate(screns?.[0], dataSend);
+        dispatch(clearAcceptInvoiceTT()); //// очиющаю guid накладной
+        dispatch(changePreloader(true)); /// чтобы вначале не показывался пустой массив
+      } else if (status == 2 || status == -2) {
+        /// if накладная уже принята
+        const dataSend = { codeid, guid };
+        navigation.navigate(screns?.[1], dataSend);
+      }
+    } else {
+      if (+status === 1 || +status === 0) {
+        /// if накладная отгружена для ТА
+        const dataSend = { date, guid, status };
+        navigation.navigate(screns?.[0], dataSend);
+        dispatch(clearAcceptInvoiceTT()); //// очиющаю guid накладной
+        dispatch(changePreloader(true)); /// чтобы вначале не показывался пустой массив
+      } else if (status == 2 || status == -2) {
+        /// if накладная уже принята
+        const dataSend = { codeid, guid };
+        navigation.navigate(screns?.[1], dataSend);
+      }
     }
   };
 
@@ -43,7 +86,7 @@ export const EveryMyInvoice = ({ obj, navigation }) => {
     <TouchableOpacity style={styles.container} onPress={lookInvoice}>
       <View style={styles.innerBlock}>
         <View style={styles.mainData}>
-          <Text style={styles.titleNum}>{obj.codeid} </Text>
+          <Text style={styles.titleNum}>{obj.codeid}</Text>
           <View>
             <Text
               style={[styles.titleDate, styles.role]}
@@ -65,7 +108,7 @@ export const EveryMyInvoice = ({ obj, navigation }) => {
       </View>
       <View style={styles.mainDataArrow}>
         <View>
-          <Text style={{ color: statusInfo?.color }}>{statusInfo?.text}</Text>
+          <Text style={{ color: checkStyle?.color }}>{checkStyle?.text}</Text>
           <Text style={styles.totalPrice}>
             {formatCount(obj?.total_price)} сом
           </Text>
@@ -105,8 +148,8 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     backgroundColor: "#d4dfee",
     padding: 3,
-    paddingLeft: 7,
-    paddingRight: 0,
+    paddingLeft: 6,
+    paddingRight: 4,
     borderRadius: 5,
   },
 

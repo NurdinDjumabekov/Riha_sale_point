@@ -7,38 +7,37 @@ import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView, FlatList, RefreshControl } from "react-native";
 
 ////// components
-import { EveryMyInvoice } from "../components/EveryMyInvoice";
+import { EveryMyInvoice } from "../../components/EveryMyInvoice";
 
 ////// fns
-import { getMyInvoice } from "../store/reducers/requestSlice";
+import { getMyReturnInvoice } from "../../store/reducers/requestSlice";
 
-export const MyApplicationScreen = ({ navigation }) => {
-  ////// загрузки
+export const MyReturnsScreen = ({ navigation }) => {
   const dispatch = useDispatch();
 
-  const { preloader, listMyInvoice } = useSelector(
+  const { preloader, listMyInvoiceReturn } = useSelector(
     (state) => state.requestSlice
   );
   const { data } = useSelector((state) => state.saveDataSlice);
 
-  const getData = async () => dispatch(getMyInvoice(data?.seller_guid));
+  const getData = () => dispatch(getMyReturnInvoice(data?.seller_guid));
 
   useEffect(() => getData(), []);
 
-  const getHistory = () => navigation.navigate("AcceptInvoiceHistory");
+  const getHistory = () => navigation.navigate("AcceptReturnHistoryScreen");
 
-  const screns = ["DetailedInvoice", "EveryInvoiceAcceptScreen"];
+  const screns = ["DetailedInvoiceReturn", "EveryReturnScreen"];
 
   return (
     <SafeAreaView>
       <TouchableOpacity onPress={getHistory} style={styles.arrow}>
-        <Text style={styles.textBtn}>Список принятых накладных</Text>
+        <Text style={styles.textBtn}>Список накладных для воврата</Text>
         <View style={styles.arrowInner}></View>
       </TouchableOpacity>
       <View style={styles.parentBlock}>
         <FlatList
           contentContainerStyle={styles.widthMax}
-          data={listMyInvoice}
+          data={listMyInvoiceReturn}
           renderItem={({ item }) => (
             <EveryMyInvoice
               obj={item}

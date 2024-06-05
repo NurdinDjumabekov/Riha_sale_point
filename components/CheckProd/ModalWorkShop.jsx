@@ -1,16 +1,20 @@
-import { StyleSheet, Text } from "react-native";
-import { TouchableOpacity } from "react-native";
-import { useDispatch, useSelector } from "react-redux";
+////hooks
 import { useCallback, useMemo, useRef, useState } from "react";
-import {
-  createInvoiceCheck,
-  getWorkShopsForRevision,
-} from "../../store/reducers/requestSlice";
+import { useDispatch, useSelector } from "react-redux";
+
+////tags
+import { StyleSheet, Text } from "react-native";
+import { TouchableOpacity, View } from "react-native";
+
+////fns
+import { createInvoiceCheck } from "../../store/reducers/requestSlice";
+import { getWorkShopsForRevision } from "../../store/reducers/requestSlice";
+
+/////
 import BottomSheet, {
   BottomSheetFlatList,
   BottomSheetBackdrop,
 } from "@gorhom/bottom-sheet";
-import { View } from "react-native";
 
 export const ModalWorkShop = (props) => {
   //// модалка для выбора цеха и продавца для которого ревизия
@@ -62,7 +66,6 @@ export const ModalWorkShop = (props) => {
   const choiceSeller = (guid) => {
     setObj({ ...obj, guid });
     ////// get список актуальных цех0в продавца
-    console.log(guid, "guid");
     dispatch(getWorkShopsForRevision(guid));
     closeSeller();
     workShopOpen(0);
@@ -96,7 +99,7 @@ export const ModalWorkShop = (props) => {
 
     setObj({ ...obj, guidWorkShop });
 
-    //// закрываю аккардион
+    //// закрываю аккардион listContrAgents
     closeWorkShop();
   };
 
@@ -155,7 +158,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "rgb(217 223 232)",
     backgroundColor: "#f5f5f5",
-    borderRadius: 5,
+    borderRadius: 3,
     marginVertical: 1,
     backgroundColor: "rgba(199, 210, 254, 0.718)",
     display: "flex",
@@ -184,8 +187,6 @@ const styles = StyleSheet.create({
     marginTop: 5,
     marginBottom: 10,
     borderStyle: "solid",
-    // borderWidth: 1,
-    // borderColor: "rgb(217 223 232)",
     borderRadius: 5,
     backgroundColor: "#fff",
     marginHorizontal: 10,
@@ -200,9 +201,9 @@ const styles = StyleSheet.create({
   arrow: {
     borderTopWidth: 3,
     borderRightWidth: 3,
-    borderColor: "#fff",
-    height: 16,
-    width: 16,
+    borderColor: "rgba(47, 71, 190, 0.482)",
+    height: 13,
+    width: 13,
     borderRadius: 3,
     transform: [{ rotate: "45deg" }],
   },

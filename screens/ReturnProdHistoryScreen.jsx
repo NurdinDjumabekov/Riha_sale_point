@@ -106,9 +106,13 @@ export const ReturnProdHistoryScreen = ({ navigation, route }) => {
           />
         </View>
 
-        <Text style={styles.totalItemSumm}>
-          Итого: {totals?.totalKg} кг и {totals?.totalSht} штук
-        </Text>
+        {(!!+totals?.totalKg || !!+totals?.totalSht) && (
+          <Text style={styles.totalItemSumm}>
+            Итого:{" "}
+            {!!+totals?.totalKg && `${formatCount(totals?.totalKg)} кг ,`}
+            {!!+totals?.totalSht && `${formatCount(totals?.totalSht)} штук`}
+          </Text>
+        )}
         <Text style={styles.totalItemSumm}>
           Сумма: {sumSoputkaProds(listProdReturn?.[0]?.list)} сом
         </Text>

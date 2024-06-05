@@ -146,6 +146,7 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
     borderTopColor: "#222",
     borderTopWidth: 1,
+    // backgroundColor: "red",
   },
 
   blockTotal: {

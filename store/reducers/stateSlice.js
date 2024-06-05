@@ -4,7 +4,7 @@ const initialState = {
   dataLogin: { login: "", password: "" },
 
   acceptConfirmInvoice: { invoice_guid: "" },
-  // для подтверждения и принятия товаров ТА
+  // для подтверждения и принятия товаров ТА в возврате тоже
 
   temporaryData: { price: "", ves: "", guid: "" },
   ///// временные данные для добавление товаров в сопутку, возврат и продажу

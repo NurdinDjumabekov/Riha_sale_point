@@ -57,7 +57,7 @@ export const TablesRevision = ({ arr }) => {
 
 const styles = StyleSheet.create({
   parentFlatList: {
-    maxHeight: "75%",
+    maxHeight: "80%",
   },
 
   mainBlock: {

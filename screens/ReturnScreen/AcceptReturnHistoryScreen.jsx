@@ -1,16 +1,16 @@
 import { useEffect } from "react";
 import { RefreshControl, StyleSheet, View, FlatList } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import { getAcceptInvoice } from "../../store/reducers/requestSlice";
-import { EveryMyInvoice } from "../EveryMyInvoice";
 import { getLocalDataUser } from "../../helpers/returnDataUser";
 import { changeLocalData } from "../../store/reducers/saveDataSlice";
+import { EveryMyInvoice } from "../../components/EveryMyInvoice";
+import { getAcceptInvoiceReturn } from "../../store/reducers/requestSlice";
 
-export const AcceptInvoiceHistory = ({ navigation }) => {
+export const AcceptReturnHistoryScreen = ({ navigation }) => {
   const dispatch = useDispatch();
   const { data } = useSelector((state) => state.saveDataSlice);
 
-  const { preloader, listAcceptInvoice } = useSelector(
+  const { preloader, listAcceptInvoiceReturn } = useSelector(
     (state) => state.requestSlice
   );
 
@@ -20,16 +20,16 @@ export const AcceptInvoiceHistory = ({ navigation }) => {
 
   const getData = async () => {
     await getLocalDataUser({ changeLocalData, dispatch });
-    await dispatch(getAcceptInvoice(data?.seller_guid));
+    await dispatch(getAcceptInvoiceReturn(data?.seller_guid));
   };
 
-  const screns = ["DetailedInvoice", "EveryInvoiceAcceptScreen"];
+  const screns = ["DetailedInvoiceReturn", "EveryReturnScreen"];
 
   return (
     <View style={styles.blockList}>
       <FlatList
         contentContainerStyle={styles.flatListStyle}
-        data={listAcceptInvoice}
+        data={listAcceptInvoiceReturn}
         renderItem={({ item }) => (
           <EveryMyInvoice obj={item} navigation={navigation} screns={screns} />
         )}

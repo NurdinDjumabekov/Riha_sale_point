@@ -2,29 +2,29 @@
 import { StyleSheet } from "react-native";
 import { Text, View } from "react-native";
 
-///hooks
+////hooks
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 ///components
-import ConfirmationModal from "../components/ConfirmationModal";
-import { ViewButton } from "../customsTags/ViewButton";
+import ConfirmationModal from "../../components/ConfirmationModal";
+import { ViewButton } from "../../customsTags/ViewButton";
 
 ///states
-import { getMyEveryInvoice } from "../store/reducers/requestSlice";
-import { acceptInvoiceTT } from "../store/reducers/requestSlice";
+import { getMyEveryInvoiceReturn } from "../../store/reducers/requestSlice";
+import { acceptInvoiceReturn } from "../../store/reducers/requestSlice";
 
 ////helpers
-import { formatCount, unitResultFN } from "../helpers/amounts";
-import { MyTable } from "../common/MyTable";
+import { formatCount, unitResultFN } from "../../helpers/amounts";
+import { MyTable } from "../../common/MyTable";
 
-export const DetailedInvoice = ({ route, navigation }) => {
+export const DetailedInvoiceReturn = ({ route, navigation }) => {
   const { guid } = route.params;
   const [acceptOk, setAcceptOk] = useState(false); //// для модалки приняти накладной
   const [rejectNo, setRejectNo] = useState(false); //// для модалки отказа накладной
 
   const dispatch = useDispatch();
-  const { everyInvoice } = useSelector((state) => state.requestSlice);
+  const { everyInvoiceReturn } = useSelector((state) => state.requestSlice);
   const { acceptConfirmInvoice } = useSelector((state) => state.stateSlice);
 
   const { data } = useSelector((state) => state.saveDataSlice);
@@ -37,7 +37,7 @@ export const DetailedInvoice = ({ route, navigation }) => {
     ///// для принятия накладной торговой токой
     const send = { ...acceptConfirmInvoice, status: 2 };
     const obj = { seller_guid: data?.seller_guid };
-    dispatch(acceptInvoiceTT({ props: { ...send, ...obj }, navigation }));
+    dispatch(acceptInvoiceReturn({ props: { ...send, ...obj }, navigation }));
     setAcceptOk(false);
   };
 
@@ -45,33 +45,33 @@ export const DetailedInvoice = ({ route, navigation }) => {
     ///// для отклонения накладной торговой токой
     const send = { ...acceptConfirmInvoice, status: -2 };
     const obj = { seller_guid: data?.seller_guid };
-    dispatch(acceptInvoiceTT({ props: { ...send, ...obj }, navigation }));
+    dispatch(acceptInvoiceReturn({ props: { ...send, ...obj }, navigation }));
     setRejectNo(false);
   };
 
   useEffect(() => {
-    dispatch(getMyEveryInvoice(guid));
+    dispatch(getMyEveryInvoiceReturn(guid));
   }, []);
 
   useEffect(() => {
     navigation.setOptions({
-      title: `Накладная №${everyInvoice?.codeid}`,
+      title: `Накладная №${everyInvoiceReturn?.codeid}`,
     });
-  }, [everyInvoice]);
+  }, [everyInvoiceReturn]);
 
-  const totals = unitResultFN(everyInvoice?.list);
+  const totals = unitResultFN(everyInvoiceReturn?.list);
 
-  const checkStatus = everyInvoice?.status !== 0;
+  const checkStatus = everyInvoiceReturn?.status !== 0;
 
   return (
     <View style={styles.main}>
       <View style={styles.container}>
         <View style={styles.parent}>
           <Text style={styles.titleDate}>
-            Дата создания: {everyInvoice?.date}
+            Дата создания: {everyInvoiceReturn?.date}
           </Text>
         </View>
-        <MyTable arr={everyInvoice?.list} />
+        <MyTable arr={everyInvoiceReturn?.list} />
         <View style={styles.total}>
           {(!!+totals?.totalKg || !!+totals?.totalSht) && (
             <Text style={styles.totalItemCount}>
@@ -81,7 +81,7 @@ export const DetailedInvoice = ({ route, navigation }) => {
             </Text>
           )}
           <Text style={styles.totalItemCount}>
-            Сумма: {everyInvoice?.total_price} сом
+            Сумма: {everyInvoiceReturn?.total_price} сом
           </Text>
           {checkStatus && (
             <View style={styles.actionBlock}>

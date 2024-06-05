@@ -7,7 +7,7 @@ import { deleteReturnProd } from "../store/reducers/requestSlice";
 import { getListReturnProd } from "../store/reducers/requestSlice";
 import ConfirmationModal from "../components/ConfirmationModal";
 import { ViewButton } from "../customsTags/ViewButton";
-import { sumSoputkaProds, unitResultFN } from "../helpers/amounts";
+import { formatCount, sumSoputkaProds, unitResultFN } from "../helpers/amounts";
 
 export const ReturnProductScreen = ({ route, navigation }) => {
   //// список товаров для возврата
@@ -95,9 +95,13 @@ export const ReturnProductScreen = ({ route, navigation }) => {
             }
           />
           <View style={styles.actionBlock}>
-            <Text style={styles.totalItemSumm}>
-              Итого: {totals?.totalKg} кг и {totals?.totalSht} штук
-            </Text>
+            {(!!+totals?.totalKg || !!+totals?.totalSht) && (
+              <Text style={styles.totalItemSumm}>
+                Итого:{" "}
+                {!!+totals?.totalKg && `${formatCount(totals?.totalKg)} кг ,`}
+                {!!+totals?.totalSht && `${formatCount(totals?.totalSht)} штук`}
+              </Text>
+            )}
             <Text style={styles.totalItemSumm}>
               Сумма: {sumSoputkaProds(listProdReturn?.[0]?.list)} сом
             </Text>

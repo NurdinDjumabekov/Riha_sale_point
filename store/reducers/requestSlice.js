@@ -93,6 +93,9 @@ export const getHistoryBalance = createAsyncThunk(
   }
 );
 
+/////////////////////////////// main ///////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////
+
 /// getMyInvoice
 export const getMyInvoice = createAsyncThunk(
   "getMyInvoice",
@@ -123,7 +126,7 @@ export const getAcceptInvoice = createAsyncThunk(
     try {
       const response = await axios({
         method: "GET",
-        url: `${API}/tt/get_invoices?seller_guid=${seller_guid}&invoice_status=2`,
+        url: `${API}/tt/get_invoices?seller_guid=${seller_guid}&invoice_status=3`,
       });
       if (response.status >= 200 && response.status < 300) {
         return response?.data;
@@ -185,15 +188,17 @@ export const getMyEveryInvoice = createAsyncThunk(
 export const acceptInvoiceTT = createAsyncThunk(
   "acceptInvoiceTT",
   /// для принятия накладной торговой точкой
-  async function ({ data, navigation }, { rejectWithValue }) {
+  async function ({ props, navigation }, { rejectWithValue }) {
+    const { status } = props;
     try {
       const response = await axios({
         method: "POST",
         url: `${API}/tt/point_conf_inv`,
-        data,
+        data: props,
       });
       if (response.status >= 200 && response.status < 300) {
         navigation.navigate("Main");
+        return status;
       } else {
         throw Error(`Error: ${response.status}`);
       }
@@ -202,6 +207,9 @@ export const acceptInvoiceTT = createAsyncThunk(
     }
   }
 );
+
+/////////////////////////////// оставки и продажи ///////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////
 
 /// getWorkShopsGorSale
 /// get все цеха
@@ -617,8 +625,8 @@ export const getExpense = createAsyncThunk(
   }
 );
 
-/////////////////////////////// pay
-///////////////////////////////////////////////////////
+/////////////////////////////// pay ///////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////
 
 /// acceptMoney
 export const acceptMoney = createAsyncThunk(
@@ -647,22 +655,17 @@ export const acceptMoney = createAsyncThunk(
 /////////////////////////////// Return ///////////////////////////////
 ////////////////////////////////////////////////////////////////////////
 
-/// createInvoiceReturn
-export const createInvoiceReturn = createAsyncThunk(
-  /// создание накладной для возврата
-  "createInvoiceReturn",
-  async function (props, { dispatch, rejectWithValue }) {
-    const { dataObj, navigation } = props;
+/// getMyReturnInvoice
+export const getMyReturnInvoice = createAsyncThunk(
+  "getMyReturnInvoice",
+  /// для получения всех накладных воврата
+  async function (seller_guid, { dispatch, rejectWithValue }) {
     try {
       const response = await axios({
-        method: "POST",
-        url: `${API}/tt/create_invoice_return`,
-        data: dataObj,
+        method: "GET",
+        url: `${API}/tt/get_invoice_return?seller_guid=${seller_guid}&invoice_status=1`,
       });
       if (response.status >= 200 && response.status < 300) {
-        navigation?.navigate("AddProdReturnSrceen", {
-          forAddTovar: response?.data,
-        });
         return response?.data;
       } else {
         throw Error(`Error: ${response.status}`);
@@ -673,22 +676,19 @@ export const createInvoiceReturn = createAsyncThunk(
   }
 );
 
-/// addProductReturn
-export const addProductReturn = createAsyncThunk(
-  /// добавление продукта(по одному) в накладную в возвврата
-  "addProductReturn",
-  async function (props, { dispatch, rejectWithValue }) {
-    const { guid, count, price, invoice_guid, sale_price } = props?.obj;
+/// getAcceptInvoiceReturn
+////// принятые ТА накладные возврата (для истории)
+export const getAcceptInvoiceReturn = createAsyncThunk(
+  "getAcceptInvoiceReturn",
+  /// для получения всех накладных возврата, которые одобрил админ (invoice_status=3)
+  async function (seller_guid, { dispatch, rejectWithValue }) {
     try {
       const response = await axios({
-        method: "POST",
-        url: `${API}/tt/create_invoice_return_products`,
-        data: { guid, count, price, invoice_guid, sale_price },
+        method: "GET",
+        url: `${API}/tt/get_invoice_return?seller_guid=${seller_guid}&invoice_status=3`,
       });
       if (response.status >= 200 && response.status < 300) {
-        if (+response?.data?.result === 1) {
-          dispatch(clearTemporaryData()); // очищаю { price: "", ves: ""}
-        }
+        return response?.data;
       } else {
         throw Error(`Error: ${response.status}`);
       }
@@ -698,10 +698,11 @@ export const addProductReturn = createAsyncThunk(
   }
 );
 
-//// getListReturnProd
-export const getListReturnProd = createAsyncThunk(
-  /// список товаров сопутки (истр0ия сопутки)
-  "getListReturnProd",
+/// getAcceptProdInvoiceRetrn
+////// принятые ТT список возврата товаров (история)
+export const getAcceptProdInvoiceRetrn = createAsyncThunk(
+  "getAcceptProdInvoiceRetrn",
+  /// для получения всех накладных возврата, которые одобрил админ (invoice_status=2)
   async function (guidInvoice, { dispatch, rejectWithValue }) {
     try {
       const response = await axios({
@@ -719,43 +720,20 @@ export const getListReturnProd = createAsyncThunk(
   }
 );
 
-//// deleteReturnProd
-export const deleteReturnProd = createAsyncThunk(
-  /// удаление данных из списока возврата товаров
-  "deleteReturnProd",
-  async function (props, { dispatch, rejectWithValue }) {
-    const { product_guid, getData } = props;
-    try {
-      const response = await axios({
-        method: "POST",
-        url: `${API}/tt/del_return`,
-        data: { product_guid },
-      });
-      if (response.status >= 200 && response.status < 300) {
-        setTimeout(() => {
-          getData();
-        }, 200);
-      } else {
-        throw Error(`Error: ${response.status}`);
-      }
-    } catch (error) {
-      return rejectWithValue(error.message);
-    }
-  }
-);
-
-//// getHistoryReturn
-export const getHistoryReturn = createAsyncThunk(
-  /// список историй товаров возврата
-  "getHistoryReturn",
-  async function (guidInvoice, { dispatch, rejectWithValue }) {
+/// getMyEveryInvoiceReturn
+export const getMyEveryInvoiceReturn = createAsyncThunk(
+  "getMyEveryInvoiceReturn",
+  /// для получения каждой накладной возврата
+  async function (guid, { dispatch, rejectWithValue }) {
     try {
       const response = await axios({
         method: "GET",
-        url: `${API}/tt/get_invoice_return?seller_guid=${guidInvoice}`,
+        url: `${API}/tt/get_invoice_return_product?invoice_guid=${guid}`,
       });
       if (response.status >= 200 && response.status < 300) {
-        return response?.data;
+        const data = response?.data?.[0];
+        dispatch(changeAcceptInvoiceTT({ invoice_guid: data?.guid }));
+        return data;
       } else {
         throw Error(`Error: ${response.status}`);
       }
@@ -765,21 +743,21 @@ export const getHistoryReturn = createAsyncThunk(
   }
 );
 
-//// confirmReturn
-export const confirmReturn = createAsyncThunk(
-  /// подверждение товаров возврата
-  "confirmReturn",
-  async function ({ invoice_guid, navigation }, { dispatch, rejectWithValue }) {
+/// acceptInvoiceReturn
+export const acceptInvoiceReturn = createAsyncThunk(
+  "acceptInvoiceReturn",
+  /// для принятия накладной возврата торговой точкой
+  async function ({ props, navigation }, { rejectWithValue }) {
+    const { status } = props;
     try {
       const response = await axios({
         method: "POST",
         url: `${API}/tt/confirm_invoice_return`,
-        data: { invoice_guid },
+        data: props,
       });
       if (response.status >= 200 && response.status < 300) {
-        if (+response?.data?.result === 1) {
-          navigation.navigate("Main");
-        }
+        navigation.navigate("Main");
+        return status;
       } else {
         throw Error(`Error: ${response.status}`);
       }
@@ -791,6 +769,27 @@ export const confirmReturn = createAsyncThunk(
 
 /////////////////////////////// soputka ////////////////////////////////
 ////////////////////////////////////////////////////////////////////////
+
+/// getListContrAgents
+/// get список контрагентов
+export const getListContrAgents = createAsyncThunk(
+  "getListContrAgents",
+  async function (i, { dispatch, rejectWithValue }) {
+    try {
+      const response = await axios({
+        method: "GET",
+        url: `${API}/tt/get_contragents`,
+      });
+      if (response.status >= 200 && response.status < 300) {
+        return response?.data;
+      } else {
+        throw Error(`Error: ${response.status}`);
+      }
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
 
 /// getListAgents
 /// Создания накладной для сопутки товара
@@ -1178,12 +1177,15 @@ const initialState = {
   balance: 0,
   listHistoryBalance: [], //// список историй платежей ТТ
 
+  listContrAgents: [], //// список контрагентов
   listAgents: [], //// список агентов
 
+  ///////  принятие накладной ///////
   listMyInvoice: [], ///// список накладных для принятия
-  listAcceptInvoice: [], /// список накладных , принятых ТT (история)
-  listAcceptInvoiceProd: [], /// список продуктов накладных , принятых ТT (история)
   everyInvoice: {}, //// каждая накладная
+  listAcceptInvoiceProd: [], /// список продуктов накладных , принятых ТT (история)
+  listAcceptInvoice: [], /// список накладных , принятых ТT (история)
+
   listWorkShopSale: [], //// список цехов для продаж
   listCategory: [], //  список категорий ТА
   listProductTT: [], //  список продуктов ТА (cписок прод-тов отсортированные селектами)
@@ -1201,8 +1203,13 @@ const initialState = {
   // список остатков (переделанный мною) для возврата накладной и ревизии
 
   /////// return ///////
-  listProdReturn: [], //// список сопутки
-  listHistoryReturn: [], //// список истории сопутки
+  listProdReturn: [], //// список сопутки delete
+  listHistoryReturn: [], //// список истории сопутки delete
+  ///
+  listMyInvoiceReturn: [], ///// список накладных для возврата
+  everyInvoiceReturn: {}, //// каждая накладная возврата
+  listAcceptReturnProd: [], /// список продуктов накладных , возврата ТT (история)
+  listAcceptInvoiceReturn: [], /// список накладных возврата ТT (история)
 
   /////// soputka ///////
   listProdSoputka: [], //// список сопутки
@@ -1260,6 +1267,8 @@ const requestSlice = createSlice({
       state.preloader = true;
     });
 
+    /////// принятие накладных
+
     //// getMyInvoice
     builder.addCase(getMyInvoice.fulfilled, (state, action) => {
       state.preloader = false;
@@ -1270,52 +1279,6 @@ const requestSlice = createSlice({
       state.preloader = false;
     });
     builder.addCase(getMyInvoice.pending, (state, action) => {
-      state.preloader = true;
-    });
-
-    //// getMyEveryInvoice
-    builder.addCase(getMyEveryInvoice.fulfilled, (state, action) => {
-      state.preloader = false;
-      state.everyInvoice = action.payload;
-    });
-    builder.addCase(getMyEveryInvoice.rejected, (state, action) => {
-      state.error = action.payload;
-      state.preloader = false;
-    });
-    builder.addCase(getMyEveryInvoice.pending, (state, action) => {
-      state.preloader = true;
-    });
-
-    ///// acceptInvoiceTT
-    builder.addCase(acceptInvoiceTT.fulfilled, (state, action) => {
-      state.preloader = false;
-      Alert.alert("Накладная успешно принята!");
-    });
-    builder.addCase(acceptInvoiceTT.rejected, (state, action) => {
-      state.error = action.payload;
-      Alert.alert("Упс, что-то пошло не так!");
-      state.preloader = false;
-    });
-    builder.addCase(acceptInvoiceTT.pending, (state, action) => {
-      state.preloader = true;
-    });
-
-    ///// getWorkShopsGorSale
-    builder.addCase(getWorkShopsGorSale.fulfilled, (state, action) => {
-      state.preloader = false;
-      state.listWorkShopSale = action?.payload?.map(
-        ({ workshop, workshop_guid }, ind) => ({
-          label: `${ind + 1}. ${workshop}`,
-          value: workshop_guid,
-        })
-      );
-    });
-    builder.addCase(getWorkShopsGorSale.rejected, (state, action) => {
-      state.error = action.payload;
-      Alert.alert("Упс, что-то пошло не так!");
-      state.preloader = false;
-    });
-    builder.addCase(getWorkShopsGorSale.pending, (state, action) => {
       state.preloader = true;
     });
 
@@ -1344,6 +1307,56 @@ const requestSlice = createSlice({
       Alert.alert("Упс, что-то пошло не так! Не удалось загрузить данные");
     });
     builder.addCase(getAcceptProdInvoice.pending, (state, action) => {
+      state.preloader = true;
+    });
+
+    //// getMyEveryInvoice
+    builder.addCase(getMyEveryInvoice.fulfilled, (state, action) => {
+      state.preloader = false;
+      state.everyInvoice = action.payload;
+    });
+    builder.addCase(getMyEveryInvoice.rejected, (state, action) => {
+      state.error = action.payload;
+      state.preloader = false;
+    });
+    builder.addCase(getMyEveryInvoice.pending, (state, action) => {
+      state.preloader = true;
+    });
+
+    ///// acceptInvoiceTT
+    builder.addCase(acceptInvoiceTT.fulfilled, (state, action) => {
+      state.preloader = false;
+      if (action.payload == 2) {
+        Alert.alert("Накладная успешно принята!");
+      } else {
+        Alert.alert("Накладная успешно отклонена!");
+      }
+    });
+    builder.addCase(acceptInvoiceTT.rejected, (state, action) => {
+      state.error = action.payload;
+      Alert.alert("Упс, что-то пошло не так!");
+      state.preloader = false;
+    });
+    builder.addCase(acceptInvoiceTT.pending, (state, action) => {
+      state.preloader = true;
+    });
+
+    ///// getWorkShopsGorSale
+    builder.addCase(getWorkShopsGorSale.fulfilled, (state, action) => {
+      state.preloader = false;
+      state.listWorkShopSale = action?.payload?.map(
+        ({ workshop, workshop_guid }, ind) => ({
+          label: `${ind + 1}. ${workshop}`,
+          value: workshop_guid,
+        })
+      );
+    });
+    builder.addCase(getWorkShopsGorSale.rejected, (state, action) => {
+      state.error = action.payload;
+      Alert.alert("Упс, что-то пошло не так!");
+      state.preloader = false;
+    });
+    builder.addCase(getWorkShopsGorSale.pending, (state, action) => {
       state.preloader = true;
     });
 
@@ -1568,6 +1581,20 @@ const requestSlice = createSlice({
       state.preloader = true;
     });
 
+    ////////////////getListContrAgents
+    builder.addCase(getListContrAgents.fulfilled, (state, action) => {
+      state.preloader = false;
+      state.listContrAgents = action.payload;
+    });
+    builder.addCase(getListContrAgents.rejected, (state, action) => {
+      state.error = action.payload;
+      state.preloader = false;
+      Alert.alert("Упс, что-то пошло не так! Не удалось создать накладную");
+    });
+    builder.addCase(getListContrAgents.pending, (state, action) => {
+      state.preloader = true;
+    });
+
     /////////////////getListAgents
     builder.addCase(getListAgents.fulfilled, (state, action) => {
       state.preloader = false;
@@ -1579,97 +1606,6 @@ const requestSlice = createSlice({
       Alert.alert("Упс, что-то пошло не так! Не удалось создать накладную");
     });
     builder.addCase(getListAgents.pending, (state, action) => {
-      state.preloader = true;
-    });
-
-    //////////////////////////// return /////////////////////////
-
-    ////////////////createInvoiceReturn
-    builder.addCase(createInvoiceReturn.fulfilled, (state, action) => {
-      state.preloader = false;
-    });
-    builder.addCase(createInvoiceReturn.rejected, (state, action) => {
-      state.error = action.payload;
-      state.preloader = false;
-      Alert.alert("Упс, что-то пошло не так! Не удалось создать накладную");
-    });
-    builder.addCase(createInvoiceReturn.pending, (state, action) => {
-      state.preloader = true;
-    });
-
-    ////////////////addProductReturn
-    builder.addCase(addProductReturn.fulfilled, (state, action) => {
-      state.preloader = false;
-    });
-    builder.addCase(addProductReturn.rejected, (state, action) => {
-      state.error = action.payload;
-      state.preloader = false;
-      Alert.alert("Упс, что-то пошло не так! Не удалось добавить товар");
-    });
-    builder.addCase(addProductReturn.pending, (state, action) => {
-      state.preloader = true;
-    });
-
-    /////// getListReturnProd
-    builder.addCase(getListReturnProd.fulfilled, (state, action) => {
-      state.preloader = false;
-      state.listProdReturn = action.payload;
-    });
-    builder.addCase(getListReturnProd.rejected, (state, action) => {
-      state.error = action.payload;
-      state.preloader = false;
-      state.listProdReturn = [];
-      Alert.alert(
-        "Упс, что-то пошло не так! Попробуйте перезайти в приложение..."
-      );
-    });
-    builder.addCase(getListReturnProd.pending, (state, action) => {
-      state.preloader = true;
-    });
-
-    /////// deleteReturnProd
-    builder.addCase(deleteReturnProd.fulfilled, (state, action) => {
-      state.preloader = false;
-    });
-    builder.addCase(deleteReturnProd.rejected, (state, action) => {
-      state.error = action.payload;
-      state.preloader = false;
-      Alert.alert("Упс, что-то пошло не так! Не удалось удалить ...");
-    });
-    builder.addCase(deleteReturnProd.pending, (state, action) => {
-      state.preloader = true;
-    });
-
-    ///////getHistoryReturn
-    builder.addCase(getHistoryReturn.fulfilled, (state, action) => {
-      state.preloader = false;
-      state.listHistoryReturn = action.payload;
-    });
-    builder.addCase(getHistoryReturn.rejected, (state, action) => {
-      state.error = action.payload;
-      state.preloader = false;
-      state.listHistoryReturn = [];
-      Alert.alert(
-        "Упс, что-то пошло не так! Попробуйте перезайти в приложение..."
-      );
-    });
-    builder.addCase(getHistoryReturn.pending, (state, action) => {
-      state.preloader = true;
-    });
-
-    ////// confirmReturn
-    builder.addCase(confirmReturn.fulfilled, (state, action) => {
-      state.preloader = false;
-      Alert.alert("Накладная возврата успешно создана!");
-    });
-    builder.addCase(confirmReturn.rejected, (state, action) => {
-      state.error = action.payload;
-      state.preloader = false;
-      Alert.alert(
-        "Упс, что-то пошло не так! Попробуйте перезайти в приложение..."
-      );
-    });
-    builder.addCase(confirmReturn.pending, (state, action) => {
       state.preloader = true;
     });
 
@@ -1776,6 +1712,80 @@ const requestSlice = createSlice({
       );
     });
     builder.addCase(confirmSoputka.pending, (state, action) => {
+      state.preloader = true;
+    });
+
+    //////////////////////////// возврат /////////////////////////
+
+    //// getMyReturnInvoice
+    builder.addCase(getMyReturnInvoice.fulfilled, (state, action) => {
+      state.preloader = false;
+      state.listMyInvoiceReturn = action.payload;
+    });
+    builder.addCase(getMyReturnInvoice.rejected, (state, action) => {
+      state.error = action.payload;
+      state.preloader = false;
+    });
+    builder.addCase(getMyReturnInvoice.pending, (state, action) => {
+      state.preloader = true;
+    });
+
+    //// getAcceptInvoiceReturn
+    builder.addCase(getAcceptInvoiceReturn.fulfilled, (state, action) => {
+      state.preloader = false;
+      state.listAcceptInvoiceReturn = action.payload;
+    });
+    builder.addCase(getAcceptInvoiceReturn.rejected, (state, action) => {
+      state.error = action.payload;
+      state.preloader = false;
+      Alert.alert("Упс, что-то пошло не так! Не удалось загрузить данные");
+    });
+    builder.addCase(getAcceptInvoiceReturn.pending, (state, action) => {
+      state.preloader = true;
+    });
+
+    ///// getAcceptProdInvoiceRetrn
+    builder.addCase(getAcceptProdInvoiceRetrn.fulfilled, (state, action) => {
+      state.preloader = false;
+      state.listAcceptReturnProd = action.payload;
+    });
+    builder.addCase(getAcceptProdInvoiceRetrn.rejected, (state, action) => {
+      state.error = action.payload;
+      state.preloader = false;
+      Alert.alert("Упс, что-то пошло не так! Не удалось загрузить данные");
+    });
+    builder.addCase(getAcceptProdInvoiceRetrn.pending, (state, action) => {
+      state.preloader = true;
+    });
+
+    //// getMyEveryInvoiceReturn
+    builder.addCase(getMyEveryInvoiceReturn.fulfilled, (state, action) => {
+      state.preloader = false;
+      state.everyInvoiceReturn = action.payload;
+    });
+    builder.addCase(getMyEveryInvoiceReturn.rejected, (state, action) => {
+      state.error = action.payload;
+      state.preloader = false;
+    });
+    builder.addCase(getMyEveryInvoiceReturn.pending, (state, action) => {
+      state.preloader = true;
+    });
+
+    ///// acceptInvoiceReturn
+    builder.addCase(acceptInvoiceReturn.fulfilled, (state, action) => {
+      state.preloader = false;
+      if (action.payload == 2) {
+        Alert.alert("Накладная успешно принята!");
+      } else {
+        Alert.alert("Накладная отклонена!");
+      }
+    });
+    builder.addCase(acceptInvoiceReturn.rejected, (state, action) => {
+      state.error = action.payload;
+      Alert.alert("Упс, что-то пошло не так!");
+      state.preloader = false;
+    });
+    builder.addCase(acceptInvoiceReturn.pending, (state, action) => {
       state.preloader = true;
     });
 

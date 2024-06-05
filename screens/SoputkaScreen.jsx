@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 /////tags
@@ -12,7 +12,10 @@ import { ViewButton } from "../customsTags/ViewButton";
 
 /////redux
 import { changeLocalData } from "../store/reducers/saveDataSlice";
-import { clearListCategory } from "../store/reducers/requestSlice";
+import {
+  clearListCategory,
+  getListContrAgents,
+} from "../store/reducers/requestSlice";
 import { clearListProductTT } from "../store/reducers/requestSlice";
 import { getHistorySoputka } from "../store/reducers/requestSlice";
 import { getListAgents } from "../store/reducers/requestSlice";
@@ -23,7 +26,8 @@ import { getLocalDataUser } from "../helpers/returnDataUser";
 export const SoputkaScreen = ({ navigation }) => {
   //// Сопутка
   const dispatch = useDispatch();
-  const [modalState, setModalState] = useState(false);
+
+  const refAccord = useRef(null);
 
   const { data } = useSelector((state) => state.saveDataSlice);
 
@@ -41,21 +45,21 @@ export const SoputkaScreen = ({ navigation }) => {
     };
   }, []);
 
-  const getData = async () => {
-    await getLocalDataUser({ changeLocalData, dispatch });
-    await dispatch(getHistorySoputka(data?.seller_guid));
-    await dispatch(getListAgents(data?.seller_guid));
+  const getData = () => {
+    dispatch(getHistorySoputka(data?.seller_guid));
+    dispatch(getListContrAgents()); /// get список контрагентов
   };
+
+  const openModal = useCallback((index) => {
+    refAccord.current?.snapToIndex(index);
+  }, []);
 
   return (
     <>
       <SafeAreaView style={styles.container}>
         <View style={styles.soputkaBlock}>
-          <ViewButton
-            styles={styles.soputka}
-            onclick={() => setModalState(true)}
-          >
-            + Создать накладную
+          <ViewButton styles={styles.soputka} onclick={() => openModal(0)}>
+            + Создать накладную для сопутки
           </ViewButton>
         </View>
         <View style={styles.selectBlock}>
@@ -77,11 +81,7 @@ export const SoputkaScreen = ({ navigation }) => {
           />
         </View>
       </SafeAreaView>
-      <ModalCreateSoputka
-        modalState={modalState}
-        setModalState={setModalState}
-        navigation={navigation}
-      />
+      <ModalCreateSoputka navigation={navigation} refAccord={refAccord} />
     </>
   );
 };
@@ -133,7 +133,7 @@ const styles = StyleSheet.create({
   },
 
   selectBlock: {
-    height: "88%",
+    height: "87%",
   },
 
   soputkaBlock: {
@@ -148,13 +148,13 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: "#fff",
     minWidth: "95%",
-    paddingTop: 15,
-    paddingBottom: 15,
+    paddingTop: 13,
+    paddingBottom: 13,
     borderRadius: 8,
     fontWeight: 600,
     backgroundColor: "rgba(97 ,100, 239,0.7)",
-    marginTop: 20,
-    marginBottom: 20,
+    marginTop: 15,
+    marginBottom: 15,
   },
 
   everyProd: {
