@@ -15,7 +15,6 @@ import { SoldProductScreen } from "./SoldProductScreen";
 import { AcceptInvoiceHistory } from "../components/InvoiceTT/AcceptInvoiceHistory";
 import { EveryInvoiceAcceptScreen } from "./EveryInvoiceAcceptScreen";
 import { PayMoneyScreen } from "./PayMoneyScreen";
-import { ReturnScreen } from "./ReturnScreen";
 import { HistoryBalance } from "./HistoryBalance";
 import { SoputkaScreen } from "./SoputkaScreen";
 import { AddProdSoputkaSrceen } from "./AddProdSoputkaSrceen";
@@ -29,10 +28,7 @@ import { InvoiceCheckScreen } from "./CheckTovarScreen/InvoiceCheckScreen";
 import { ListCheckProdScreen } from "./CheckTovarScreen/ListCheckProdScreen";
 import { EveryRevisionRequest } from "./CheckTovarScreen/EveryRevisionRequest";
 import { RevisionRequest } from "./CheckTovarScreen/RevisionRequest";
-import { AddProdReturnSrceen } from "./AddProdReturnSrceen";
 import UserInfo from "../components/Header/UserInfo";
-import { ReturnProductScreen } from "./ReturnProductScreen";
-import { ReturnProdHistoryScreen } from "./ReturnProdHistoryScreen";
 import SaleSearchScreen from "./SaleScreen/SaleSearchScreen";
 import { MyReturnsScreen } from "./ReturnScreen/MyReturnsScreen";
 import { DetailedInvoiceReturn } from "./ReturnScreen/DetailedInvoiceReturn";
@@ -76,6 +72,7 @@ export const Navigation = () => {
                 headerRight: () => <LogOut navigation={navigation} />,
               })}
             />
+
             {/* /////////////////////// HistoryBalance ///////////////////////*/}
             <Stack.Screen
               name="HistoryBalance"
@@ -129,13 +126,15 @@ export const Navigation = () => {
               component={SoputkaProdHistoryScreen}
               ////// просмотр каждой истории сопутки
             />
+
             {/* /////////////////////// Остатки ///////////////////////*/}
             <Stack.Screen
               name="Leftovers"
               component={LeftoversScreen}
               options={{ title: "Остатки" }}
             />
-            {/* /////////////////////// Продажа ///////////////////////*/}
+
+            {/* /////////////////////// Продажа /////////////////////////*/}
             <Stack.Screen
               name="Shipment"
               component={MyShipmentScreen}
@@ -168,8 +167,8 @@ export const Navigation = () => {
               component={PayMoneyScreen}
               options={{ title: "Оплата" }}
             />
-            {/* /////////////////////// Возврат /////////////////////// */}
 
+            {/* /////////////////////// Возврат /////////////////////// */}
             <Stack.Screen
               name="MyReturnsScreen"
               component={MyReturnsScreen}

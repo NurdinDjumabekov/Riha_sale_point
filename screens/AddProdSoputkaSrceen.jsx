@@ -48,6 +48,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#ebeef2",
   },
+
   arrow: {
     display: "flex",
     flexDirection: "row",
@@ -58,6 +59,7 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(12, 169, 70, 0.486)",
     marginBottom: 0,
   },
+
   arrowInner: {
     borderTopWidth: 3,
     borderRightWidth: 3,
@@ -69,6 +71,7 @@ const styles = StyleSheet.create({
     marginRight: 20,
     marginTop: 5,
   },
+
   textBtn: {
     fontSize: 18,
     fontWeight: "500",

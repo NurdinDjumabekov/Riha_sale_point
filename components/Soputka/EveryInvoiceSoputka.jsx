@@ -41,8 +41,6 @@ export const EveryInvoiceSoputka = ({ forAddTovar, navigation }) => {
     return <Text style={styles.noneData}>Список пустой</Text>;
   }
 
-  console.log("asdasdas");
-
   return (
     <View style={styles.container}>
       <SafeAreaView style={styles.parentBlock}>

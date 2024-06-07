@@ -1,3 +1,4 @@
+////// hooks
 import { useCallback, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -11,17 +12,11 @@ import { ModalCreateSoputka } from "../components/Soputka/ModalCreateSoputka";
 import { ViewButton } from "../customsTags/ViewButton";
 
 /////redux
-import { changeLocalData } from "../store/reducers/saveDataSlice";
-import {
-  clearListCategory,
-  getListContrAgents,
-} from "../store/reducers/requestSlice";
+import { getListContrAgents } from "../store/reducers/requestSlice";
+import { clearListAgents } from "../store/reducers/requestSlice";
+import { clearListCategory } from "../store/reducers/requestSlice";
 import { clearListProductTT } from "../store/reducers/requestSlice";
 import { getHistorySoputka } from "../store/reducers/requestSlice";
-import { getListAgents } from "../store/reducers/requestSlice";
-
-/////helpers
-import { getLocalDataUser } from "../helpers/returnDataUser";
 
 export const SoputkaScreen = ({ navigation }) => {
   //// Сопутка
@@ -31,9 +26,8 @@ export const SoputkaScreen = ({ navigation }) => {
 
   const { data } = useSelector((state) => state.saveDataSlice);
 
-  const { preloader, listHistorySoputka } = useSelector(
-    (state) => state.requestSlice
-  );
+  const { preloader } = useSelector((state) => state.requestSlice);
+  const { listHistorySoputka } = useSelector((state) => state.requestSlice);
 
   useEffect(() => {
     getData();
@@ -41,7 +35,8 @@ export const SoputkaScreen = ({ navigation }) => {
     return () => {
       dispatch(clearListCategory());
       dispatch(clearListProductTT());
-      //// очищаю список категорий и товаров
+      dispatch(clearListAgents());
+      //// очищаю список категорий,агентов и товаров
     };
   }, []);
 

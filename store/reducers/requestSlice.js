@@ -792,15 +792,35 @@ export const getListContrAgents = createAsyncThunk(
 );
 
 /// getListAgents
-/// Создания накладной для сопутки товара
 export const getListAgents = createAsyncThunk(
-  /// список товаров сопутки
+  /// get cписок агентов
   "getListAgents",
   async function (seller_guid, { dispatch, rejectWithValue }) {
     try {
       const response = await axios({
         method: "GET",
         url: `${API}/tt/get_agents?seller_guid=${seller_guid}`,
+      });
+      if (response.status >= 200 && response.status < 300) {
+        return response?.data;
+      } else {
+        throw Error(`Error: ${response.status}`);
+      }
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+/// getListAgentsSorting
+export const getListAgentsSorting = createAsyncThunk(
+  /// get cписок агентов отсортированные по контрагентам
+  "getListAgentsSorting",
+  async function (contrAgentGuid, { dispatch, rejectWithValue }) {
+    try {
+      const response = await axios({
+        method: "GET",
+        url: `${API}/tt/get_agents_contr?contragent_guid=${contrAgentGuid}`,
       });
       if (response.status >= 200 && response.status < 300) {
         return response?.data;
@@ -1609,6 +1629,20 @@ const requestSlice = createSlice({
       state.preloader = true;
     });
 
+    //////////////// getListAgentsSorting
+    builder.addCase(getListAgentsSorting.fulfilled, (state, action) => {
+      state.preloader = false;
+      state.listAgents = action.payload;
+    });
+    builder.addCase(getListAgentsSorting.rejected, (state, action) => {
+      state.error = action.payload;
+      state.preloader = false;
+      Alert.alert("Упс, что-то пошло не так! Не удалось создать накладную");
+    });
+    builder.addCase(getListAgentsSorting.pending, (state, action) => {
+      state.preloader = true;
+    });
+
     //////////////////////////// pay /////////////////////////
 
     //////// acceptMoney
@@ -1960,7 +1994,7 @@ const requestSlice = createSlice({
     },
 
     clearListAgents: (state, action) => {
-      state.listAgents = action.payload;
+      state.listAgents = [];
     },
 
     clearListProdSearch: (state, action) => {
