@@ -109,7 +109,8 @@ export const ActionsEveryInvoice = ({ location, type }) => {
 
 const styles = StyleSheet.create({
   parentSelects: {
-    paddingVertical: 10,
+    paddingTop: 10,
+    paddingBottom: 3,
   },
 
   choiceCateg: {

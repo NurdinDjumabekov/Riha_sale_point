@@ -1648,6 +1648,7 @@ const requestSlice = createSlice({
     //////// acceptMoney
     builder.addCase(acceptMoney.fulfilled, (state, action) => {
       state.preloader = false;
+      Alert.alert("Оплата успешно проведена");
     });
     builder.addCase(acceptMoney.rejected, (state, action) => {
       state.error = action.payload;

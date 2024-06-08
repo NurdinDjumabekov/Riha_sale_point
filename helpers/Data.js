@@ -76,14 +76,7 @@ export const listTableLeftoverst = [
   "Остаток на конец",
 ];
 
-export const listTableForAcceptInvoice = [
-  " Продукт",
-  "Цена",
-  "Шт(кг)",
-  // "Вес с усушкой",
-  // "Вес принято",
-  // "  ....",
-];
+export const listTableForAcceptInvoice = [" Продукт", "Цена", "Шт(кг)"];
 
 export const listTableForReturnProd = [
   " Товар",
@@ -110,43 +103,17 @@ export const statusColor = {
   2: "green",
 };
 
-// if (location === "Shipment") {
-//   /// продажа
-//   dispatch(addProductInvoiceTT({ data, getData }));
-// } else if (location === "AddProdSoputkaSrceen") {
-//   /// сопутка
-//   const obj = { ...data, ...forAddTovar };
-//   dispatch(addProductSoputkaTT({ obj, getData }));
-// } else if (location === "AddProdReturnSrceen") {
-//   /// возврат
-//   const obj = { ...data, ...forAddTovar };
-//   dispatch(addProductReturn({ obj, getData }));
-// }
-/// checkComponent
+export const typesPay = {
+  1: "Поступление средств по накладной",
+  2: "Передача денег торговой точки агенту",
+  3: "Расходы и траты",
+};
 
-const arr = {
-  category_guid: "7362B299-56F1-11E9-82E8-000C2986F897",
-  category_name: "Сэндвич",
-  change_end_outcome: 1000000,
-  codeid: "774",
-  date_system: "21.05.2024 22:50",
-  end_outcome: 1000000,
-  end_outcome_rev: 0,
-  guid: "083603F2-A087-11ED-83CC-000C292CE9DF",
-  income: 1000000,
-  name: "Торговая Точка1",
-  outcome: 0,
-  point_guid: "E7458A29-6F7F-4364-A96D-ED878812F0CF",
-  price: 1,
-  product_guid: "BD574C4C-9392-4FC2-A89A-BD0968F4B445",
-  product_name: "Ход-дог НУКУРА 0,26 кг ЦС",
-  sale_price: 69,
-  seller_fio: "ТЕСТ СТАРЫЙ ПРОДАВЕЦ",
-  seller_guid: "8F0B54CF-122F-4738-B332-8D5BD944F5C0",
-  start_outcome: 0,
-  status: 0,
-  unit: "шт",
-  unit_codeid: "1",
-  workshop: "Сендвичи",
-  workshop_guid: "2FACBB78-5A25-11ED-83AE-000C292CE9DF",
+export const objTitleLeftov = {
+  1: "Товар",
+  2: "Цена",
+  3: "Остаток на начало",
+  4: "Приход",
+  5: "Расход",
+  6: "Остаток на конец",
 };

@@ -14,8 +14,8 @@ import { StoreSpendingScreen } from "./StoreSpendingScreen";
 import { SoldProductScreen } from "./SoldProductScreen";
 import { AcceptInvoiceHistory } from "../components/InvoiceTT/AcceptInvoiceHistory";
 import { EveryInvoiceAcceptScreen } from "./EveryInvoiceAcceptScreen";
-import { PayMoneyScreen } from "./PayMoneyScreen";
-import { HistoryBalance } from "./HistoryBalance";
+import { PayMoneyScreen } from "./PayScreen/PayMoneyScreen";
+import { HistoryBalance } from "./PayScreen/HistoryBalance";
 import { SoputkaScreen } from "./SoputkaScreen";
 import { AddProdSoputkaSrceen } from "./AddProdSoputkaSrceen";
 import { SoputkaProductScreen } from "./SoputkaProductScreen";
@@ -71,13 +71,6 @@ export const Navigation = () => {
                 headerLeft: () => <UserInfo />,
                 headerRight: () => <LogOut navigation={navigation} />,
               })}
-            />
-
-            {/* /////////////////////// HistoryBalance ///////////////////////*/}
-            <Stack.Screen
-              name="HistoryBalance"
-              component={HistoryBalance}
-              options={{ title: "История баланса" }}
             />
 
             {/* /////////////////////// Main ///////////////////////*/}
@@ -161,11 +154,17 @@ export const Navigation = () => {
               options={{ title: "Расходы" }}
             />
 
-            {/* /////////////////////// 0плата ТТ /////////////////////// */}
+            {/* /////////////////////// 0плата ТТ && HistoryBalance /////////////////////// */}
             <Stack.Screen
               name="PayMoney"
               component={PayMoneyScreen}
               options={{ title: "Оплата" }}
+            />
+
+            <Stack.Screen
+              name="HistoryBalance"
+              component={HistoryBalance}
+              options={{ title: "История баланса" }}
             />
 
             {/* /////////////////////// Возврат /////////////////////// */}

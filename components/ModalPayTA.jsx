@@ -34,6 +34,8 @@ export const ModalPayTA = ({ modalState, setModalState, navigation }) => {
     ///// отплачиваю деньги как ТТ ревизору
     if (!obj?.amount) {
       Alert.alert("Введите сумму");
+    } else if (!obj?.agent_guid) {
+      Alert.alert("Выберите агента");
     } else {
       const dataObj = { ...obj, seller_guid: data?.seller_guid };
       dispatch(acceptMoney({ dataObj, closeModal, navigation }));
