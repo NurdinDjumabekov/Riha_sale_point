@@ -45,7 +45,7 @@ export const SearchProdsSale = ({}) => {
   useEffect(() => {
     setTimeout(() => {
       focus();
-    }, 1000);
+    }, 500);
   }, []);
 
   const onChange = (text) => {

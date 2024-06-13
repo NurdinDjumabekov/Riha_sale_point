@@ -12,7 +12,8 @@ import { acceptInvoiceRevision } from "../../store/reducers/requestSlice";
 import { getEveryRevisionRequest } from "../../store/reducers/requestSlice";
 
 ////helpers
-import { formatCount, unitResultFN } from "../../helpers/amounts";
+import { formatCount } from "../../helpers/amounts";
+import ResultCounts from "../../common/ResultCounts";
 
 export const EveryRevisionRequest = ({ route, navigation }) => {
   const { invoice_guid, disable } = route.params;
@@ -38,8 +39,6 @@ export const EveryRevisionRequest = ({ route, navigation }) => {
     });
   }, [everyRequestRevision?.codeid]);
 
-  const totals = unitResultFN(everyRequestRevision?.list);
-
   return (
     <View style={styles.main}>
       <View style={styles.container}>
@@ -50,15 +49,9 @@ export const EveryRevisionRequest = ({ route, navigation }) => {
         </View>
         <MyTable arr={everyRequestRevision?.list} />
         <View style={styles.actionBlock}>
-          {(!!+totals?.totalKg || !!+totals?.totalSht) && (
-            <Text style={styles.totalItemCount}>
-              Итого:{" "}
-              {!!+totals?.totalKg && `${formatCount(totals?.totalKg)} кг ,`}
-              {!!+totals?.totalSht && `${formatCount(totals?.totalSht)} штук`}
-            </Text>
-          )}
+          <ResultCounts list={everyRequestRevision?.list} />
           <Text style={styles.totalItemCount}>
-            Сумма: {everyRequestRevision?.total_price} сом
+            Сумма: {formatCount(everyRequestRevision?.total_price)} сом
           </Text>
           {!disable && (
             <ViewButton styles={styles.sendBtn} onclick={clickOkay}>
@@ -79,9 +72,7 @@ export const EveryRevisionRequest = ({ route, navigation }) => {
 };
 
 const styles = StyleSheet.create({
-  main: {
-    flex: 1,
-  },
+  main: { flex: 1 },
 
   container: {
     flex: 1,
@@ -106,7 +97,7 @@ const styles = StyleSheet.create({
   actionBlock: {
     borderTopColor: "#222",
     borderTopWidth: 1,
-    paddingTop: 8,
+    paddingTop: 14,
   },
 
   totalItemCount: {

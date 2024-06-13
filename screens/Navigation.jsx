@@ -34,6 +34,7 @@ import { MyReturnsScreen } from "./ReturnScreen/MyReturnsScreen";
 import { DetailedInvoiceReturn } from "./ReturnScreen/DetailedInvoiceReturn";
 import { AcceptReturnHistoryScreen } from "./ReturnScreen/AcceptReturnHistoryScreen";
 import { EveryReturnScreen } from "./ReturnScreen/EveryReturnScreen";
+import EverySaleProdScreen from "./SaleScreen/EverySaleProd/EverySaleProdScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -42,7 +43,7 @@ export const Navigation = () => {
 
   const { data } = useSelector((state) => state.saveDataSlice);
 
-  // console.log(data, "data");
+  // console.log(data, "datsaaa");
 
   useEffect(() => getLocalDataUser({ changeLocalData, dispatch }), []);
 
@@ -142,6 +143,13 @@ export const Navigation = () => {
             />
 
             <Stack.Screen
+              name="EverySaleProdScreen"
+              component={EverySaleProdScreen}
+              options={{ title: "Назад" }}
+              ////// страница продажи каждого товара
+            />
+
+            <Stack.Screen
               name="SoldProduct"
               component={SoldProductScreen} /// список проданных товаров
               options={{ title: "Список продаж" }}
@@ -191,7 +199,7 @@ export const Navigation = () => {
               component={EveryReturnScreen}
             />
 
-            {/* /////////////////////// Ревизия asda/////////////////////// */}
+            {/* /////////////////////// Ревизия /////////////////////// */}
             <Stack.Screen
               name="CheckTovarScreen"
               component={CheckTovarScreen}

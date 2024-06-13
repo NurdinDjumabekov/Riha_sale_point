@@ -10,7 +10,8 @@ import { RenderResult } from "../components/RenderResult";
 import { getAcceptProdInvoice } from "../store/reducers/requestSlice";
 
 ////// helpers
-import { formatCount, unitResultFN } from "../helpers/amounts";
+import { formatCount } from "../helpers/amounts";
+import ResultCounts from "../common/ResultCounts";
 
 export const EveryInvoiceAcceptScreen = ({ route, navigation }) => {
   //// каждый возврат накладной типо истории
@@ -31,8 +32,6 @@ export const EveryInvoiceAcceptScreen = ({ route, navigation }) => {
     return <Text style={styles.noneData}>Данные отсутствуют</Text>;
   }
 
-  const totals = unitResultFN(newList);
-
   return (
     <View style={styles.parent}>
       <FlatList
@@ -44,13 +43,7 @@ export const EveryInvoiceAcceptScreen = ({ route, navigation }) => {
         keyExtractor={(item, index) => `${item.guid}${index}`}
       />
       <View style={styles.results}>
-        {(!!+totals?.totalKg || !!+totals?.totalSht) && (
-          <Text style={styles.totalItemCount}>
-            Итого:{" "}
-            {!!+totals?.totalKg && `${formatCount(totals?.totalKg)} кг ,`}
-            {!!+totals?.totalSht && `${formatCount(totals?.totalSht)} штук`}
-          </Text>
-        )}
+        <ResultCounts list={newList} />
         <Text style={styles.totalItemCount}>
           Сумма: {formatCount(listAcceptInvoiceProd?.[0]?.total_price)} сом
         </Text>

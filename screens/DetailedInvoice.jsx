@@ -15,8 +15,9 @@ import { getMyEveryInvoice } from "../store/reducers/requestSlice";
 import { acceptInvoiceTT } from "../store/reducers/requestSlice";
 
 ////helpers
-import { formatCount, unitResultFN } from "../helpers/amounts";
+import { formatCount } from "../helpers/amounts";
 import { MyTable } from "../common/MyTable";
+import ResultCounts from "../common/ResultCounts";
 
 export const DetailedInvoice = ({ route, navigation }) => {
   const { guid } = route.params;
@@ -59,8 +60,6 @@ export const DetailedInvoice = ({ route, navigation }) => {
     });
   }, [everyInvoice]);
 
-  const totals = unitResultFN(everyInvoice?.list);
-
   const checkStatus = everyInvoice?.status !== 0;
 
   return (
@@ -73,15 +72,9 @@ export const DetailedInvoice = ({ route, navigation }) => {
         </View>
         <MyTable arr={everyInvoice?.list} />
         <View style={styles.total}>
-          {(!!+totals?.totalKg || !!+totals?.totalSht) && (
-            <Text style={styles.totalItemCount}>
-              Итого:{" "}
-              {!!+totals?.totalKg && `${formatCount(totals?.totalKg)} кг ,`}
-              {!!+totals?.totalSht && `${formatCount(totals?.totalSht)} штук`}
-            </Text>
-          )}
+          <ResultCounts list={everyInvoice?.list} />
           <Text style={styles.totalItemCount}>
-            Сумма: {everyInvoice?.total_price} сом
+            Сумма: {formatCount(everyInvoice?.total_price)} сом
           </Text>
           {checkStatus && (
             <View style={styles.actionBlock}>

@@ -54,7 +54,6 @@ export const EveryMyInvoice = (props) => {
 
   const lookInvoice = () => {
     const { date, guid, status, codeid } = obj;
-    console.log(obj, "obj");
     if (check) {
       if (status == 1) {
         /// if накладная отгружена для ТА

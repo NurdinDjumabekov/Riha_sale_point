@@ -52,7 +52,11 @@ const SaleSearchScreen = ({ navigation }) => {
             <FlatList
               data={listProdSearch}
               renderItem={({ item, index }) => (
-                <EveryProduct obj={item} index={index} />
+                <EveryProduct
+                  obj={item}
+                  index={index}
+                  navigation={navigation}
+                />
               )}
               keyExtractor={(item, index) => `${item?.guid}${index}`}
             />

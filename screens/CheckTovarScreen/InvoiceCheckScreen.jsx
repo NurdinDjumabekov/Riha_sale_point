@@ -15,9 +15,9 @@ import { ViewButton } from "../../customsTags/ViewButton";
 import ConfirmationModal from "../../components/ConfirmationModal";
 
 ///// helpers
-import { totalSumRevision, unitRevisions } from "../../helpers/amounts";
-import { formatCount } from "../../helpers/amounts";
+import { totalSumRevision } from "../../helpers/amounts";
 import { TablesRevision } from "../Tables/TablesRevision";
+import ResultCounts from "../../common/ResultCounts";
 
 export const InvoiceCheckScreen = ({ route, navigation }) => {
   const { invoice_guid, guidWorkShop, seller_guid_to } = route.params;
@@ -59,8 +59,6 @@ export const InvoiceCheckScreen = ({ route, navigation }) => {
 
   const noneData = listActionLeftovers?.length === 0;
 
-  const totals = unitRevisions(listActionLeftovers);
-
   return (
     <View style={styles.main}>
       <View style={styles.container}>
@@ -68,10 +66,7 @@ export const InvoiceCheckScreen = ({ route, navigation }) => {
         {!noneData && (
           <View style={styles.divAction}>
             <View style={styles.blockTotal}>
-              <Text style={styles.totalItemCount}>
-                Итого: {formatCount(+totals?.totalKg)} кг и{" "}
-                {formatCount(+totals?.totalSht)} штук
-              </Text>
+              <ResultCounts list={listActionLeftovers} />
               <Text style={styles.totalItemCount}>
                 Сумма: {totalSumRevision(listActionLeftovers) || 0} сом
               </Text>

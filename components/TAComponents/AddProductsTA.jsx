@@ -12,7 +12,6 @@ import { changeSearchProd } from "../../store/reducers/stateSlice";
 import { clearTemporaryData } from "../../store/reducers/stateSlice";
 import { changeTemporaryData } from "../../store/reducers/stateSlice";
 import { addProductReturn } from "../../store/reducers/requestSlice";
-import { addProductInvoiceTT } from "../../store/reducers/requestSlice";
 import { addProductSoputkaTT } from "../../store/reducers/requestSlice";
 import { getWorkShopsGorSale } from "../../store/reducers/requestSlice";
 
@@ -24,7 +23,7 @@ import { useEffect, useRef } from "react";
 export const AddProductsTA = (props) => {
   const { location, forAddTovar } = props;
 
-  //// для добавления продуктов в список
+  //// для добавления продуктов в список в ревизии и сопутке
   ///  location тут каждая страница, исходя их страницы я делаю действия
   const dispatch = useDispatch();
 
@@ -49,11 +48,10 @@ export const AddProductsTA = (props) => {
       temporaryData?.price == 0 ||
       temporaryData?.ves == 0
     ) {
-      Alert.alert(
-        `Введите цену и ${
-          temporaryData?.unit_codeid == 1 ? "количество" : "вес"
-        }`
-      );
+      const text = `Введите цену и ${
+        temporaryData?.unit_codeid == 1 ? "количество" : "вес"
+      }`;
+      Alert.alert(text);
     } else {
       const data = {
         guid: temporaryData?.guid,
@@ -63,10 +61,7 @@ export const AddProductsTA = (props) => {
         sale_price: temporaryData?.sale_price,
       };
 
-      if (location === "Shipment") {
-        /// продажа
-        dispatch(addProductInvoiceTT({ data, getData }));
-      } else if (location === "AddProdSoputkaSrceen") {
+      if (location === "AddProdSoputkaSrceen") {
         /// сопутка
         const obj = { ...data, ...forAddTovar };
         dispatch(addProductSoputkaTT({ obj, getData }));

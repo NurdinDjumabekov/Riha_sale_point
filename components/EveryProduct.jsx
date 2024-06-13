@@ -3,11 +3,11 @@ import { useDispatch } from "react-redux";
 import { changeTemporaryData } from "../store/reducers/stateSlice";
 
 export const EveryProduct = (props) => {
-  const { obj, index } = props;
+  const { obj, index, navigation } = props;
 
-  const dispatch = useDispatch();
-
-  const addInTemporary = () => dispatch(changeTemporaryData(obj));
+  const addInTemporary = () => {
+    navigation.navigate("EverySaleProdScreen", { obj });
+  };
 
   return (
     <TouchableOpacity onPress={addInTemporary} style={styles.blockMain}>

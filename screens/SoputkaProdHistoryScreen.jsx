@@ -13,7 +13,8 @@ import { deleteSoputkaProd } from "../store/reducers/requestSlice";
 import { getListSoputkaProd } from "../store/reducers/requestSlice";
 
 ////helpers
-import { formatCount, sumSoputkaProds, unitResultFN } from "../helpers/amounts";
+import { formatCount, sumSoputkaProds } from "../helpers/amounts";
+import ResultCounts from "../common/ResultCounts";
 
 export const SoputkaProdHistoryScreen = ({ navigation, route }) => {
   //// история каждой накладной сапутки
@@ -59,8 +60,6 @@ export const SoputkaProdHistoryScreen = ({ navigation, route }) => {
 
   const listData = listProdSoputka?.[0]?.list;
 
-  const totals = unitResultFN(listData);
-
   return (
     <>
       <View style={styles.container}>
@@ -105,13 +104,7 @@ export const SoputkaProdHistoryScreen = ({ navigation, route }) => {
             }
           />
         </View>
-        {(!!+totals?.totalKg || !!+totals?.totalSht) && (
-          <Text style={styles.totalItemSumm}>
-            Итого:{" "}
-            {!!+totals?.totalKg && `${formatCount(totals?.totalKg)} кг ,`}
-            {!!+totals?.totalSht && `${formatCount(totals?.totalSht)} штук`}
-          </Text>
-        )}
+        <ResultCounts list={listData} />
         <Text style={styles.totalItemSumm}>
           Сумма: {sumSoputkaProds(listProdSoputka?.[0]?.list)} сом
         </Text>

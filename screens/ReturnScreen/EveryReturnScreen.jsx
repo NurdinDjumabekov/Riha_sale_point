@@ -10,7 +10,8 @@ import { RenderResult } from "../../components/RenderResult";
 import { getAcceptProdInvoiceRetrn } from "../../store/reducers/requestSlice";
 
 ////// helpers
-import { formatCount, unitResultFN } from "../../helpers/amounts";
+import { formatCount } from "../../helpers/amounts";
+import ResultCounts from "../../common/ResultCounts";
 
 export const EveryReturnScreen = ({ route, navigation }) => {
   //// каждый возврат накладной типо истории
@@ -31,8 +32,6 @@ export const EveryReturnScreen = ({ route, navigation }) => {
     return <Text style={styles.noneData}>Данные отсутствуют</Text>;
   }
 
-  const totals = unitResultFN(newList);
-
   return (
     <View style={styles.parent}>
       <FlatList
@@ -44,13 +43,7 @@ export const EveryReturnScreen = ({ route, navigation }) => {
         keyExtractor={(item, index) => `${item.guid}${index}`}
       />
       <View style={styles.results}>
-        {(!!+totals?.totalKg || !!+totals?.totalSht) && (
-          <Text style={styles.totalItemCount}>
-            Итого:{" "}
-            {!!+totals?.totalKg && `${formatCount(totals?.totalKg)} кг ,`}
-            {!!+totals?.totalSht && `${formatCount(totals?.totalSht)} штук`}
-          </Text>
-        )}
+        <ResultCounts list={newList} />
         <Text style={styles.totalItemCount}>
           Сумма: {formatCount(listAcceptReturnProd?.[0]?.total_price)} сом
         </Text>
@@ -60,9 +53,7 @@ export const EveryReturnScreen = ({ route, navigation }) => {
 };
 
 const styles = StyleSheet.create({
-  parent: {
-    maxHeight: "98%",
-  },
+  parent: { maxHeight: "98%" },
 
   flatList: {
     minWidth: "100%",
@@ -71,9 +62,7 @@ const styles = StyleSheet.create({
     marginBottom: 15,
   },
 
-  results: {
-    paddingTop: 5,
-  },
+  results: { paddingTop: 5 },
 
   totalItemCount: {
     fontSize: 18,

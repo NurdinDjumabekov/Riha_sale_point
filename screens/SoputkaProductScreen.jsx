@@ -1,13 +1,23 @@
+/////// hooks
 import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+
+/////// tags
 import { FlatList, StyleSheet, Text } from "react-native";
 import { View, TouchableOpacity, RefreshControl } from "react-native";
-import { useDispatch, useSelector } from "react-redux";
+
+////fns
 import { confirmSoputka } from "../store/reducers/requestSlice";
 import { deleteSoputkaProd } from "../store/reducers/requestSlice";
 import { getListSoputkaProd } from "../store/reducers/requestSlice";
+
+/////components
 import ConfirmationModal from "../components/ConfirmationModal";
 import { ViewButton } from "../customsTags/ViewButton";
-import { formatCount, sumSoputkaProds, unitResultFN } from "../helpers/amounts";
+import ResultCounts from "../common/ResultCounts";
+
+///helpers
+import { sumSoputkaProds } from "../helpers/amounts";
 
 export const SoputkaProductScreen = ({ route, navigation }) => {
   //// список проданных продуктов
@@ -20,11 +30,9 @@ export const SoputkaProductScreen = ({ route, navigation }) => {
     (state) => state.requestSlice
   );
 
-  const newList = listProdSoputka?.[0]?.list;
+  const getData = () => dispatch(getListSoputkaProd(guidInvoice));
 
   useEffect(() => getData(), [guidInvoice]);
-
-  const getData = () => dispatch(getListSoputkaProd(guidInvoice));
 
   const del = (product_guid) => {
     dispatch(deleteSoputkaProd({ product_guid, getData }));
@@ -32,14 +40,12 @@ export const SoputkaProductScreen = ({ route, navigation }) => {
     ////// удаление продуктов сопутки
   };
 
-  // const { invoice_guid } = listProdSoputka?.[0];
-
   const confirmBtn = () => {
     dispatch(confirmSoputka({ invoice_guid: guidInvoice, navigation }));
     ///// подтверждение накладной сопутки
   };
 
-  const totals = unitResultFN(newList);
+  const newList = listProdSoputka?.[0]?.list;
 
   const none = newList?.length === 0;
 
@@ -95,13 +101,7 @@ export const SoputkaProductScreen = ({ route, navigation }) => {
             }
           />
           <View style={styles.actionBlock}>
-            {(!!+totals?.totalKg || !!+totals?.totalSht) && (
-              <Text style={styles.totalItemSumm}>
-                Итого:{" "}
-                {!!+totals?.totalKg && `${formatCount(totals?.totalKg)} кг ,`}
-                {!!+totals?.totalSht && `${formatCount(totals?.totalSht)} штук`}
-              </Text>
-            )}
+            <ResultCounts list={newList} />
             <Text style={styles.totalItemSumm}>
               Сумма: {sumSoputkaProds(listProdSoputka?.[0]?.list)} сом
             </Text>
