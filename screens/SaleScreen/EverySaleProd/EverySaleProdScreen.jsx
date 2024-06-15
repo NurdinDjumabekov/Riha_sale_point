@@ -11,6 +11,7 @@ import styles from "./style.js";
 
 ////components
 import { ViewButton } from "../../../customsTags/ViewButton";
+import { getEveryProd } from "../../../store/reducers/requestSlice";
 import { addProductInvoiceTT } from "../../../store/reducers/requestSlice";
 
 const EverySaleProdScreen = ({ route, navigation }) => {
@@ -19,8 +20,13 @@ const EverySaleProdScreen = ({ route, navigation }) => {
   const refInput = useRef(null);
 
   const { obj } = route.params;
+  console.log(obj, "obj");
 
   const { infoKassa } = useSelector((state) => state.requestSlice);
+
+  const { data } = useSelector((state) => state.saveDataSlice);
+
+  const { everyProdSale } = useSelector((state) => state.requestSlice);
 
   const [sum, setSum] = useState("");
 
@@ -34,58 +40,81 @@ const EverySaleProdScreen = ({ route, navigation }) => {
     if (!!obj?.guid) {
       setTimeout(() => {
         refInput?.current?.focus();
-      }, 200);
+      }, 400);
     }
+
+    dispatch(getEveryProd({ guid: obj?.guid, seller_guid: data?.seller_guid }));
+    /////// получаю каждый прожуке для продажи
   }, [obj?.guid]);
 
-  console.log(obj);
+  const confText = `Недостаточное количество товара, у вас остаток ${everyProdSale?.end_outcome} ${obj?.unit}`;
 
-  const confText = `Недостаточное кол-во товара, у вас остаток ${obj?.end_outcome} ${obj?.unit}`;
+  const typeProd = `Введите ${
+    everyProdSale?.unit_codeid == 1 ? "количество" : "вес"
+  }`;
 
   const addInInvoice = () => {
     if (sum == "" || sum == 0) {
-      Alert.alert(`Введите ${obj?.unit_codeid == 1 ? "количество" : "вес"}`);
-    } else if (+obj?.end_outcome < sum) {
-      Alert.alert(confText);
+      Alert.alert(typeProd);
     } else {
-      const { guid, ves, price, sale_price } = obj;
-      const sendData = { guid, ves: sum, price, sale_price };
-      const data = { invoice_guid: infoKassa?.guid, ...sendData };
-      dispatch(addProductInvoiceTT({ data }));
+      const { price, sale_price } = everyProdSale;
+      const sendData = { guid: obj?.guid, count: sum, sale_price };
+      const data = { invoice_guid: infoKassa?.guid, price, ...sendData };
+      dispatch(addProductInvoiceTT({ data, navigation }));
       ///// продаю товар
     }
+    // else if (+everyProdSale?.end_outcome < sum) {
+    //   Alert.alert(confText);
+    // } else {
+    //   const { price, sale_price } = everyProdSale;
+    //   const sendData = { guid: obj?.guid, count: sum, sale_price };
+    //   const data = { invoice_guid: infoKassa?.guid, price, ...sendData };
+    //   dispatch(addProductInvoiceTT({ data }));
+    //   ///// продаю товар
+    // }
   };
 
-  const onClose = () => navigation.navigate(-1);
+  console.log(everyProdSale, "everyProdSaleasdasasdas");
+
+  const onClose = () => navigation.goBack();
+
+  const typeVes = {
+    1: `Введите ${
+      everyProdSale?.unit_codeid == 1 ? "итоговое количество" : "итоговый вес"
+    } товара`,
+    2: "Введите итоговую сумму товара",
+  };
 
   return (
     <View style={styles.parent}>
-      <Text style={styles.title}>{obj?.product_name}</Text>
-      <TouchableOpacity style={styles.krest} onPress={() => onClose()}>
+      <Text style={styles.title}>{everyProdSale?.product_name}</Text>
+      <TouchableOpacity style={styles.krest} onPress={onClose}>
         <View style={[styles.line, styles.deg]} />
         <View style={[styles.line, styles.degMinus]} />
       </TouchableOpacity>
       <Text style={styles.leftovers}>
-        Остаток: {obj?.end_outcome} {obj?.unit}
+        Остаток: {everyProdSale?.end_outcome} {everyProdSale?.unit}
       </Text>
       <View style={styles.addDataBlock}>
         <View style={styles.inputBlock}>
           <Text style={styles.inputTitle}>
-            Цена продажи {obj?.unit && `за ${obj?.unit}`}
+            Цена продажи {everyProdSale?.unit && `за ${everyProdSale?.unit}`}
           </Text>
           <TextInput
             style={styles.input}
-            value={`${obj?.price?.toString()} сом`}
+            value={`${everyProdSale?.price?.toString()} сом`}
             keyboardType="numeric"
             maxLength={8}
           />
         </View>
         <View style={styles.inputBlock}>
-          <Text style={styles.inputTitle}>Введите итоговую сумму товара</Text>
+          <Text style={styles.inputTitle}>
+            {typeVes?.[+everyProdSale?.count_type]}
+          </Text>
           <TextInput
             style={styles.input}
             ref={refInput}
-            value={obj?.ves}
+            value={everyProdSale?.ves}
             onChangeText={onChange}
             keyboardType="numeric"
             maxLength={8}

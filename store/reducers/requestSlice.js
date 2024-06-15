@@ -26,13 +26,15 @@ export const logInAccount = createAsyncThunk(
         data: dataLogin,
       });
       if (response.status >= 200 && response.status < 300) {
-        const { result, seller_guid, seller_fio, point_name, agent_guid } =
+        const { result, seller_guid, seller_fio, point_name, count_type } =
           response?.data;
+        console.log(response?.data, "response?.data");
         if (+result === 1) {
           // Сохраняю seller_guid в AsyncStorage
           await AsyncStorage.setItem("seller_guid", seller_guid);
           await AsyncStorage.setItem("seller_fio", seller_fio);
           await AsyncStorage.setItem("point_name", point_name);
+          await AsyncStorage.setItem("count_type", `${count_type}`);
           // await AsyncStorage.setItem("agent_guid", agent_guid); checkcheck
           await dispatch(getBalance(seller_guid));
           await getLocalDataUser({ changeLocalData, dispatch });
@@ -436,7 +438,7 @@ export const addProductInvoiceTT = createAsyncThunk(
   /// добавление продукта(по одному) в накладную торговой точки
   "addProductInvoiceTT",
   async function (props, { dispatch, rejectWithValue }) {
-    const { data, getData } = props;
+    const { data, navigation } = props;
     try {
       const response = await axios({
         method: "POST",
@@ -446,9 +448,31 @@ export const addProductInvoiceTT = createAsyncThunk(
       if (response.status >= 200 && response.status < 300) {
         if (+response?.data?.result === 1) {
           dispatch(clearTemporaryData()); // очищаю { price: "", ves: ""}
-          // getData();
+          navigation.goBack();
         }
         return response?.data?.result;
+      } else {
+        throw Error(`Error: ${response.status}`);
+      }
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+/// getEveryProd
+export const getEveryProd = createAsyncThunk(
+  /// получаю каждый прожуке для продажи
+  "getEveryProd",
+  async function ({ guid, seller_guid }, { dispatch, rejectWithValue }) {
+    console.log(guid, "guid");
+    try {
+      const response = await axios({
+        method: "GET",
+        url: `${API}/tt/get_product_detail?product_guid=${guid}&seller_guid=${seller_guid}`,
+      });
+      if (response.status >= 200 && response.status < 300) {
+        return response?.data?.[0];
       } else {
         throw Error(`Error: ${response.status}`);
       }
@@ -1210,7 +1234,10 @@ const initialState = {
   listCategory: [], //  список категорий ТА
   listProductTT: [], //  список продуктов ТА (cписок прод-тов отсортированные селектами)
   listLeftovers: [], // список остатков
+
+  /////////// sale //////////////
   listSoldProd: [], /// список проданных товаров
+  everyProdSale: [], /// список проданных товаров
 
   listProdSearch: [], /// храню данные поиска в продаже товара
 
@@ -1510,6 +1537,20 @@ const requestSlice = createSlice({
       Alert.alert("Упс, что-то пошло не так! Не удалось загрузить данные");
     });
     builder.addCase(addProductInvoiceTT.pending, (state, action) => {
+      state.preloader = true;
+    });
+
+    ////////getEveryProd
+    builder.addCase(getEveryProd.fulfilled, (state, action) => {
+      state.preloader = false;
+      state.everyProdSale = action.payload;
+    });
+    builder.addCase(getEveryProd.rejected, (state, action) => {
+      state.error = action.payload;
+      state.preloader = false;
+      state.everyProdSale = {};
+    });
+    builder.addCase(getEveryProd.pending, (state, action) => {
       state.preloader = true;
     });
 

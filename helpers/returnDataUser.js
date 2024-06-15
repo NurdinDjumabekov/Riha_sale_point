@@ -6,15 +6,22 @@ export const returnDataUser = async () => {
     const seller_guid = await AsyncStorage.getItem("seller_guid");
     const seller_fio = await AsyncStorage.getItem("seller_fio");
     const point_name = await AsyncStorage.getItem("point_name");
+    const count_type = await AsyncStorage.getItem("count_type");
+
     // const agent_guid = await AsyncStorage.getItem("agent_guid");
-    if (seller_guid !== null && seller_fio !== null && point_name !== null) {
+    if (
+      seller_guid !== null &&
+      seller_fio !== null &&
+      point_name !== null &&
+      count_type !== null
+    ) {
       // Данные успешно найдены
       //   console.log("найден:", seller_guid, seller_fio, point_name);
       const data = {
         seller_guid,
         seller_fio,
         point_name,
-        // agent_guid,
+        count_type,
       };
       return data; // Возвращаем значение seller_guid
     } else {
