@@ -55,8 +55,8 @@ export const EveryInvoiceSoputka = ({ forAddTovar, navigation }) => {
                 <EveryProduct
                   obj={item}
                   index={index}
-                  location={location}
-                  forAddTovar={forAddTovar}
+                  type={"soputka"}
+                  navigation={navigation}
                 />
               )}
               keyExtractor={(item, index) => `${item?.guid}${index}`}

@@ -9,7 +9,6 @@ import { SafeAreaView, StyleSheet, Text, View } from "react-native";
 
 /// components
 import { ActionsEveryInvoice } from "../../common/ActionsEveryInvoice";
-import { AddProductsTA } from "../TAComponents/AddProductsTA";
 import { EveryProduct } from "../EveryProduct";
 
 /////fns
@@ -64,6 +63,7 @@ export const EveryInvoiceSale = ({ forAddTovar, navigation }) => {
                 <EveryProduct
                   obj={item}
                   index={index}
+                  type={"sale"}
                   navigation={navigation}
                 />
               )}

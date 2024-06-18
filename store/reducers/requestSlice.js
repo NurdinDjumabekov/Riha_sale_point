@@ -438,7 +438,7 @@ export const addProductInvoiceTT = createAsyncThunk(
   /// добавление продукта(по одному) в накладную торговой точки
   "addProductInvoiceTT",
   async function (props, { dispatch, rejectWithValue }) {
-    const { data, navigation, unit_codeid } = props;
+    const { data, navigation, count_type } = props;
     try {
       const response = await axios({
         method: "POST",
@@ -451,7 +451,7 @@ export const addProductInvoiceTT = createAsyncThunk(
           dispatch(clearTemporaryData()); // очищаю { price: "", ves: ""}
           navigation.goBack();
         }
-        return { result, unit_codeid };
+        return { result, count_type };
       } else {
         throw Error(`Error: ${response.status}`);
       }
@@ -1528,7 +1528,7 @@ const requestSlice = createSlice({
         : Alert.alert(
             "Ошибка!",
             `${
-              +action.payload?.unit_codeid == 1
+              +action.payload?.count_type == 1
                 ? "Введенное количество товара больше доступного вам количества."
                 : "Введенная сумма товара больше доступного вам количества."
             } `
@@ -1537,14 +1537,15 @@ const requestSlice = createSlice({
     builder.addCase(addProductInvoiceTT.rejected, (state, action) => {
       state.error = action.payload;
       state.preloader = false;
-      Alert.alert(
-        "Ошибка!",
-        `${
-          +action.payload?.unit_codeid == 1
-            ? "Введенное количество товара больше доступного вам количества."
-            : "Введенная сумма товара больше доступного вам количества."
-        } `
-      );
+      Alert.alert("Упс, что-то пошло не так! Не удалось продать товар!");
+      // Alert.alert(
+      //   "Ошибка!",
+      // `${
+      //   +action.payload?.unit_codeid == 1
+      //     ? "Введенное количество товара больше доступного вам количества."
+      //     : "Введенная сумма товара больше доступного вам количества."
+      // } `
+      // );
     });
     builder.addCase(addProductInvoiceTT.pending, (state, action) => {
       state.preloader = true;

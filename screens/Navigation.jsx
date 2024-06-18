@@ -104,17 +104,20 @@ export const Navigation = () => {
               component={SoputkaScreen}
               options={{ title: "Сопутка" }}
             />
+
             <Stack.Screen
               name="AddProdSoputkaSrceen"
               component={AddProdSoputkaSrceen}
               options={{ title: "" }}
             />
+
             <Stack.Screen
               name="SoputkaProductScreen"
               component={SoputkaProductScreen}
               options={{ title: "Сопутствующие товары" }}
               ////// список сопутствующих товаров
             />
+
             <Stack.Screen
               name="SoputkaProdHistoryScreen"
               component={SoputkaProdHistoryScreen}

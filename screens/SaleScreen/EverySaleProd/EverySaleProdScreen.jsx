@@ -60,10 +60,10 @@ const EverySaleProdScreen = ({ route, navigation }) => {
     if (sum == "" || sum == 0) {
       Alert.alert(typeProd);
     } else {
-      const { price, sale_price, unit_codeid } = everyProdSale;
+      const { price, sale_price, count_type } = everyProdSale;
       const sendData = { guid: obj?.guid, count: sum, sale_price };
       const data = { invoice_guid: infoKassa?.guid, price, ...sendData };
-      dispatch(addProductInvoiceTT({ data, navigation, unit_codeid }));
+      dispatch(addProductInvoiceTT({ data, navigation, count_type }));
       ///// продаю товар
     }
   };

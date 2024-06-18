@@ -49,7 +49,7 @@ export const EveryInvoiceReturn = ({ forAddTovar, navigation }) => {
           <Text style={styles.noneData}>Список пустой</Text>
         ) : (
           <View style={styles.blockSelectProd}>
-            <FlatList
+            {/* <FlatList
               data={listProductTT}
               renderItem={({ item, index }) => (
                 <EveryProduct obj={item} index={index} />
@@ -58,7 +58,7 @@ export const EveryInvoiceReturn = ({ forAddTovar, navigation }) => {
               refreshControl={
                 <RefreshControl refreshing={preloader} onRefresh={getData} />
               }
-            />
+            /> */}
           </View>
         )}
       </SafeAreaView>

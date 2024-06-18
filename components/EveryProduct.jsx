@@ -3,10 +3,19 @@ import { useDispatch } from "react-redux";
 import { changeTemporaryData } from "../store/reducers/stateSlice";
 
 export const EveryProduct = (props) => {
-  const { obj, index, navigation } = props;
+  //// Shipment - для продажи,
+  const { obj, index, navigation, type } = props;
+
+  const dispatch = useDispatch();
+
+  console.log(type, "type");
 
   const addInTemporary = () => {
-    navigation.navigate("EverySaleProdScreen", { obj });
+    if (type == "sale") {
+      navigation.navigate("EverySaleProdScreen", { obj });
+    } else if (type == "soputka") {
+      dispatch(changeTemporaryData(obj));
+    }
   };
 
   return (

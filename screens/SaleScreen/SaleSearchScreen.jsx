@@ -56,6 +56,7 @@ const SaleSearchScreen = ({ navigation }) => {
                   obj={item}
                   index={index}
                   navigation={navigation}
+                  type={"sale"}
                 />
               )}
               keyExtractor={(item, index) => `${item?.guid}${index}`}
