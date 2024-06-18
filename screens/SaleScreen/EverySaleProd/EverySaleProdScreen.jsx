@@ -20,7 +20,6 @@ const EverySaleProdScreen = ({ route, navigation }) => {
   const refInput = useRef(null);
 
   const { obj } = route.params;
-  console.log(obj, "obj");
 
   const { infoKassa } = useSelector((state) => state.requestSlice);
 
@@ -32,6 +31,10 @@ const EverySaleProdScreen = ({ route, navigation }) => {
 
   const onChange = (text) => {
     if (/^\d*\.?\d*$/.test(text)) {
+      // Проверяем, не является ли точка первым символом
+      if (text === "." || text?.indexOf(".") === 0) {
+        return;
+      }
       setSum(text);
     }
   };
@@ -57,24 +60,13 @@ const EverySaleProdScreen = ({ route, navigation }) => {
     if (sum == "" || sum == 0) {
       Alert.alert(typeProd);
     } else {
-      const { price, sale_price } = everyProdSale;
+      const { price, sale_price, unit_codeid } = everyProdSale;
       const sendData = { guid: obj?.guid, count: sum, sale_price };
       const data = { invoice_guid: infoKassa?.guid, price, ...sendData };
-      dispatch(addProductInvoiceTT({ data, navigation }));
+      dispatch(addProductInvoiceTT({ data, navigation, unit_codeid }));
       ///// продаю товар
     }
-    // else if (+everyProdSale?.end_outcome < sum) {
-    //   Alert.alert(confText);
-    // } else {
-    //   const { price, sale_price } = everyProdSale;
-    //   const sendData = { guid: obj?.guid, count: sum, sale_price };
-    //   const data = { invoice_guid: infoKassa?.guid, price, ...sendData };
-    //   dispatch(addProductInvoiceTT({ data }));
-    //   ///// продаю товар
-    // }
   };
-
-  console.log(everyProdSale, "everyProdSaleasdasasdas");
 
   const onClose = () => navigation.goBack();
 
@@ -84,6 +76,8 @@ const EverySaleProdScreen = ({ route, navigation }) => {
     } товара`,
     2: "Введите итоговую сумму товара",
   };
+
+  console.log(everyProdSale, "everyProdSale");
 
   return (
     <View style={styles.parent}>
@@ -102,7 +96,7 @@ const EverySaleProdScreen = ({ route, navigation }) => {
           </Text>
           <TextInput
             style={styles.input}
-            value={`${everyProdSale?.price?.toString()} сом`}
+            value={`${everyProdSale?.sale_price?.toString()} сом`}
             keyboardType="numeric"
             maxLength={8}
           />
@@ -114,7 +108,7 @@ const EverySaleProdScreen = ({ route, navigation }) => {
           <TextInput
             style={styles.input}
             ref={refInput}
-            value={everyProdSale?.ves}
+            value={sum}
             onChangeText={onChange}
             keyboardType="numeric"
             maxLength={8}

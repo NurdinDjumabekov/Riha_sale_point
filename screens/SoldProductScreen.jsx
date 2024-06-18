@@ -25,7 +25,7 @@ export const SoldProductScreen = ({ route }) => {
 
   useEffect(() => {
     getData();
-  }, [guidInvoice]);
+  }, []);
 
   const del = (product_guid) => {
     dispatch(deleteSoldProd({ product_guid, getData }));

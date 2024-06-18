@@ -438,7 +438,7 @@ export const addProductInvoiceTT = createAsyncThunk(
   /// добавление продукта(по одному) в накладную торговой точки
   "addProductInvoiceTT",
   async function (props, { dispatch, rejectWithValue }) {
-    const { data, navigation } = props;
+    const { data, navigation, unit_codeid } = props;
     try {
       const response = await axios({
         method: "POST",
@@ -446,11 +446,12 @@ export const addProductInvoiceTT = createAsyncThunk(
         data,
       });
       if (response.status >= 200 && response.status < 300) {
-        if (+response?.data?.result === 1) {
+        const { result } = response?.data;
+        if (+result === 1) {
           dispatch(clearTemporaryData()); // очищаю { price: "", ves: ""}
           navigation.goBack();
         }
-        return response?.data?.result;
+        return { result, unit_codeid };
       } else {
         throw Error(`Error: ${response.status}`);
       }
@@ -517,9 +518,7 @@ export const deleteSoldProd = createAsyncThunk(
         data: { product_guid },
       });
       if (response.status >= 200 && response.status < 300) {
-        setTimeout(() => {
-          getData();
-        }, 200);
+        getData();
       } else {
         throw Error(`Error: ${response.status}`);
       }
@@ -1524,17 +1523,28 @@ const requestSlice = createSlice({
       /// 1 - продукт добавлен
       /// 2 - Введенное количество товара больше доступного количества.
       state.preloader = false;
-      +action.payload === 1
+      +action.payload.result == 1
         ? Alert.alert("Товар продан!")
         : Alert.alert(
             "Ошибка!",
-            "Введенное количество товара больше доступного вам количества."
+            `${
+              +action.payload?.unit_codeid == 1
+                ? "Введенное количество товара больше доступного вам количества."
+                : "Введенная сумма товара больше доступного вам количества."
+            } `
           );
     });
     builder.addCase(addProductInvoiceTT.rejected, (state, action) => {
       state.error = action.payload;
       state.preloader = false;
-      Alert.alert("Упс, что-то пошло не так! Не удалось загрузить данные");
+      Alert.alert(
+        "Ошибка!",
+        `${
+          +action.payload?.unit_codeid == 1
+            ? "Введенное количество товара больше доступного вам количества."
+            : "Введенная сумма товара больше доступного вам количества."
+        } `
+      );
     });
     builder.addCase(addProductInvoiceTT.pending, (state, action) => {
       state.preloader = true;
