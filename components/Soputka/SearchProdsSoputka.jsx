@@ -1,4 +1,4 @@
-import React, { useCallback, useRef } from "react";
+import React, { useCallback, useEffect, useRef } from "react";
 import { debounce } from "lodash";
 
 ///// tags
@@ -42,6 +42,10 @@ export const SearchProdsSoputka = ({ getData, location }) => {
     dispatch(changeSearchProd(text));
     text?.length === 0 ? getData() : searchData(text);
   };
+
+  useEffect(() => {
+    setTimeout(() => refInput?.current?.focus(), 400);
+  }, []);
 
   return (
     <View style={styles.blockSearch}>

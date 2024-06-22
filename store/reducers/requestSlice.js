@@ -463,16 +463,27 @@ export const addProductInvoiceTT = createAsyncThunk(
 
 /// getEveryProd
 export const getEveryProd = createAsyncThunk(
-  /// получаю каждый прожуке для продажи
+  /// получаю каждый продукт по qrcode или guid для продажи
   "getEveryProd",
-  async function ({ guid, seller_guid }, { dispatch, rejectWithValue }) {
-    console.log(guid, "guid");
+  async function (props, { dispatch, rejectWithValue }) {
+    const { guid, seller_guid, qrcode, navigation } = props;
+
+    const urlGuid = !!guid ? `&product_guid=${guid}` : "";
+    const qrcodeGuid = !!qrcode ? `&qrcode=${qrcode}` : "";
+
+    const url = `${API}/tt/get_product_detail?seller_guid=${seller_guid}${urlGuid}${qrcodeGuid}`;
+
     try {
-      const response = await axios({
-        method: "GET",
-        url: `${API}/tt/get_product_detail?product_guid=${guid}&seller_guid=${seller_guid}`,
-      });
+      const response = await axios(url);
       if (response.status >= 200 && response.status < 300) {
+        const { guid, product_name } = response?.data?.[0];
+        const obj = { guid, product_name };
+
+        if (!!qrcode) {
+          await navigation.navigate("Shipment");
+          await navigation.navigate("EverySaleProdScreen", { obj });
+        }
+
         return response?.data?.[0];
       } else {
         throw Error(`Error: ${response.status}`);

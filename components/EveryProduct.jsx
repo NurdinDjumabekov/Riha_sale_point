@@ -8,8 +8,6 @@ export const EveryProduct = (props) => {
 
   const dispatch = useDispatch();
 
-  console.log(type, "type");
-
   const addInTemporary = () => {
     if (type == "sale") {
       navigation.navigate("EverySaleProdScreen", { obj });

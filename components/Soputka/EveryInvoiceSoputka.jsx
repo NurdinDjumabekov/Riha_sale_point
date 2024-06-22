@@ -1,11 +1,18 @@
+/////// hooks
 import { useEffect } from "react";
 import { useRoute } from "@react-navigation/native";
 import { FlatList, RefreshControl } from "react-native";
+
+///// tags
 import { SafeAreaView, StyleSheet, Text, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
+
+///// fns
 import { clearListProductTT } from "../../store/reducers/requestSlice";
-import { EveryProduct } from "../EveryProduct";
 import { changeSearchProd } from "../../store/reducers/stateSlice";
+
+///// components
+import { EveryProduct } from "../EveryProduct";
 import { SearchProdsSoputka } from "./SearchProdsSoputka";
 import { AddProductsTA } from "../TAComponents/AddProductsTA";
 

@@ -1,10 +1,17 @@
+/////// tags
 import { StyleSheet, TouchableOpacity, View, Text } from "react-native";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
+
+/////// fns
 import { clearListCategory } from "../store/reducers/requestSlice";
 import { clearListProductTT } from "../store/reducers/requestSlice";
 import { clearTemporaryData } from "../store/reducers/stateSlice";
+
+/////// helpers
 import { transformDate } from "../helpers/transformDate";
+
+/////// components
 import { EveryInvoiceSoputka } from "../components/Soputka/EveryInvoiceSoputka";
 
 export const AddProdSoputkaSrceen = ({ navigation, route }) => {
@@ -13,9 +20,7 @@ export const AddProdSoputkaSrceen = ({ navigation, route }) => {
 
   useEffect(() => {
     defaultActive();
-    navigation.setOptions({
-      title: `${transformDate(new Date())}`,
-    });
+    navigation.setOptions({ title: `${transformDate(new Date())}` });
 
     return () => {
       dispatch(clearListCategory());
@@ -27,9 +32,8 @@ export const AddProdSoputkaSrceen = ({ navigation, route }) => {
   const defaultActive = () => dispatch(clearTemporaryData()); // очищаю активный продукт
 
   const listProdSale = () => {
-    navigation.navigate("SoputkaProductScreen", {
-      guidInvoice: forAddTovar?.invoice_guid,
-    });
+    const obj = { guidInvoice: forAddTovar?.invoice_guid };
+    navigation.navigate("SoputkaProductScreen", obj);
   };
 
   return (

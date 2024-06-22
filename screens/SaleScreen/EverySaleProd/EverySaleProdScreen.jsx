@@ -45,12 +45,11 @@ const EverySaleProdScreen = ({ route, navigation }) => {
         refInput?.current?.focus();
       }, 400);
     }
-
     dispatch(getEveryProd({ guid: obj?.guid, seller_guid: data?.seller_guid }));
     /////// получаю каждый прожуке для продажи
-  }, [obj?.guid]);
+  }, []);
 
-  const confText = `Недостаточное количество товара, у вас остаток ${everyProdSale?.end_outcome} ${obj?.unit}`;
+  const confText = `Недостаточное количество товара, у вас остаток ${everyProdSale?.end_outcome} ${everyProdSale?.unit}`;
 
   const typeProd = `Введите ${
     everyProdSale?.unit_codeid == 1 ? "количество" : "вес"
@@ -76,8 +75,6 @@ const EverySaleProdScreen = ({ route, navigation }) => {
     } товара`,
     2: "Введите итоговую сумму товара",
   };
-
-  console.log(everyProdSale, "everyProdSale");
 
   return (
     <View style={styles.parent}>

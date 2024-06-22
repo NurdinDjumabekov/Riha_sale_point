@@ -30,9 +30,7 @@ export const MyTable = ({ arr }) => {
 };
 
 const styles = StyleSheet.create({
-  parentFlatList: {
-    maxHeight: "75%",
-  },
+  parentFlatList: { maxHeight: "75%" },
 
   mainBlock: {
     paddingVertical: 10,
@@ -41,7 +39,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    // backgroundColor: "red",
     borderBottomColor: "rgba(47, 71, 190, 0.287)",
     borderBottomWidth: 1,
   },
@@ -62,7 +59,6 @@ const styles = StyleSheet.create({
     fontWeight: "400",
     color: "#222",
     width: "55%",
-    // backgroundColor: "blue",
     paddingRight: 15,
   },
 
@@ -71,7 +67,6 @@ const styles = StyleSheet.create({
     fontWeight: "400",
     color: "#222",
     width: "22%",
-    // backgroundColor: "yellow",
     paddingRight: 10,
   },
 
@@ -80,6 +75,5 @@ const styles = StyleSheet.create({
     fontWeight: "400",
     color: "#222",
     width: "21%",
-    // backgroundColor: "green",
   },
 });

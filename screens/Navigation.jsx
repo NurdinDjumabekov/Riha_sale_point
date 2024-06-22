@@ -35,6 +35,7 @@ import { DetailedInvoiceReturn } from "./ReturnScreen/DetailedInvoiceReturn";
 import { AcceptReturnHistoryScreen } from "./ReturnScreen/AcceptReturnHistoryScreen";
 import { EveryReturnScreen } from "./ReturnScreen/EveryReturnScreen";
 import EverySaleProdScreen from "./SaleScreen/EverySaleProd/EverySaleProdScreen";
+import ScannerSaleScreen from "./SaleScreen/ScannerSaleScreen/ScannerSaleScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -156,6 +157,13 @@ export const Navigation = () => {
               name="SoldProduct"
               component={SoldProductScreen} /// список проданных товаров
               options={{ title: "Список продаж" }}
+            />
+
+            <Stack.Screen
+              name="ScannerSaleScreen"
+              component={ScannerSaleScreen}
+              options={{ title: "Сканер" }}
+              ////// сканер для продажи товара
             />
 
             {/* /////////////////////// Траты /////////////////////// */}

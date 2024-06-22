@@ -15,6 +15,7 @@ import { EveryProduct } from "../EveryProduct";
 import { getWorkShopsGorSale } from "../../store/reducers/requestSlice";
 import { changeSearchProd } from "../../store/reducers/stateSlice";
 import IconsDisableSearch from "./IconsDisableSearch";
+import BtnScaner from "../../common/BtnScaner/BtnScaner";
 
 export const EveryInvoiceSale = ({ forAddTovar, navigation }) => {
   const dispatch = useDispatch();
@@ -75,15 +76,13 @@ export const EveryInvoiceSale = ({ forAddTovar, navigation }) => {
           </View>
         )}
       </SafeAreaView>
+      <BtnScaner navigation={navigation} />
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-  },
+  container: { flex: 1, backgroundColor: "#fff", position: "relative" },
 
   parentBlock: {
     flex: 1,
@@ -91,10 +90,7 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(162, 178, 238, 0.102)",
   },
 
-  blockSelectProd: {
-    flex: 1,
-    paddingBottom: 10,
-  },
+  blockSelectProd: { flex: 1, paddingBottom: 10 },
 
   textTovar: {
     color: "#fff",

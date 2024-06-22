@@ -89,7 +89,7 @@ export const AddProductsTA = (props) => {
     if (!!temporaryData?.guid) {
       setTimeout(() => {
         refInput?.current?.focus();
-      }, 400);
+      }, 200);
     }
   }, [temporaryData?.guid]);
 

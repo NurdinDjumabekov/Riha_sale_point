@@ -21,10 +21,11 @@ import ResultCounts from "../common/ResultCounts";
 
 export const DetailedInvoice = ({ route, navigation }) => {
   const { guid } = route.params;
+  const dispatch = useDispatch();
+
   const [acceptOk, setAcceptOk] = useState(false); //// для модалки приняти накладной
   const [rejectNo, setRejectNo] = useState(false); //// для модалки отказа накладной
 
-  const dispatch = useDispatch();
   const { everyInvoice } = useSelector((state) => state.requestSlice);
   const { acceptConfirmInvoice } = useSelector((state) => state.stateSlice);
 
@@ -50,14 +51,11 @@ export const DetailedInvoice = ({ route, navigation }) => {
     setRejectNo(false);
   };
 
-  useEffect(() => {
-    dispatch(getMyEveryInvoice(guid));
-  }, []);
+  useEffect(() => dispatch(getMyEveryInvoice(guid)), []);
 
   useEffect(() => {
-    navigation.setOptions({
-      title: `Накладная №${everyInvoice?.codeid}`,
-    });
+    const obj = { title: `Накладная №${everyInvoice?.codeid}` };
+    navigation.setOptions(obj);
   }, [everyInvoice]);
 
   const checkStatus = everyInvoice?.status !== 0;
