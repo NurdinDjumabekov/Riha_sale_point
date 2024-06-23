@@ -10,6 +10,7 @@ import { changeSearchProd } from "../../store/reducers/stateSlice";
 
 const IconsDisableSearch = ({ navigation }) => {
   const dispatch = useDispatch();
+  //// delete
 
   const navSearch = () => {
     navigation.navigate("SaleSearchScreen");

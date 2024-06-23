@@ -466,7 +466,7 @@ export const getEveryProd = createAsyncThunk(
   /// получаю каждый продукт по qrcode или guid для продажи
   "getEveryProd",
   async function (props, { dispatch, rejectWithValue }) {
-    const { guid, seller_guid, qrcode, navigation } = props;
+    const { guid, seller_guid, qrcode, navigation, closeModal } = props;
 
     const urlGuid = !!guid ? `&product_guid=${guid}` : "";
     const qrcodeGuid = !!qrcode ? `&qrcode=${qrcode}` : "";
@@ -476,12 +476,19 @@ export const getEveryProd = createAsyncThunk(
     try {
       const response = await axios(url);
       if (response.status >= 200 && response.status < 300) {
-        const { guid, product_name } = response?.data?.[0];
-        const obj = { guid, product_name };
-
-        if (!!qrcode) {
+        if (response?.data?.length === 0) {
           await navigation.navigate("Shipment");
-          await navigation.navigate("EverySaleProdScreen", { obj });
+          Alert.alert("Не удалось найти такой продукт");
+        } else {
+          const { guid, product_name } = response?.data?.[0];
+          const obj = { guid, product_name };
+
+          if (!!qrcode) {
+            await navigation.navigate("Shipment");
+            await navigation.navigate("EverySaleProdScreen", { obj });
+            ///// закрываю модалку для ввода ручного qr кода
+            closeModal();
+          }
         }
 
         return response?.data?.[0];

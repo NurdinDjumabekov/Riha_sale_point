@@ -42,9 +42,9 @@ export const EveryInvoiceSale = ({ forAddTovar, navigation }) => {
   useEffect(() => {
     getData();
 
-    navigation.setOptions({
-      headerRight: () => <IconsDisableSearch navigation={navigation} />,
-    });
+    // navigation.setOptions({
+    //   headerRight: () => <IconsDisableSearch navigation={navigation} />,
+    // }); delete
   }, []);
 
   const emptyDataProd = listProductTT?.length === 0;
