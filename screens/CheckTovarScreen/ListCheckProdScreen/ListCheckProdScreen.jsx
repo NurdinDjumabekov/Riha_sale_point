@@ -14,6 +14,9 @@ import { RenderResult } from "../../../common/RenderResult/RenderResult";
 /////// helpers
 import { totalLidtCountReturns } from "../../../helpers/amounts";
 
+////style
+import styles from "./style";
+
 export const ListCheckProdScreen = ({ route, navigation }) => {
   //// каждая накладная (список воозврата накладной) типо истории
   const dispatch = useDispatch();

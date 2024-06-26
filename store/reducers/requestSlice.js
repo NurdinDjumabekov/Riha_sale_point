@@ -571,34 +571,6 @@ export const getProductEveryInvoice = createAsyncThunk(
   }
 );
 
-/// checkStatusKassa /// delete
-/// список накладных каждой ТT(типо истории, список касса ждя проверки)
-export const checkStatusKassa = createAsyncThunk(
-  "checkStatusKassa",
-  async function ({ seller_guid, date }, { dispatch, rejectWithValue }) {
-    try {
-      const response = await axios({
-        method: "GET",
-        url: `${API}/tt/get_point_invoice?seller_guid=${seller_guid}`,
-      });
-      if (response.status >= 200 && response.status < 300) {
-        const containsDate = response?.data?.some(
-          (item) => item.date_system === date
-        );
-        const obj = response?.data?.filter((item) => item.date_system === date);
-        return {
-          result: !containsDate,
-          obj,
-        }; /// true - касса открыта, false она закрыта
-      } else {
-        throw Error(`Error: ${response.status}`);
-      }
-    } catch (error) {
-      return rejectWithValue(error.message);
-    }
-  }
-);
-
 /////////////////////////////// для страницы расходов ТТ ///////////////////////////////
 
 /// getSelectExpense
@@ -1270,9 +1242,7 @@ const initialState = {
   // список остатков (переделанный мною) для возврата накладной и ревизии
 
   /////// return ///////
-  listProdReturn: [], //// список сопутки delete
-  listHistoryReturn: [], //// список истории сопутки delete
-  ///
+  listProdReturn: [], //// список сопутки
   listMyInvoiceReturn: [], ///// список накладных для возврата
   everyInvoiceReturn: {}, //// каждая накладная возврата
   listAcceptReturnProd: [], /// список продуктов накладных , возврата ТT (история)
@@ -1613,22 +1583,6 @@ const requestSlice = createSlice({
       Alert.alert("Упс, что-то пошло не так! Не удалось удалить...");
     });
     builder.addCase(deleteSoldProd.pending, (state, action) => {
-      state.preloader = true;
-    });
-
-    /////// checkStatusKassa
-    builder.addCase(checkStatusKassa.fulfilled, (state, action) => {
-      state.preloader = false;
-      state.infoKassa = action.payload?.obj?.[0];
-    });
-    builder.addCase(checkStatusKassa.rejected, (state, action) => {
-      state.error = action.payload;
-      state.preloader = false;
-      Alert.alert(
-        "Упс, что-то пошло не так! Попробуйте перезайти в приложение..."
-      );
-    });
-    builder.addCase(checkStatusKassa.pending, (state, action) => {
       state.preloader = true;
     });
 
