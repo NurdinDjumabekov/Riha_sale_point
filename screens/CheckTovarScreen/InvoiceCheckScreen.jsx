@@ -17,7 +17,7 @@ import ConfirmationModal from "../../components/ConfirmationModal";
 ///// helpers
 import { totalSumRevision } from "../../helpers/amounts";
 import { TablesRevision } from "../Tables/TablesRevision";
-import ResultCounts from "../../common/ResultCounts";
+import ResultCounts from "../../common/ResultCounts/ResultCounts";
 
 export const InvoiceCheckScreen = ({ route, navigation }) => {
   const { invoice_guid, guidWorkShop, seller_guid_to } = route.params;

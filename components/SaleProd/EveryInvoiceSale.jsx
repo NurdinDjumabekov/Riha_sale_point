@@ -8,14 +8,14 @@ import { FlatList, RefreshControl } from "react-native";
 import { SafeAreaView, StyleSheet, Text, View } from "react-native";
 
 /// components
-import { ActionsEveryInvoice } from "../../common/ActionsEveryInvoice";
+import { ActionsEveryInvoice } from "../../common/ActionsEveryInvoice/ActionsEveryInvoice";
 import { EveryProduct } from "../EveryProduct";
 
 /////fns
 import { getWorkShopsGorSale } from "../../store/reducers/requestSlice";
 import { changeSearchProd } from "../../store/reducers/stateSlice";
 import IconsDisableSearch from "./IconsDisableSearch";
-import BtnScaner from "../../common/BtnScaner/BtnScaner";
+import SaleMenu from "../../common/SaleMenu/SaleMenu";
 
 export const EveryInvoiceSale = ({ forAddTovar, navigation }) => {
   const dispatch = useDispatch();
@@ -41,7 +41,6 @@ export const EveryInvoiceSale = ({ forAddTovar, navigation }) => {
 
   useEffect(() => {
     getData();
-
     // navigation.setOptions({
     //   headerRight: () => <IconsDisableSearch navigation={navigation} />,
     // }); delete
@@ -76,7 +75,7 @@ export const EveryInvoiceSale = ({ forAddTovar, navigation }) => {
           </View>
         )}
       </SafeAreaView>
-      <BtnScaner navigation={navigation} />
+      <SaleMenu navigation={navigation} />
     </View>
   );
 };

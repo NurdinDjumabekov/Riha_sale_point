@@ -40,7 +40,7 @@ export const logInAccount = createAsyncThunk(
           await getLocalDataUser({ changeLocalData, dispatch });
           // console.log(data, "logInAccount");
           if (data?.seller_guid) {
-            await navigation.navigate("Main");
+            await navigation.navigate("AllCategScreen");
             dispatch(clearLogin());
           }
         }
@@ -95,7 +95,7 @@ export const getHistoryBalance = createAsyncThunk(
   }
 );
 
-/////////////////////////////// main ///////////////////////////////////////////////////////
+/////////////////////////////// AllCategScreen ///////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////
 
 /// getMyInvoice
@@ -199,7 +199,7 @@ export const acceptInvoiceTT = createAsyncThunk(
         data: props,
       });
       if (response.status >= 200 && response.status < 300) {
-        navigation.navigate("Main");
+        navigation.navigate("AllCategScreen");
         return status;
       } else {
         throw Error(`Error: ${response.status}`);
@@ -219,10 +219,10 @@ export const getWorkShopsGorSale = createAsyncThunk(
   "getWorkShopsGorSale",
   async function (props, { dispatch, rejectWithValue }) {
     const { seller_guid } = props;
+
+    const urlLink = `${API}/tt/get_leftover_workshop?seller_guid=${seller_guid}`;
     try {
-      const response = await axios(
-        `${API}/tt/get_leftover_workshop?seller_guid=${seller_guid}`
-      );
+      const response = await axios(urlLink);
       if (response.status >= 200 && response.status < 300) {
         const { workshop_guid } = response?.data?.[0];
         dispatch(changeActiveSelectWorkShop(workshop_guid));
@@ -247,7 +247,8 @@ export const getCategoryTT = createAsyncThunk(
   async function (props, { dispatch, rejectWithValue }) {
     const { location, seller_guid, type, workshop_guid } = props;
 
-    const check = location == "Shipment" || location == "AddProdReturnSrceen"; ///// продажа и возрат
+    const check =
+      location == "SalePointScreen" || location == "AddProdReturnSrceen"; ///// продажа и возрат
 
     const urlLink = check
       ? `${API}/tt/get_category?seller_guid=${seller_guid}&workshop_guid=${workshop_guid}` //// для пр0дажи и возрата
@@ -295,7 +296,8 @@ export const getProductTT = createAsyncThunk(
   async function (props, { dispatch, rejectWithValue }) {
     const { guid, seller_guid, location, workshop_guid } = props;
 
-    const check = location == "Shipment" || location == "AddProdReturnSrceen"; ///// продажа и возрат
+    const check =
+      location == "SalePointScreen" || location == "AddProdReturnSrceen"; ///// продажа и возрат
 
     const urlLink = check
       ? `${API}/tt/get_product?categ_guid=${guid}&seller_guid=${seller_guid}&workshop_guid=${workshop_guid}` ///// продажа и возрат
@@ -321,10 +323,13 @@ export const searchProdTT = createAsyncThunk(
   /// для поиска товаров
   async function (props, { dispatch, rejectWithValue }) {
     const { searchProd, seller_guid, location } = props;
+
     const check = location === "AddProdReturnSrceen";
+
     const urlLink = check
       ? `${API}/tt/get_product?search=${searchProd}&seller_guid=${seller_guid}` //// для возврата
       : `${API}/tt/get_product_all?search=${searchProd}&seller_guid=${seller_guid}`; //// для сопутки
+
     try {
       const response = await axios(urlLink);
       if (response.status >= 200 && response.status < 300) {
@@ -345,10 +350,10 @@ export const searchProdSale = createAsyncThunk(
   /// для поиска товаров
   async function (props, { dispatch, rejectWithValue }) {
     const { text, seller_guid } = props;
+
+    const urlLink = `${API}/tt/get_product?search=${text}&seller_guid=${seller_guid}`;
     try {
-      const response = await axios(
-        `${API}/tt/get_product?search=${text}&seller_guid=${seller_guid}`
-      );
+      const response = await axios(urlLink);
       if (response.status >= 200 && response.status < 300) {
         console.log(response?.data, "response?.data");
         return response?.data;
@@ -368,9 +373,7 @@ export const getMyLeftovers = createAsyncThunk(
     const { seller_guid, category_guid, workshop_guid } = props;
 
     console.log(category_guid, "category_guid");
-    // console.log(
-    //   `${API}/tt/get_report_leftovers?seller_guid=${seller_guid}&categ_guid=${category_guid}&workshop_guid=${workshop_guid}`
-    // );
+
     try {
       const response = await axios({
         method: "GET",
@@ -477,14 +480,14 @@ export const getEveryProd = createAsyncThunk(
       const response = await axios(url);
       if (response.status >= 200 && response.status < 300) {
         if (response?.data?.length === 0) {
-          await navigation.navigate("Shipment");
+          await navigation.navigate("SalePointScreen");
           Alert.alert("Не удалось найти такой продукт");
         } else {
           const { guid, product_name } = response?.data?.[0];
           const obj = { guid, product_name };
 
           if (!!qrcode) {
-            await navigation.navigate("Shipment");
+            await navigation.navigate("SalePointScreen");
             await navigation.navigate("EverySaleProdScreen", { obj });
             ///// закрываю модалку для ввода ручного qr кода
             closeModal();
@@ -683,7 +686,7 @@ export const acceptMoney = createAsyncThunk(
       });
       if (response.status >= 200 && response.status < 300) {
         closeModal();
-        navigation?.navigate("Main");
+        navigation?.navigate("AllCategScreen");
       } else {
         throw Error(`Error: ${response.status}`);
       }
@@ -797,7 +800,7 @@ export const acceptInvoiceReturn = createAsyncThunk(
         data: props,
       });
       if (response.status >= 200 && response.status < 300) {
-        navigation.navigate("Main");
+        navigation.navigate("AllCategScreen");
         return status;
       } else {
         throw Error(`Error: ${response.status}`);
@@ -1003,7 +1006,7 @@ export const confirmSoputka = createAsyncThunk(
       });
       if (response.status >= 200 && response.status < 300) {
         if (+response?.data?.result === 1) {
-          navigation.navigate("Main");
+          navigation.navigate("AllCategScreen");
         }
       } else {
         throw Error(`Error: ${response.status}`);
@@ -1130,7 +1133,7 @@ export const sendCheckListProduct = createAsyncThunk(
       });
       if (response.status >= 200 && response.status < 300) {
         if (+response?.data?.result === 1) {
-          navigation.navigate("Main");
+          navigation.navigate("AllCategScreen");
         } else {
           // Alert.alert("Не удалооь")
         }
@@ -1220,7 +1223,7 @@ export const acceptInvoiceRevision = createAsyncThunk(
       });
       if (response.status >= 200 && response.status < 300) {
         if (+response?.data?.result === 1) {
-          navigation.navigate("Main");
+          navigation.navigate("AllCategScreen");
         }
       } else {
         throw Error(`Error: ${response.status}`);

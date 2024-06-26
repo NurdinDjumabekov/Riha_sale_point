@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux";
 import { changeTemporaryData } from "../store/reducers/stateSlice";
 
 export const EveryProduct = (props) => {
-  //// Shipment - для продажи,
+  //// SalePointScreen - для продажи,
   const { obj, index, navigation, type } = props;
 
   const dispatch = useDispatch();

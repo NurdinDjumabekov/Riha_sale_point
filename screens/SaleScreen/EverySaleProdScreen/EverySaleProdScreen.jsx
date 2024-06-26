@@ -10,9 +10,9 @@ import { useDispatch, useSelector } from "react-redux";
 import styles from "./style.js";
 
 ////components
-import { ViewButton } from "../../../customsTags/ViewButton";
-import { getEveryProd } from "../../../store/reducers/requestSlice";
-import { addProductInvoiceTT } from "../../../store/reducers/requestSlice";
+import { ViewButton } from "../../../customsTags/ViewButton.jsx";
+import { getEveryProd } from "../../../store/reducers/requestSlice.js";
+import { addProductInvoiceTT } from "../../../store/reducers/requestSlice.js";
 
 const EverySaleProdScreen = ({ route, navigation }) => {
   const dispatch = useDispatch();

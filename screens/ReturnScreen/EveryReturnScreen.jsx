@@ -11,7 +11,7 @@ import { getAcceptProdInvoiceRetrn } from "../../store/reducers/requestSlice";
 
 ////// helpers
 import { formatCount } from "../../helpers/amounts";
-import ResultCounts from "../../common/ResultCounts";
+import ResultCounts from "../../common/ResultCounts/ResultCounts";
 
 export const EveryReturnScreen = ({ route, navigation }) => {
   //// каждый возврат накладной типо истории

@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 ///components
 import ConfirmationModal from "../../components/ConfirmationModal";
 import { ViewButton } from "../../customsTags/ViewButton";
-import { MyTable } from "../../common/MyTable";
+import { MyTable } from "../../common/MyTable/MyTable";
 
 ///states
 import { acceptInvoiceRevision } from "../../store/reducers/requestSlice";
@@ -13,7 +13,7 @@ import { getEveryRevisionRequest } from "../../store/reducers/requestSlice";
 
 ////helpers
 import { formatCount } from "../../helpers/amounts";
-import ResultCounts from "../../common/ResultCounts";
+import ResultCounts from "../../common/ResultCounts/ResultCounts";
 
 export const EveryRevisionRequest = ({ route, navigation }) => {
   const { invoice_guid, disable } = route.params;

@@ -1,6 +1,9 @@
-import { Text, StyleSheet } from "react-native";
+import { Text } from "react-native";
 import React from "react";
-import { formatCount, unitResultFN } from "../helpers/amounts";
+import { formatCount, unitResultFN } from "../../helpers/amounts";
+
+////style
+import styles from "./style";
 
 const ResultCounts = ({ list }) => {
   const totals = unitResultFN(list);
@@ -21,12 +24,3 @@ const ResultCounts = ({ list }) => {
 };
 
 export default ResultCounts;
-
-const styles = StyleSheet.create({
-  totalItemCount: {
-    fontSize: 18,
-    fontWeight: "500",
-    color: "rgba(47, 71, 190, 0.991)",
-    paddingHorizontal: 10,
-  },
-});

@@ -18,7 +18,7 @@ import { changeActiveSelectWorkShop } from "../../store/reducers/stateSlice";
 import { getLocalDataUser } from "../../helpers/returnDataUser";
 
 /////// components
-import { ActionsEveryInvoice } from "../../common/ActionsEveryInvoice";
+import { ActionsEveryInvoice } from "../../common/ActionsEveryInvoice/ActionsEveryInvoice";
 import { TablesLeftovers } from "../Tables/TablesLeftovers";
 
 ////style
@@ -51,12 +51,12 @@ export const LeftoversScreen = () => {
 
     const sendData = { seller_guid: data?.seller_guid, type: "leftovers" };
     // ////// внутри есть getCategoryTT и getProductTT
-    dispatch(getWorkShopsGorSale({ ...sendData, location: "Shipment" }));
+    dispatch(getWorkShopsGorSale({ ...sendData, location: "SalePointScreen" }));
   };
 
   return (
     <SafeAreaView style={styles.container}>
-      <ActionsEveryInvoice type={"leftovers"} location={"Shipment"} />
+      <ActionsEveryInvoice type={"leftovers"} location={"SalePointScreen"} />
       {listLeftovers?.length === 0 ? (
         <Text style={styles.noneData}>Остатков нет...</Text>
       ) : (

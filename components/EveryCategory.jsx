@@ -1,45 +1,8 @@
-import { StyleSheet, View } from "react-native";
-import styled from "styled-components/native";
-
-const ParentDiv = styled.TouchableOpacity`
-  min-width: 47%;
-  height: 180px;
-  border-radius: 8px;
-  position: relative;
-  background-color: #fff;
-  shadow-color: #000;
-  shadow-opacity: 0.3;
-  shadow-radius: 4px;
-  elevation: 2;
-  margin: 5px;
-`;
-
-const TextTitle = styled.Text`
-  margin: 0;
-  padding: 0;
-  font-size: 19px;
-  font-weight: 600;
-  padding: 5px 10px;
-  background-color: rgba(199, 210, 254, 0.25);
-  color: #222;
-  width: 100%;
-  text-align: center;
-  border-radius: 0 0 8px 8px;
-`;
-
-const BackgroundImage = styled.Image`
-  width: 100%;
-  height: 140px;
-  position: absolute;
-  left: 0;
-  top: 0;
-  border-radius: 8px;
-`;
+import React from "react";
+import { StyleSheet, View, Text, Image, TouchableOpacity } from "react-native";
 
 export const EveryCategory = ({ obj, navigation }) => {
   const clickCateg = () => {
-    // console.log(navigation, "navigation");
-    // console.log(obj.link);
     navigation.navigate(`${obj.link}`, {
       id: obj?.codeid,
       name: obj?.name,
@@ -48,17 +11,31 @@ export const EveryCategory = ({ obj, navigation }) => {
   };
 
   return (
-    <ParentDiv onPress={clickCateg}>
+    <TouchableOpacity style={styles.parentDiv} onPress={clickCateg}>
       <View style={styles.shadow}></View>
-      <BackgroundImage source={{ uri: obj.img }} />
+      <Image source={{ uri: obj?.img }} style={styles.backgroundImage} />
       <View style={styles.main}>
-        <TextTitle>{obj?.name}</TextTitle>
+        <Text style={styles.textTitle}>{obj?.name}</Text>
       </View>
-    </ParentDiv>
+    </TouchableOpacity>
   );
 };
 
 const styles = StyleSheet.create({
+  parentDiv: {
+    width: "47%",
+    minWidth: "47%",
+    height: 180,
+    borderRadius: 8,
+    position: "relative",
+    backgroundColor: "#fff",
+    shadowColor: "#000",
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 2,
+    margin: 5,
+  },
+
   shadow: {
     position: "absolute",
     left: 0,
@@ -69,17 +46,40 @@ const styles = StyleSheet.create({
     zIndex: 10,
     borderRadius: 8,
   },
+
   main: {
     position: "absolute",
     left: 0,
     top: 0,
     width: "100%",
     height: "100%",
-    // backgroundColor: "red",
     zIndex: 11,
     borderRadius: 8,
     flex: 1,
     justifyContent: "flex-end",
     alignItems: "center",
+  },
+
+  textTitle: {
+    margin: 0,
+    padding: 0,
+    fontSize: 19,
+    fontWeight: "600",
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+    backgroundColor: "rgba(199, 210, 254, 0.25)",
+    color: "#222",
+    width: "100%",
+    textAlign: "center",
+    borderRadius: 8,
+  },
+
+  backgroundImage: {
+    width: "100%",
+    height: 140,
+    position: "absolute",
+    left: 0,
+    top: 0,
+    borderRadius: 8,
   },
 });

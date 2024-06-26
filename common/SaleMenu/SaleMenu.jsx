@@ -19,7 +19,7 @@ import inputIcon from "../../assets/icons/inputIcon.png";
 import { getEveryProd } from "../../store/reducers/requestSlice";
 import { changeSearchProd } from "../../store/reducers/stateSlice";
 
-const BtnScaner = ({ navigation }) => {
+const SaleMenu = ({ navigation }) => {
   const dispatch = useDispatch();
   const refInput = useRef();
 
@@ -115,4 +115,4 @@ const BtnScaner = ({ navigation }) => {
   );
 };
 
-export default BtnScaner;
+export default SaleMenu;

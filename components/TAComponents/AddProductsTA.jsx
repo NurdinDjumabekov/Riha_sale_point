@@ -108,7 +108,7 @@ export const AddProductsTA = (props) => {
               <View style={[styles.line, styles.deg]} />
               <View style={[styles.line, styles.degMinus]} />
             </TouchableOpacity>
-            {location === "Shipment" && (
+            {location === "SalePointScreen" && (
               <Text style={styles.leftovers}>
                 Остаток: {temporaryData?.end_outcome} {temporaryData?.unit}
               </Text>

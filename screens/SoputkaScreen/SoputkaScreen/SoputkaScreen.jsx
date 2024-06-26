@@ -7,7 +7,7 @@ import { Text, View, RefreshControl } from "react-native";
 import { SafeAreaView, FlatList } from "react-native";
 
 /////components
-import { AllHistoryInvoice } from "../../../common/AllHistoryInvoice";
+import { AllHistoryInvoice } from "../../../common/AllHistoryInvoice/AllHistoryInvoice";
 import { ModalCreateSoputka } from "../../../components/Soputka/ModalCreateSoputka";
 import { ViewButton } from "../../../customsTags/ViewButton";
 

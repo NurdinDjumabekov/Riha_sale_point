@@ -11,7 +11,7 @@ import { getAcceptProdInvoice } from "../../../store/reducers/requestSlice";
 
 ////// helpers
 import { formatCount } from "../../../helpers/amounts";
-import ResultCounts from "../../../common/ResultCounts";
+import ResultCounts from "../../../common/ResultCounts/ResultCounts";
 
 ////style
 import styles from "./style";

@@ -1,7 +1,8 @@
+//// hooks
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-/// tags
+//// tags
 import { FlatList, RefreshControl } from "react-native";
 import { TouchableOpacity, Text, View } from "react-native";
 import { ViewButton } from "../../../customsTags/ViewButton";
@@ -14,9 +15,11 @@ import { getListSoputkaProd } from "../../../store/reducers/requestSlice";
 
 //// helpers
 import { formatCount, sumSoputkaProds } from "../../../helpers/amounts";
-import ResultCounts from "../../../common/ResultCounts";
 
-////style
+/////components
+import ResultCounts from "../../../common/ResultCounts/ResultCounts";
+
+//// style
 import styles from "./style";
 
 export const SoputkaProdHistoryScreen = ({ navigation, route }) => {

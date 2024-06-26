@@ -1,10 +1,17 @@
+//////// tags
 import React, { useState, useEffect } from "react";
 import { Text, View, StyleSheet, Vibration, Dimensions } from "react-native";
 import { Camera } from "expo-camera";
 import BarcodeMask from "react-native-barcode-mask";
+
+//////// hooks
 import { useDispatch, useSelector } from "react-redux";
-import styles from "./style";
+
+//////// fns
 import { getEveryProd } from "../../../store/reducers/requestSlice";
+
+////// styles
+import styles from "./style";
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
 

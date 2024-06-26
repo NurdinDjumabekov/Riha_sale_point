@@ -23,10 +23,9 @@ export const dataCategory = [
   {
     codeid: 3,
     name: "Продажа",
-    link: "Shipment",
-    img: "https://img.freepik.com/free-photo/3d-render-of-paper-clipboard-with-green-tick_107791-15840.jpg?t=st=1710666268~exp=1710666868~hmac=cc6f2e56021a30cba97967879fbfd136f530c326ed8440f14d2c5b306459ee0b",
+    link: "SalePointScreen",
     img: "https://img.freepik.com/free-vector/finance-department-employees-are-calculating-expenses-company-s-business_1150-41782.jpg?t=st=1711965120~exp=1711968720~hmac=96a672de3602a7397d6e0b7452abfa17eaa700d42fd08a2a3e244eb154b7bd30&w=1380",
-    pathApi: "Shipment",
+    pathApi: "SalePointScreen",
   },
   {
     codeid: 4,

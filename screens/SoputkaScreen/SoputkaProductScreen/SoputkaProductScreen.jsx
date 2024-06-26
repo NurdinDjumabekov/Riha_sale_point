@@ -14,7 +14,7 @@ import { getListSoputkaProd } from "../../../store/reducers/requestSlice";
 /////components
 import ConfirmationModal from "../../../components/ConfirmationModal";
 import { ViewButton } from "../../../customsTags/ViewButton";
-import ResultCounts from "../../../common/ResultCounts";
+import ResultCounts from "../../../common/ResultCounts/ResultCounts";
 
 ///helpers
 import { sumSoputkaProds } from "../../../helpers/amounts";

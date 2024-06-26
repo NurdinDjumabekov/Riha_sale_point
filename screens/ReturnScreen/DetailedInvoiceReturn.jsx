@@ -16,8 +16,8 @@ import { acceptInvoiceReturn } from "../../store/reducers/requestSlice";
 
 ////helpers
 import { formatCount } from "../../helpers/amounts";
-import { MyTable } from "../../common/MyTable";
-import ResultCounts from "../../common/ResultCounts";
+import { MyTable } from "../../common/MyTable/MyTable";
+import ResultCounts from "../../common/ResultCounts/ResultCounts";
 
 export const DetailedInvoiceReturn = ({ route, navigation }) => {
   const { guid } = route.params;
