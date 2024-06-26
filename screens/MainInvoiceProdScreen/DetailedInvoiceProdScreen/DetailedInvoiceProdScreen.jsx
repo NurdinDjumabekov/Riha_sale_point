@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 ///components
-import ConfirmationModal from "../../../components/ConfirmationModal";
+import ConfirmationModal from "../../../common/ConfirmationModal/ConfirmationModal";
 import { ViewButton } from "../../../customsTags/ViewButton";
 
 ///states

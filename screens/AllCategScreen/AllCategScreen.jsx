@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useFocusEffect } from "@react-navigation/native";
 
 /////  components
-import { EveryCategory } from "../../components/EveryCategory";
+import { EveryCategory } from "../../components/AllCategory/EveryCategory";
 
 ////// helpers
 import { dataCategory } from "../../helpers/Data";

@@ -7,7 +7,7 @@ import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView, FlatList, RefreshControl } from "react-native";
 
 ////// components
-import { EveryMyInvoice } from "../../../components/EveryMyInvoice";
+import { EveryMyInvoice } from "../../../components/MainInvoiceProd/EveryMyInvoice/EveryMyInvoice";
 
 ////// fns
 import { getMyInvoice } from "../../../store/reducers/requestSlice";

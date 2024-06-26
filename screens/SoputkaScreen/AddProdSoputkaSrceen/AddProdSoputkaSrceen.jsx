@@ -12,7 +12,7 @@ import { clearTemporaryData } from "../../../store/reducers/stateSlice";
 import { transformDate } from "../../../helpers/transformDate";
 
 /////// components
-import { EveryInvoiceSoputka } from "../../../components/Soputka/EveryInvoiceSoputka";
+import { EveryInvoiceSoputka } from "../../../components/Soputka/EveryInvoiceSoputka/EveryInvoiceSoputka";
 
 ////style
 import styles from "./style";

@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Text, View, FlatList } from "react-native";
 
 ////// components
-import { RenderResult } from "../../../components/RenderResult";
+import { RenderResult } from "../../../common/RenderResult/RenderResult";
 import { getAcceptProdInvoice } from "../../../store/reducers/requestSlice";
 
 ////// helpers

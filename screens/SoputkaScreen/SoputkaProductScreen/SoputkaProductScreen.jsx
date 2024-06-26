@@ -12,7 +12,7 @@ import { deleteSoputkaProd } from "../../../store/reducers/requestSlice";
 import { getListSoputkaProd } from "../../../store/reducers/requestSlice";
 
 /////components
-import ConfirmationModal from "../../../components/ConfirmationModal";
+import ConfirmationModal from "../../../common/ConfirmationModal/ConfirmationModal";
 import { ViewButton } from "../../../customsTags/ViewButton";
 import ResultCounts from "../../../common/ResultCounts/ResultCounts";
 

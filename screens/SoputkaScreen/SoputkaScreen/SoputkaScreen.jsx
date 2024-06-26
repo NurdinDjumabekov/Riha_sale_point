@@ -8,7 +8,7 @@ import { SafeAreaView, FlatList } from "react-native";
 
 /////components
 import { AllHistoryInvoice } from "../../../common/AllHistoryInvoice/AllHistoryInvoice";
-import { ModalCreateSoputka } from "../../../components/Soputka/ModalCreateSoputka";
+import { ModalCreateSoputka } from "../../../components/Soputka/ModalCreateSoputka/ModalCreateSoputka";
 import { ViewButton } from "../../../customsTags/ViewButton";
 
 /////redux

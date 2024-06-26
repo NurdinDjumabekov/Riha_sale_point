@@ -19,7 +19,7 @@ import { getLocalDataUser } from "../../helpers/returnDataUser";
 
 /////// components
 import { ActionsEveryInvoice } from "../../common/ActionsEveryInvoice/ActionsEveryInvoice";
-import { TablesLeftovers } from "../Tables/TablesLeftovers";
+import { TablesLeftovers } from "../Tables/TablesLeftovers/TablesLeftovers";
 
 ////style
 import styles from "./style";

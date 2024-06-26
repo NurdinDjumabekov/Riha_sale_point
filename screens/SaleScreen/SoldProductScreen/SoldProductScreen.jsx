@@ -11,7 +11,7 @@ import { getListSoldProd } from "../../../store/reducers/requestSlice";
 import { deleteSoldProd } from "../../../store/reducers/requestSlice";
 
 ////// components
-import ConfirmationModal from "../../../components/ConfirmationModal";
+import ConfirmationModal from "../../../common/ConfirmationModal/ConfirmationModal";
 
 ////// helpers
 import { formatCount } from "../../../helpers/amounts";

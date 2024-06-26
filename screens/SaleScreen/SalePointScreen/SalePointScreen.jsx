@@ -13,7 +13,7 @@ import { changeActiveSelectWorkShop } from "../../../store/reducers/stateSlice";
 import { changeLocalData } from "../../../store/reducers/saveDataSlice";
 
 /////// components
-import { EveryInvoiceSale } from "../../../components/SaleProd/EveryInvoiceSale";
+import { EveryInvoiceSale } from "../../../components/SaleProd/EveryInvoiceSale/EveryInvoiceSale";
 
 /////// helpers
 import { getLocalDataUser } from "../../../helpers/returnDataUser";

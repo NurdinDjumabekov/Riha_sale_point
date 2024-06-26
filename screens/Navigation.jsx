@@ -7,33 +7,33 @@ import { useDispatch, useSelector } from "react-redux";
 import { StatusBar } from "expo-status-bar";
 import { AcceptInvoiceProdScreen } from "./MainInvoiceProdScreen/AcceptInvoiceProdScreen/AcceptInvoiceProdScreen";
 import { SalePointScreen } from "./SaleScreen/SalePointScreen/SalePointScreen";
-import { LogOut } from "../components/Header/LogOut";
+import { LogOut } from "../components/Header/LogOut/LogOut";
 import { LeftoversScreen } from "./LeftoversScreen/LeftoversScreen";
 import { DetailedInvoiceProdScreen } from "./MainInvoiceProdScreen/DetailedInvoiceProdScreen/DetailedInvoiceProdScreen";
 import { StoreSpendingScreen } from "./SpendingScreens/StoreSpendingScreen";
 import { SoldProductScreen } from "./SaleScreen/SoldProductScreen/SoldProductScreen";
 import { AcceptInvoiceHistoryScreen } from "./MainInvoiceProdScreen/AcceptInvoiceHistoryScreen/AcceptInvoiceHistoryScreen";
 import { EveryInvoiceAcceptScreen } from "./MainInvoiceProdScreen/EveryInvoiceAcceptScreen/EveryInvoiceAcceptScreen";
-import { PayMoneyScreen } from "./PayScreen/PayMoneyScreen";
-import { HistoryBalance } from "./PayScreen/HistoryBalance";
+import { PayMoneyScreen } from "./PayScreen/PayMoneyScreen/PayMoneyScreen";
+import { HistoryBalance } from "./PayScreen/HistoryBalance/HistoryBalance";
 import { SoputkaScreen } from "./SoputkaScreen/SoputkaScreen/SoputkaScreen";
 import { AddProdSoputkaSrceen } from "./SoputkaScreen/AddProdSoputkaSrceen/AddProdSoputkaSrceen";
 import { SoputkaProductScreen } from "./SoputkaScreen/SoputkaProductScreen/SoputkaProductScreen";
 import { SoputkaProdHistoryScreen } from "./SoputkaScreen/SoputkaProdHistoryScreen/SoputkaProdHistoryScreen";
 import { getLocalDataUser } from "../helpers/returnDataUser";
 import { changeLocalData } from "../store/reducers/saveDataSlice";
-import { Preloader } from "../components/Preloader";
-import { CheckTovarScreen } from "./CheckTovarScreen/CheckTovarScreen";
-import { InvoiceCheckScreen } from "./CheckTovarScreen/InvoiceCheckScreen";
-import { ListCheckProdScreen } from "./CheckTovarScreen/ListCheckProdScreen";
-import { EveryRevisionRequest } from "./CheckTovarScreen/EveryRevisionRequest";
-import { RevisionRequest } from "./CheckTovarScreen/RevisionRequest";
-import UserInfo from "../components/Header/UserInfo";
+import { Preloader } from "../common/Preloader/Preloader";
+import { CheckTovarScreen } from "./CheckTovarScreen/CheckTovarScreen/CheckTovarScreen";
+import { InvoiceCheckScreen } from "./CheckTovarScreen/InvoiceCheckScreen/InvoiceCheckScreen";
+import { ListCheckProdScreen } from "./CheckTovarScreen/ListCheckProdScreen/ListCheckProdScreen";
+import { EveryRevisionRequestScreen } from "./CheckTovarScreen/EveryRevisionRequestScreen/EveryRevisionRequestScreen";
+import { RevisionRequestScreen } from "./CheckTovarScreen/RevisionRequestScreen/RevisionRequestScreen";
+import UserInfo from "../components/Header/UserInfo/UserInfo";
 import SaleSearchScreen from "./SaleScreen/SaleSearchScreen/SaleSearchScreen";
-import { MyReturnsScreen } from "./ReturnScreen/MyReturnsScreen";
-import { DetailedInvoiceReturn } from "./ReturnScreen/DetailedInvoiceReturn";
-import { AcceptReturnHistoryScreen } from "./ReturnScreen/AcceptReturnHistoryScreen";
-import { EveryReturnScreen } from "./ReturnScreen/EveryReturnScreen";
+import { MyReturnsScreen } from "./ReturnScreen/MyReturnsScreen/MyReturnsScreen";
+import { DetailedInvoiceReturn } from "./ReturnScreen/DetailedInvoiceReturn/DetailedInvoiceReturn";
+import { AcceptReturnHistoryScreen } from "./ReturnScreen/AcceptReturnHistoryScreen/AcceptReturnHistoryScreen";
+import { EveryReturnScreen } from "./ReturnScreen/EveryReturnScreen/EveryReturnScreen";
 import EverySaleProdScreen from "./SaleScreen/EverySaleProdScreen/EverySaleProdScreen";
 import ScannerSaleScreen from "./SaleScreen/ScannerSaleScreen/ScannerSaleScreen";
 
@@ -72,6 +72,7 @@ export const Navigation = () => {
                 headerRight: () => <LogOut navigation={navigation} />,
               })}
             />
+
             {/* /////////////////////// принятие накладных  товара для продажи ////////////////////////*/}
             <Stack.Screen
               name="AcceptInvoiceProdScreen"
@@ -93,6 +94,7 @@ export const Navigation = () => {
               name="EveryInvoiceAcceptScreen"
               component={EveryInvoiceAcceptScreen}
             />
+
             {/* /////////////////////// Сопутка ///////////////////////*/}
             <Stack.Screen
               name="Soputka"
@@ -159,6 +161,7 @@ export const Navigation = () => {
               component={StoreSpendingScreen}
               options={{ title: "Расходы" }}
             />
+
             {/* /////////////////////// 0плата ТТ && HistoryBalance /////////////////////// */}
             <Stack.Screen
               name="PayMoney"
@@ -170,6 +173,7 @@ export const Navigation = () => {
               component={HistoryBalance}
               options={{ title: "История баланса" }}
             />
+
             {/* /////////////////////// Возврат /////////////////////// */}
             <Stack.Screen
               name="MyReturnsScreen"
@@ -190,6 +194,7 @@ export const Navigation = () => {
               name="EveryReturnScreen"
               component={EveryReturnScreen}
             />
+
             {/* /////////////////////// Ревизия /////////////////////// */}
             <Stack.Screen
               name="CheckTovarScreen"
@@ -203,14 +208,14 @@ export const Navigation = () => {
               options={{ title: "Накладная для ревизии" }}
             />
             <Stack.Screen
-              name="RevisionRequest"
-              component={RevisionRequest}
+              name="RevisionRequestScreen"
+              component={RevisionRequestScreen}
               options={{ title: "Список запросов на ревизию" }}
               ////// список запрос0в других пр0давцов для подтверждения ревизии
             />
             <Stack.Screen
-              name="EveryRevisionRequest"
-              component={EveryRevisionRequest}
+              name="EveryRevisionRequestScreen"
+              component={EveryRevisionRequestScreen}
               options={{ title: "" }}
               ////// каждый запрос других пр0давцов для подтверждения ревизии
             />

@@ -4,7 +4,7 @@ import { RefreshControl, View, FlatList } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 
 ////// components
-import { EveryMyInvoice } from "../../../components/EveryMyInvoice";
+import { EveryMyInvoice } from "../../../components/MainInvoiceProd/EveryMyInvoice/EveryMyInvoice";
 
 ////// helpers
 import { getLocalDataUser } from "../../../helpers/returnDataUser";

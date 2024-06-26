@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { FlatList, RefreshControl } from "react-native";
 import { TouchableOpacity, Text, View } from "react-native";
 import { ViewButton } from "../../../customsTags/ViewButton";
-import ConfirmationModal from "../../../components/ConfirmationModal";
+import ConfirmationModal from "../../../common/ConfirmationModal/ConfirmationModal";
 
 //// redux
 import { confirmSoputka } from "../../../store/reducers/requestSlice";

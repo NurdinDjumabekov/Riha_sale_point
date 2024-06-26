@@ -14,7 +14,7 @@ import { addExpenseTT, getExpense } from "../../store/reducers/requestSlice";
 import { getSelectExpense } from "../../store/reducers/requestSlice";
 
 //////components
-import { ListExpense } from "../../components/ListExpense";
+import { ListExpense } from "../../components/Spendings/ListExpense/ListExpense";
 import { changeLocalData } from "../../store/reducers/saveDataSlice";
 
 //////helpers

@@ -7,8 +7,8 @@ import { FlatList, SafeAreaView } from "react-native";
 import { Text, TouchableOpacity, View } from "react-native";
 
 /////components
-import { SearchProdsSale } from "../../../components/SaleProd/SearchProdsSale";
-import { EveryProduct } from "../../../components/EveryProduct";
+import { SearchProdsSale } from "../../../components/SaleProd/SearchProdsSale/SearchProdsSale";
+import { EveryProduct } from "../../../components/SaleProd/EveryProduct/EveryProduct";
 
 ////fns
 import { clearListProdSearch } from "../../../store/reducers/requestSlice";
