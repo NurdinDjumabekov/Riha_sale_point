@@ -95,12 +95,14 @@ const SaleMenu = ({ navigation }) => {
           onPress={closeModal} // Закрыть модальное окно
         >
           <View style={styles.modalInner}>
-            <Text style={styles.titleSelect}>Введите QR Code товара</Text>
+            <Text style={styles.titleSelect}>
+              Введите 6ти значный QR Code товара
+            </Text>
             <TextInput
               style={styles.input}
               value={obj?.qrcode?.toString()}
               onChangeText={onChange}
-              placeholder="Сумма"
+              placeholder="763546"
               keyboardType="numeric"
               maxLength={6}
               ref={refInput}

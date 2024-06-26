@@ -30,8 +30,12 @@ const UserInfo = () => {
     <View style={styles.parentBlock}>
       <Image style={styles.user} source={userImg} />
       <View>
-        <Text style={styles.userRole}>Продавец</Text>
-        <Text style={styles.userName}>{data?.seller_fio}</Text>
+        <Text style={styles.userRole} numberOfLines={1} ellipsizeMode="tail">
+          {data?.point_name}
+        </Text>
+        <Text style={styles.userName} numberOfLines={1} ellipsizeMode="tail">
+          {data?.seller_fio}
+        </Text>
       </View>
     </View>
   );

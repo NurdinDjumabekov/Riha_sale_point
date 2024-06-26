@@ -20,6 +20,8 @@ export const ListExpense = ({ getData }) => {
     2: { text: "Одобрено", color: "green" },
   };
 
+  console.log(listExpense, "listExpense");
+
   return (
     <View style={styles.parentBlock}>
       <FlatList
@@ -31,15 +33,15 @@ export const ListExpense = ({ getData }) => {
               <View style={styles.blockTitle}>
                 <Text style={styles.title}>{item?.name}</Text>
                 <Text style={styles.comment}>
-                  {item.comment ? item.comment : "..."}
+                  {item?.comment ? item?.comment : "..."}
                 </Text>
               </View>
               <View style={styles.blockTitle}>
                 <Text style={styles?.[`${objType?.[+item?.status]?.color}`]}>
                   {objType?.[+item?.status]?.text}
                 </Text>
-                <Text style={styles.date}>{item.date_system}</Text>
-                <Text style={styles.sum}>{item.amount} сом</Text>
+                <Text style={styles.date}>{item?.date_system}</Text>
+                <Text style={styles.sum}>{item?.amount} сом</Text>
               </View>
             </View>
             {item?.cancel_comment && (
@@ -47,7 +49,7 @@ export const ListExpense = ({ getData }) => {
             )}
           </View>
         )}
-        keyExtractor={(item, index) => `${item.guid}${index}`}
+        keyExtractor={(item, index) => `${item?.guid}${index}`}
         refreshControl={
           <RefreshControl refreshing={preloader} onRefresh={() => getData()} />
         }

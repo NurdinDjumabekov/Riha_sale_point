@@ -26,9 +26,11 @@ export const logInAccount = createAsyncThunk(
         data: dataLogin,
       });
       if (response.status >= 200 && response.status < 300) {
-        const { result, seller_guid, seller_fio, point_name, count_type } =
-          response?.data;
-        console.log(response?.data, "response?.data");
+        const { result, seller_guid, seller_fio } = response?.data;
+        const { point_name, count_type } = response?.data;
+
+        console.log(response?.data);
+
         if (+result === 1) {
           // Сохраняю seller_guid в AsyncStorage
           await AsyncStorage.setItem("seller_guid", seller_guid);
@@ -38,7 +40,6 @@ export const logInAccount = createAsyncThunk(
           // await AsyncStorage.setItem("agent_guid", agent_guid); checkcheck
           await dispatch(getBalance(seller_guid));
           await getLocalDataUser({ changeLocalData, dispatch });
-          // console.log(data, "logInAccount");
           if (data?.seller_guid) {
             await navigation.navigate("AllCategScreen");
             dispatch(clearLogin());
