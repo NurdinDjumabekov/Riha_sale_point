@@ -3,15 +3,18 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 ////// tags
-import { StyleSheet, Text, View, FlatList } from "react-native";
+import { Text, View, FlatList } from "react-native";
 
 ////// components
-import { RenderResult } from "../components/RenderResult";
-import { getAcceptProdInvoice } from "../store/reducers/requestSlice";
+import { RenderResult } from "../../../components/RenderResult";
+import { getAcceptProdInvoice } from "../../../store/reducers/requestSlice";
 
 ////// helpers
-import { formatCount } from "../helpers/amounts";
-import ResultCounts from "../common/ResultCounts";
+import { formatCount } from "../../../helpers/amounts";
+import ResultCounts from "../../../common/ResultCounts";
+
+////style
+import styles from "./style";
 
 export const EveryInvoiceAcceptScreen = ({ route, navigation }) => {
   //// каждый возврат накладной типо истории
@@ -24,6 +27,7 @@ export const EveryInvoiceAcceptScreen = ({ route, navigation }) => {
     navigation.setOptions({
       title: `Накладная №${codeid}`,
     });
+
     dispatch(getAcceptProdInvoice(guid));
   }, []);
   const newList = listAcceptInvoiceProd?.[0]?.list;
@@ -51,35 +55,3 @@ export const EveryInvoiceAcceptScreen = ({ route, navigation }) => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  parent: {
-    maxHeight: "98%",
-  },
-
-  flatList: {
-    minWidth: "100%",
-    width: "100%",
-    paddingTop: 8,
-    marginBottom: 15,
-  },
-
-  results: {
-    paddingTop: 5,
-  },
-
-  totalItemCount: {
-    fontSize: 18,
-    fontWeight: "500",
-    color: "rgba(47, 71, 190, 0.991)",
-    paddingHorizontal: 10,
-  },
-
-  noneData: {
-    flex: 1,
-    paddingTop: 300,
-    textAlign: "center",
-    fontSize: 20,
-    fontWeight: "500",
-  },
-});

@@ -7,12 +7,15 @@ import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView, FlatList, RefreshControl } from "react-native";
 
 ////// components
-import { EveryMyInvoice } from "../components/EveryMyInvoice";
+import { EveryMyInvoice } from "../../../components/EveryMyInvoice";
 
 ////// fns
-import { getMyInvoice } from "../store/reducers/requestSlice";
+import { getMyInvoice } from "../../../store/reducers/requestSlice";
 
-export const MyApplicationScreen = ({ navigation }) => {
+////style
+import styles from "./style";
+
+export const AcceptInvoiceProdScreen = ({ navigation }) => {
   ////// загрузки
   const dispatch = useDispatch();
 
@@ -25,9 +28,9 @@ export const MyApplicationScreen = ({ navigation }) => {
 
   useEffect(() => getData(), []);
 
-  const getHistory = () => navigation.navigate("AcceptInvoiceHistory");
+  const getHistory = () => navigation.navigate("AcceptInvoiceHistoryScreen");
 
-  const screns = ["DetailedInvoice", "EveryInvoiceAcceptScreen"];
+  const screns = ["DetailedInvoiceProdScreen", "EveryInvoiceAcceptScreen"];
 
   return (
     <SafeAreaView>
@@ -55,48 +58,3 @@ export const MyApplicationScreen = ({ navigation }) => {
     </SafeAreaView>
   );
 };
-
-const styles = StyleSheet.create({
-  parentBlock: {
-    minWidth: "100%",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    width: "100%",
-    paddingBottom: 110,
-  },
-
-  arrow: {
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "space-between",
-    padding: 10,
-    paddingTop: 12,
-    paddingBottom: 12,
-    backgroundColor: "rgba(47, 71, 190, 0.287)",
-    marginBottom: 0,
-  },
-
-  arrowInner: {
-    borderTopWidth: 3,
-    borderRightWidth: 3,
-    borderColor: "#fff",
-    height: 15,
-    width: 15,
-    borderRadius: 3,
-    transform: [{ rotate: "45deg" }],
-    marginRight: 20,
-    marginTop: 5,
-  },
-
-  textBtn: {
-    fontSize: 18,
-    fontWeight: "500",
-    color: "#fff",
-  },
-
-  widthMax: {
-    minWidth: "100%",
-    width: "100%",
-  },
-});

@@ -23,7 +23,7 @@ export const EveryMyInvoice = (props) => {
   const dispatch = useDispatch();
 
   /////////////////////////////////////////////////
-  const location = route.name; ///// MyReturnsScreen и Application
+  const location = route.name; ///// MyReturnsScreen и AcceptInvoiceProdScreen
   const check = location == "MyReturnsScreen";
   /////////////////////////////////////////////////
 

@@ -5,15 +5,15 @@ import { LoginScreen } from "./LoginScreen";
 import { MainScreen } from "./MainScreen";
 import { useDispatch, useSelector } from "react-redux";
 import { StatusBar } from "expo-status-bar";
-import { MyApplicationScreen } from "./MyApplicationScreen";
+import { AcceptInvoiceProdScreen } from "./MainInvoiceProdScreen/AcceptInvoiceProdScreen/AcceptInvoiceProdScreen";
 import { MyShipmentScreen } from "./MyShipmentScreen";
 import { LogOut } from "../components/Header/LogOut";
-import { LeftoversScreen } from "./LeftoversScreen";
-import { DetailedInvoice } from "./DetailedInvoice";
+import { LeftoversScreen } from "./LeftoversScreen/LeftoversScreen";
+import { DetailedInvoiceProdScreen } from "./MainInvoiceProdScreen/DetailedInvoiceProdScreen/DetailedInvoiceProdScreen";
 import { StoreSpendingScreen } from "./StoreSpendingScreen";
 import { SoldProductScreen } from "./SoldProductScreen";
-import { AcceptInvoiceHistory } from "../components/InvoiceTT/AcceptInvoiceHistory";
-import { EveryInvoiceAcceptScreen } from "./EveryInvoiceAcceptScreen";
+import { AcceptInvoiceHistoryScreen } from "./MainInvoiceProdScreen/AcceptInvoiceHistoryScreen/AcceptInvoiceHistoryScreen";
+import { EveryInvoiceAcceptScreen } from "./MainInvoiceProdScreen/EveryInvoiceAcceptScreen/EveryInvoiceAcceptScreen";
 import { PayMoneyScreen } from "./PayScreen/PayMoneyScreen";
 import { HistoryBalance } from "./PayScreen/HistoryBalance";
 import { SoputkaScreen } from "./SoputkaScreen/SoputkaScreen/SoputkaScreen";
@@ -44,8 +44,6 @@ export const Navigation = () => {
 
   const { data } = useSelector((state) => state.saveDataSlice);
 
-  // console.log(data, "datsaaa");
-
   useEffect(() => getLocalDataUser({ changeLocalData, dispatch }), []);
 
   const checkLogin = !data?.seller_guid;
@@ -75,22 +73,22 @@ export const Navigation = () => {
               })}
             />
 
-            {/* /////////////////////// Main ///////////////////////*/}
+            {/* /////////////////////// Main ////////////////////////*/}
             <Stack.Screen
-              name="Application"
-              component={MyApplicationScreen}
+              name="AcceptInvoiceProdScreen"
+              component={AcceptInvoiceProdScreen}
               options={{ title: "Список накладных" }}
             />
 
             <Stack.Screen
-              name="DetailedInvoice"
-              component={DetailedInvoice}
+              name="DetailedInvoiceProdScreen"
+              component={DetailedInvoiceProdScreen}
               options={{ title: "Принятие накладной" }}
             />
 
             <Stack.Screen
-              name="AcceptInvoiceHistory"
-              component={AcceptInvoiceHistory}
+              name="AcceptInvoiceHistoryScreen"
+              component={AcceptInvoiceHistoryScreen}
               options={{ title: "Список принятых накладных" }}
             />
 

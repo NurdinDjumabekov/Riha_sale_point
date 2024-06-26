@@ -27,7 +27,7 @@ export const totalLidtCountReturns = (list) => {
   return formatCount(totalSum);
 };
 
-/////////////////////////////// DetailedInvoice
+/////////////////////////////// DetailedInvoiceProdScreen
 
 export const totalCountAccept = (data) => {
   const totalItemCount = data?.list?.reduce(
