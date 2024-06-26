@@ -16,10 +16,10 @@ import { AcceptInvoiceHistory } from "../components/InvoiceTT/AcceptInvoiceHisto
 import { EveryInvoiceAcceptScreen } from "./EveryInvoiceAcceptScreen";
 import { PayMoneyScreen } from "./PayScreen/PayMoneyScreen";
 import { HistoryBalance } from "./PayScreen/HistoryBalance";
-import { SoputkaScreen } from "./SoputkaScreen";
-import { AddProdSoputkaSrceen } from "./AddProdSoputkaSrceen";
-import { SoputkaProductScreen } from "./SoputkaProductScreen";
-import { SoputkaProdHistoryScreen } from "./SoputkaProdHistoryScreen";
+import { SoputkaScreen } from "./SoputkaScreen/SoputkaScreen/SoputkaScreen";
+import { AddProdSoputkaSrceen } from "./SoputkaScreen/AddProdSoputkaSrceen/AddProdSoputkaSrceen";
+import { SoputkaProductScreen } from "./SoputkaScreen/SoputkaProductScreen/SoputkaProductScreen";
+import { SoputkaProdHistoryScreen } from "./SoputkaScreen/SoputkaProdHistoryScreen/SoputkaProdHistoryScreen";
 import { getLocalDataUser } from "../helpers/returnDataUser";
 import { changeLocalData } from "../store/reducers/saveDataSlice";
 import { Preloader } from "../components/Preloader";
