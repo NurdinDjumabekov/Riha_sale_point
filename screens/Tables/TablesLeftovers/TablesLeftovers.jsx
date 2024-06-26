@@ -1,5 +1,5 @@
 ///// tags
-import { FlatList, StyleSheet, Text, View } from "react-native";
+import { FlatList, Text, View } from "react-native";
 
 ////// helpers
 import { objTitleLeftov } from "../../../helpers/Data";

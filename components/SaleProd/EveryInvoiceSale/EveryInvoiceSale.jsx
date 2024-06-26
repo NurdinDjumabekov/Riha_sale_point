@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 ///tags
 import { FlatList, RefreshControl } from "react-native";
-import { SafeAreaView, StyleSheet, Text, View } from "react-native";
+import { SafeAreaView, Text, View } from "react-native";
 
 /// components
 import { ActionsEveryInvoice } from "../../../common/ActionsEveryInvoice/ActionsEveryInvoice";
@@ -14,7 +14,6 @@ import { EveryProduct } from "../EveryProduct/EveryProduct";
 /////fns
 import { getWorkShopsGorSale } from "../../../store/reducers/requestSlice";
 import { changeSearchProd } from "../../../store/reducers/stateSlice";
-import IconsDisableSearch from "../IconsDisableSearch/IconsDisableSearch";
 import SaleMenu from "../../../common/SaleMenu/SaleMenu";
 
 ////style
@@ -44,9 +43,6 @@ export const EveryInvoiceSale = ({ forAddTovar, navigation }) => {
 
   useEffect(() => {
     getData();
-    // navigation.setOptions({
-    //   headerRight: () => <IconsDisableSearch navigation={navigation} />,
-    // }); delete
   }, []);
 
   const emptyDataProd = listProductTT?.length === 0;

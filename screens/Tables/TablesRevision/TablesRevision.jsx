@@ -8,6 +8,9 @@ import { Text, View } from "react-native";
 /////// components
 import RevisionChangeCount from "../../../components/CheckProd/RevisionChangeCount/RevisionChangeCount";
 
+////style
+import styles from "./style";
+
 export const TablesRevision = ({ arr }) => {
   const [objTemporary, setObjTemporary] = useState({});
 
