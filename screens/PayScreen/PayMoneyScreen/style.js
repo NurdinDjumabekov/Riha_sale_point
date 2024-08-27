@@ -1,6 +1,11 @@
 import { StyleSheet } from "react-native";
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    paddingBottom: 60,
+  },
+
   title: {
     padding: 8,
     fontSize: 18,
@@ -11,7 +16,7 @@ const styles = StyleSheet.create({
     color: "#fff",
   },
 
-  listContent: { maxHeight: "82%" },
+  listContent: { flex: 1 },
 
   payBlock: {
     textAlign: "center",

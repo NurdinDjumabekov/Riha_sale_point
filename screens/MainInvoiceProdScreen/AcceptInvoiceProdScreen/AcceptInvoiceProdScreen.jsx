@@ -24,7 +24,9 @@ export const AcceptInvoiceProdScreen = ({ navigation }) => {
   );
   const { data } = useSelector((state) => state.saveDataSlice);
 
-  const getData = async () => dispatch(getMyInvoice(data?.seller_guid));
+  const getData = () => {
+    dispatch(getMyInvoice(data?.seller_guid));
+  };
 
   useEffect(() => getData(), []);
 

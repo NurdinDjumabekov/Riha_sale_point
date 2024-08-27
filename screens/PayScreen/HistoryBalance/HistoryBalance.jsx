@@ -27,9 +27,8 @@ export const HistoryBalance = () => {
     (state) => state.requestSlice
   );
 
-  const getData = async () => {
-    await getLocalDataUser({ changeLocalData, dispatch });
-    await dispatch(getHistoryBalance(data?.seller_guid));
+  const getData = () => {
+    dispatch(getHistoryBalance(data?.seller_guid));
   };
 
   useEffect(() => getData(), []);

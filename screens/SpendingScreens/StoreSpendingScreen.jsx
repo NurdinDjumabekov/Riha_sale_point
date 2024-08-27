@@ -15,10 +15,6 @@ import { getSelectExpense } from "../../store/reducers/requestSlice";
 
 //////components
 import { ListExpense } from "../../components/Spendings/ListExpense/ListExpense";
-import { changeLocalData } from "../../store/reducers/saveDataSlice";
-
-//////helpers
-import { getLocalDataUser } from "../../helpers/returnDataUser";
 
 ////style
 import styles from "./style";
@@ -29,10 +25,9 @@ export const StoreSpendingScreen = () => {
   const { expense } = useSelector((state) => state.stateSlice);
   const { listCategExpense } = useSelector((state) => state.requestSlice);
 
-  const getData = async () => {
-    await getLocalDataUser({ changeLocalData, dispatch });
-    await dispatch(getSelectExpense()); ///  список селекта расходов ТТ(их траты)
-    await dispatch(getExpense(data?.seller_guid)); /// список расходов ТТ(их траты)
+  const getData = () => {
+    dispatch(getSelectExpense()); ///  список селекта расходов ТТ(их траты)
+    dispatch(getExpense(data?.seller_guid)); /// список расходов ТТ(их траты)
   };
 
   useEffect(() => getData(), []);

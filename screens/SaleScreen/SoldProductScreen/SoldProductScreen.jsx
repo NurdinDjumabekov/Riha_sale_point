@@ -12,6 +12,7 @@ import { deleteSoldProd } from "../../../store/reducers/requestSlice";
 
 ////// components
 import ConfirmationModal from "../../../common/ConfirmationModal/ConfirmationModal";
+import SortDateSaleProd from "../../../components/SaleProd/SortDateSaleProd/SortDateSaleProd";
 
 ////// helpers
 import { formatCount } from "../../../helpers/amounts";
@@ -19,7 +20,7 @@ import { formatCount } from "../../../helpers/amounts";
 ////style
 import styles from "./style";
 
-export const SoldProductScreen = ({ route }) => {
+export const SoldProductScreen = ({ route, navigation }) => {
   //// список проданных продуктов
   const dispatch = useDispatch();
   const { guidInvoice } = route.params;
@@ -32,6 +33,11 @@ export const SoldProductScreen = ({ route }) => {
   const getData = () => dispatch(getListSoldProd(guidInvoice));
 
   useEffect(() => {
+    navigation.setOptions({
+      headerRight: () => <SortDateSaleProd navigation={navigation} />,
+      ///// только для продажи
+    });
+
     getData();
   }, []);
 
@@ -45,7 +51,7 @@ export const SoldProductScreen = ({ route }) => {
   }
 
   return (
-    <View>
+    <View style={[styles.parentSolds]}>
       <FlatList
         contentContainerStyle={styles.flatList}
         data={listSoldProd}

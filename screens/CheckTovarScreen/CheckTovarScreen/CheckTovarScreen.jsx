@@ -36,10 +36,6 @@ export const CheckTovarScreen = ({ navigation }) => {
     (state) => state.requestSlice
   );
 
-  useEffect(() => {
-    getData();
-  }, []);
-
   const getData = async () => {
     dispatch(clearListSellersPoints());
     ///// очищаю список продавцов каждой точки
@@ -53,6 +49,10 @@ export const CheckTovarScreen = ({ navigation }) => {
     ////// get историю ревизии
     await dispatch(getHistoryRevision(seller_guid));
   };
+
+  useEffect(() => {
+    getData();
+  }, []);
 
   const navLick = () => navigation.navigate("RevisionRequestScreen");
 

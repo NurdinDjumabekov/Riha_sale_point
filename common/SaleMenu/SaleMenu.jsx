@@ -4,7 +4,7 @@ import { ViewButton } from "../../customsTags/ViewButton";
 import { TextInput, Modal, Alert } from "react-native";
 
 /////hooks
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 ///// style
@@ -61,10 +61,6 @@ const SaleMenu = ({ navigation }) => {
       dispatch(getEveryProd({ ...sendData, navigation, closeModal }));
     }
   };
-
-  useEffect(() => {
-    return () => console.log("dasasikdhakjh");
-  }, []);
 
   return (
     <>

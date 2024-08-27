@@ -1,7 +1,7 @@
 import { StyleSheet } from "react-native";
 
 const styles = StyleSheet.create({
-  container: { flex: 1, marginBottom: 10 },
+  container: { flex: 1, paddingBottom: 60 },
 
   noneData: {
     flex: 1,

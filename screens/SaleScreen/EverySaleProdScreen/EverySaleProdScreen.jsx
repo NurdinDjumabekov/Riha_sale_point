@@ -1,6 +1,7 @@
 ///// tags
-import { Text, View, TouchableOpacity, Alert } from "react-native";
-import { TextInput } from "react-native";
+import { Text, View, Alert } from "react-native";
+import { TouchableOpacity, KeyboardAvoidingView } from "react-native";
+import { TextInput, Keyboard } from "react-native";
 
 ///hooks
 import React, { useEffect, useRef, useState } from "react";
@@ -22,12 +23,11 @@ const EverySaleProdScreen = ({ route, navigation }) => {
   const { obj } = route.params;
 
   const { infoKassa } = useSelector((state) => state.requestSlice);
-
   const { data } = useSelector((state) => state.saveDataSlice);
-
   const { everyProdSale } = useSelector((state) => state.requestSlice);
 
   const [sum, setSum] = useState("");
+  const [isKeyboardVisible, setKeyboardVisible] = useState(false);
 
   const onChange = (text) => {
     if (/^\d*\.?\d*$/.test(text)) {
@@ -49,7 +49,25 @@ const EverySaleProdScreen = ({ route, navigation }) => {
     /////// получаю каждый прожуке для продажи
   }, []);
 
-  const confText = `Недостаточное количество товара, у вас остаток ${everyProdSale?.end_outcome} ${everyProdSale?.unit}`;
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      "keyboardDidShow",
+      () => {
+        setKeyboardVisible(true);
+      }
+    );
+    const keyboardDidHideListener = Keyboard.addListener(
+      "keyboardDidHide",
+      () => {
+        setKeyboardVisible(false);
+      }
+    );
+
+    return () => {
+      keyboardDidHideListener.remove();
+      keyboardDidShowListener.remove();
+    };
+  }, []);
 
   const typeProd = `Введите ${
     everyProdSale?.unit_codeid == 1 ? "количество" : "вес"
@@ -77,7 +95,7 @@ const EverySaleProdScreen = ({ route, navigation }) => {
   };
 
   return (
-    <View style={styles.parent}>
+    <KeyboardAvoidingView style={styles.parent}>
       <Text style={styles.title}>{everyProdSale?.product_name}</Text>
       <TouchableOpacity style={styles.krest} onPress={onClose}>
         <View style={[styles.line, styles.deg]} />
@@ -112,10 +130,12 @@ const EverySaleProdScreen = ({ route, navigation }) => {
           />
         </View>
       </View>
-      <ViewButton styles={styles.btnAdd} onclick={addInInvoice}>
-        Продать товар
-      </ViewButton>
-    </View>
+      {!isKeyboardVisible && (
+        <ViewButton styles={styles.btnAdd} onclick={addInInvoice}>
+          Продать товар
+        </ViewButton>
+      )}
+    </KeyboardAvoidingView>
   );
 };
 

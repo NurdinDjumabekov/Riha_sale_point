@@ -40,8 +40,13 @@ export const AcceptInvoiceHistoryScreen = ({ navigation }) => {
       <FlatList
         contentContainerStyle={styles.flatListStyle}
         data={listAcceptInvoice}
-        renderItem={({ item }) => (
-          <EveryMyInvoice obj={item} navigation={navigation} screns={screns} />
+        renderItem={({ item, index }) => (
+          <EveryMyInvoice
+            obj={item}
+            navigation={navigation}
+            screns={screns}
+            index={index}
+          />
         )}
         keyExtractor={(item, index) => `${item.guid}${index}`}
         refreshControl={

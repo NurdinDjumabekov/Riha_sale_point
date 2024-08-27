@@ -7,6 +7,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#ebeef2",
     paddingHorizontal: 10,
     paddingVertical: 25,
+    paddingBottom: 60,
   },
 
   leftovers: {
@@ -59,7 +60,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
     backgroundColor: "rgba(97 ,100, 239,0.7)",
     position: "absolute",
-    bottom: 20,
+    bottom: 60,
     alignSelf: "center",
     minWidth: "100%",
   },

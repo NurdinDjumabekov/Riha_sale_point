@@ -23,7 +23,9 @@ export const MyReturnsScreen = ({ navigation }) => {
   );
   const { data } = useSelector((state) => state.saveDataSlice);
 
-  const getData = () => dispatch(getMyReturnInvoice(data?.seller_guid));
+  const getData = () => {
+    dispatch(getMyReturnInvoice(data?.seller_guid));
+  };
 
   useEffect(() => getData(), []);
 
@@ -32,7 +34,7 @@ export const MyReturnsScreen = ({ navigation }) => {
   const screns = ["DetailedInvoiceReturn", "EveryReturnScreen"];
 
   return (
-    <SafeAreaView>
+    <SafeAreaView style={styles.paretnReturn}>
       <TouchableOpacity onPress={getHistory} style={styles.arrow}>
         <Text style={styles.textBtn}>Список накладных для воврата</Text>
         <View style={styles.arrowInner}></View>
@@ -41,11 +43,12 @@ export const MyReturnsScreen = ({ navigation }) => {
         <FlatList
           contentContainerStyle={styles.widthMax}
           data={listMyInvoiceReturn}
-          renderItem={({ item }) => (
+          renderItem={({ item, index }) => (
             <EveryMyInvoice
               obj={item}
               navigation={navigation}
               screns={screns}
+              index={index}
             />
           )}
           keyExtractor={(item, index) => `${item.guid}${index}`}

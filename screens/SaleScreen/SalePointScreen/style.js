@@ -4,6 +4,7 @@ const styles = StyleSheet.create({
   parentBlock: {
     flex: 1,
     backgroundColor: "#ebeef2",
+    paddingBottom: 10,
   },
 
   arrow: {

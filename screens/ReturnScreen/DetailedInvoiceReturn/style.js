@@ -3,6 +3,7 @@ import { StyleSheet } from "react-native";
 const styles = StyleSheet.create({
   main: {
     flex: 1,
+    paddingBottom: 60,
   },
 
   container: {
@@ -51,7 +52,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    paddingHorizontal: 10,
+    paddingHorizontal: 5,
   },
 
   acceptBtn: {
@@ -60,7 +61,7 @@ const styles = StyleSheet.create({
     width: "47%",
     alignSelf: "center",
     fontSize: 14,
-    paddingHorizontal: 8,
+    paddingHorizontal: 2,
   },
 
   rejectBtn: {
@@ -69,7 +70,7 @@ const styles = StyleSheet.create({
     width: "47%",
     alignSelf: "center",
     fontSize: 14,
-    paddingHorizontal: 8,
+    paddingHorizontal: 2,
   },
 });
 

@@ -1,6 +1,8 @@
 //////// tags
 import React, { useState, useEffect } from "react";
 import { Text, View, StyleSheet, Vibration, Dimensions } from "react-native";
+
+//// components
 import { Camera } from "expo-camera";
 import BarcodeMask from "react-native-barcode-mask";
 
@@ -12,6 +14,7 @@ import { getEveryProd } from "../../../store/reducers/requestSlice";
 
 ////// styles
 import styles from "./style";
+import { BarCodeScanner } from "expo-barcode-scanner";
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
 
@@ -21,8 +24,8 @@ const FRAME_Y = (SCREEN_HEIGHT - 280) / 2;
 const FRAME_WIDTH = 280;
 const FRAME_HEIGHT = 280;
 
-const isCodeInCenter = (boundingBox) => {
-  const { origin, size } = boundingBox;
+const isCodeInCenter = (bounds) => {
+  const { origin, size } = bounds;
 
   // Масштабирование координат bounding box
   const previewWidth = SCREEN_WIDTH; // ширина предварительного просмотра камеры
@@ -31,10 +34,10 @@ const isCodeInCenter = (boundingBox) => {
   const scaleX = SCREEN_WIDTH / previewWidth;
   const scaleY = SCREEN_HEIGHT / previewHeight;
 
-  const codeLeft = origin.x * scaleX - 240;
-  const codeRight = (origin.x + size.width) * scaleX - 300;
-  const codeTop = origin.y * scaleY + 200;
-  const codeBottom = (origin.y + size.height) * scaleY + 240;
+  const codeLeft = origin.x * scaleX;
+  const codeRight = (origin.x + size.width) * scaleX;
+  const codeTop = origin.y * scaleY;
+  const codeBottom = (origin.y + size.height) * scaleY;
 
   const frameLeft = FRAME_X;
   const frameRight = FRAME_X + FRAME_WIDTH;
@@ -52,13 +55,13 @@ const isCodeInCenter = (boundingBox) => {
   // console.log(size.height, "size.height");
 
   const check1 = codeLeft >= frameLeft;
-  // console.log(check1, "check1");
+  console.log(check1, "check1");
   const check2 = codeRight <= frameRight;
-  // console.log(check2, "check2");
+  console.log(check2, "check2");
   const check3 = codeTop >= frameTop;
-  // console.log(check3, "check3");
+  console.log(check3, "check3");
   const check4 = codeBottom <= frameBottom;
-  // console.log(check4, "check4");
+  console.log(check4, "check4");
 
   const allCheck = check1 && check2 && check3 && check4;
 
@@ -68,7 +71,6 @@ const isCodeInCenter = (boundingBox) => {
 export const ScannerSaleScreen = ({ navigation }) => {
   const dispatch = useDispatch();
 
-  const [permission, requestPermission] = Camera.useCameraPermissions();
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
 
@@ -83,10 +85,9 @@ export const ScannerSaleScreen = ({ navigation }) => {
     })();
   }, []);
 
-  const showResultModal = async ({ data, boundingBox }) => {
-    // console.log(`Сканированные данные: ${data}`, boundingBox);
-
-    if (data && !scanned && isCodeInCenter(boundingBox)) {
+  const showResultModal = async ({ data, bounds }) => {
+    // console.log(data, bounds);
+    if (data && !scanned && isCodeInCenter(bounds)) {
       setScanned(true);
       const obj = { qrcode: data, seller_guid, navigation };
       dispatch(getEveryProd(obj));
@@ -94,11 +95,11 @@ export const ScannerSaleScreen = ({ navigation }) => {
     }
   };
 
-  if (!permission) {
+  if (!hasPermission) {
     return <View />;
   }
 
-  if (!permission.granted || hasPermission === null) {
+  if (hasPermission === null) {
     return (
       <View style={styles.container}>
         <Text style={{ textAlign: "center" }}>
@@ -110,7 +111,7 @@ export const ScannerSaleScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Camera
+      <BarCodeScanner
         onBarCodeScanned={scanned ? undefined : showResultModal}
         style={StyleSheet.absoluteFillObject}
       >
@@ -139,7 +140,7 @@ export const ScannerSaleScreen = ({ navigation }) => {
             borderColor: "red",
           }}
         /> */}
-      </Camera>
+      </BarCodeScanner>
     </View>
   );
 };

@@ -19,6 +19,8 @@ export const logInAccount = createAsyncThunk(
   "logInAccount",
   async function (props, { dispatch, rejectWithValue }) {
     const { dataLogin, navigation, data } = props;
+    console.log(dataLogin, data, "props");
+    console.log(`${API}/tt/login`, "login");
     try {
       const response = await axios({
         method: "POST",

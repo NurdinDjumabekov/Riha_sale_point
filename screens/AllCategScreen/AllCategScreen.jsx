@@ -34,12 +34,12 @@ export const AllCategScreen = ({ navigation }) => {
     }, [])
   );
 
+  const goPage = () => navigation.navigate("HistoryBalance");
+
   const getData = async () => {
     await getLocalDataUser({ changeLocalData, dispatch });
     await dispatch(getBalance(data?.seller_guid));
   };
-
-  const goPage = () => navigation.navigate("HistoryBalance");
 
   return (
     <ViewContainer>

@@ -1,7 +1,7 @@
 import { StyleSheet } from "react-native";
 
 const styles = StyleSheet.create({
-  parent: { maxHeight: "98%" },
+  parent: { maxHeight: "98%", paddingBottom: 50 },
 
   flatList: {
     minWidth: "100%",
@@ -10,7 +10,7 @@ const styles = StyleSheet.create({
     marginBottom: 15,
   },
 
-  results: { paddingTop: 5 },
+  results: { paddingTop: 10 },
 
   totalItemCount: {
     fontSize: 18,

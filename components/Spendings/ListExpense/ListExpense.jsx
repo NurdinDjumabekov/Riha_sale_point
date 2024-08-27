@@ -20,8 +20,6 @@ export const ListExpense = ({ getData }) => {
     2: { text: "Одобрено", color: "green" },
   };
 
-  console.log(listExpense, "listExpense");
-
   return (
     <View style={styles.parentBlock}>
       <FlatList

@@ -1,7 +1,7 @@
 import { StyleSheet } from "react-native";
 
 const styles = StyleSheet.create({
-  parent: { maxHeight: "98%" },
+  parent: { maxHeight: "98%", paddingBottom: 60 },
 
   flatList: {
     minWidth: "100%",

@@ -6,7 +6,7 @@ const styles = StyleSheet.create({
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    paddingBottom: 10,
+    paddingBottom: 50,
   },
 
   flatList: {

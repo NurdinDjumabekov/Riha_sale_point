@@ -14,6 +14,7 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-between",
+    alignItems: "center",
     padding: 10,
     paddingTop: 12,
     paddingBottom: 12,
@@ -33,7 +34,7 @@ const styles = StyleSheet.create({
     marginTop: 5,
   },
 
-  textBtn: { fontSize: 18, fontWeight: "500", color: "#fff" },
+  textBtn: { fontSize: 18, fontWeight: "500", color: "#fff", width: "80%" },
 
   widthMax: { minWidth: "100%", width: "100%" },
 });

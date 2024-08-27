@@ -29,7 +29,8 @@ export const EveryInvoiceAcceptScreen = ({ route, navigation }) => {
     });
 
     dispatch(getAcceptProdInvoice(guid));
-  }, []);
+  }, [codeid]);
+
   const newList = listAcceptInvoiceProd?.[0]?.list;
 
   if (newList?.length === 0) {

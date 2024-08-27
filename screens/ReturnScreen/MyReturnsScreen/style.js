@@ -1,13 +1,17 @@
 import { StyleSheet } from "react-native";
 
 const styles = StyleSheet.create({
+  paretnReturn: {
+    flex: 1,
+    paddingBottom: 100,
+  },
+
   parentBlock: {
     minWidth: "100%",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
     width: "100%",
-    paddingBottom: 110,
   },
 
   arrow: {

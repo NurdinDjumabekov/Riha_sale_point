@@ -30,7 +30,7 @@ export const EveryMyInvoice = (props) => {
   const check = location == "MyReturnsScreen";
   /////////////////////////////////////////////////
 
-  const { obj, navigation, screns } = props;
+  const { obj, navigation, screns, index } = props;
 
   const objType = {
     0: { text: "На складе", color: "red" },
@@ -88,7 +88,7 @@ export const EveryMyInvoice = (props) => {
     <TouchableOpacity style={styles.container} onPress={lookInvoice}>
       <View style={styles.innerBlock}>
         <View style={styles.mainData}>
-          <Text style={styles.titleNum}>{obj.codeid}</Text>
+          <Text style={styles.titleNum}>{index + 1}</Text>
           <View>
             <Text
               style={[styles.titleDate, styles.role]}

@@ -1,7 +1,11 @@
 import { StyleSheet } from "react-native";
 
 const styles = StyleSheet.create({
-  parentBlock: { flex: 1, backgroundColor: "#ebeef2" },
+  parentBlock: {
+    flex: 1,
+    backgroundColor: "#ebeef2",
+    paddingBottom: 60,
+  },
 
   arrow: {
     display: "flex",

@@ -3,8 +3,7 @@ import { StyleSheet } from "react-native";
 const styles = StyleSheet.create({
   parentBlock: {
     flex: 1,
-    minHeight: "100%",
-    paddingBottom: 180,
+    // minHeight: "100%",
   },
 
   everyProd: {

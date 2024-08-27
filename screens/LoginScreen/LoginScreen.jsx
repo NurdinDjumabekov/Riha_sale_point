@@ -1,5 +1,6 @@
 /////// tags
-import { Image, Text, TextInput, View } from "react-native";
+import { Text, TextInput, View } from "react-native";
+import { Image, KeyboardAvoidingView } from "react-native";
 
 ////// hooks
 import { useEffect } from "react";
@@ -41,7 +42,7 @@ export const LoginScreen = ({ navigation }) => {
   }, []);
 
   return (
-    <View styles={{ position: "relative" }}>
+    <KeyboardAvoidingView style={styles.loginParent}>
       <ViewContainer>
         <View>
           <View style={styles.logoBlock}>
@@ -71,6 +72,6 @@ export const LoginScreen = ({ navigation }) => {
       <ViewButton onclick={sendLogin} styles={styles.loginBtn}>
         Войти
       </ViewButton>
-    </View>
+    </KeyboardAvoidingView>
   );
 };

@@ -11,13 +11,16 @@ export const Preloader = () => {
           width: "100%",
           minHeight: "100%",
           flex: 1,
+          display: "flex",
           alignItems: "center",
           justifyContent: "center",
           gap: 10,
         }}
       >
-        <ActivityIndicator size="large" style={{ margin: "auto" }} />
-        <Text>Загрузка...</Text>
+        <View>
+          <ActivityIndicator size="large" style={{ margin: "auto" }} />
+          <Text>Загрузка...</Text>
+        </View>
       </View>
     );
   }

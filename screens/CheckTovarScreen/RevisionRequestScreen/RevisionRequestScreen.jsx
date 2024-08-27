@@ -26,9 +26,8 @@ export const RevisionRequestScreen = ({ navigation, route }) => {
   const { listRequestRevision } = useSelector((state) => state.requestSlice);
   const { data } = useSelector((state) => state.saveDataSlice);
 
-  const getData = async () => {
-    await getLocalDataUser({ changeLocalData, dispatch });
-    await dispatch(getRevisionRequest(data?.seller_guid));
+  const getData = () => {
+    dispatch(getRevisionRequest(data?.seller_guid));
   };
 
   useEffect(() => getData(), []);

@@ -1,6 +1,8 @@
 import { StyleSheet } from "react-native";
 
 const styles = StyleSheet.create({
+  parentSolds: { paddingBottom: 60 },
+
   container: {
     backgroundColor: "rgba(162, 178, 238, 0.102)",
     minWidth: "100%",

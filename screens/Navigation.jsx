@@ -181,9 +181,10 @@ export const Navigation = () => {
               />
               <Stack.Screen
                 name="SoldProductScreen"
-                component={SoldProductScreen} /// список проданных товаров
+                component={SoldProductScreen}
                 options={{ title: "Список продаж" }}
               />
+              {/* /// список проданных товаров */}
               <Stack.Screen
                 name="ScannerSaleScreen"
                 component={ScannerSaleScreen}

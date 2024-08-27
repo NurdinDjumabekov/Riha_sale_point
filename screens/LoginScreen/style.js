@@ -1,6 +1,8 @@
 import { StyleSheet } from "react-native";
 
 const styles = StyleSheet.create({
+  loginParent: { position: "relative", paddingBottom: 80 },
+
   loginBtn: {
     backgroundColor: "rgba(47, 71, 190, 0.591)",
     backgroundColor: "#e5322d",

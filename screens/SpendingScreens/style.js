@@ -1,7 +1,12 @@
 import { StyleSheet } from "react-native";
 
 const styles = StyleSheet.create({
-  parentBlock: { flex: 1, backgroundColor: "#ebeef2", padding: 10 },
+  parentBlock: {
+    flex: 1,
+    backgroundColor: "#ebeef2",
+    padding: 10,
+    paddingBottom: 60,
+  },
 
   selectBlock: {
     backgroundColor: "#f5f5f5",

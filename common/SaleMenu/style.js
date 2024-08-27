@@ -7,10 +7,11 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     gap: 40,
     backgroundColor: "rgba(47, 71, 190, 0.127)",
-    height: 70,
+    height: 100,
     minWidth: "100%",
     justifyContent: "center",
     alignItems: "center",
+    paddingBottom: 30,
   },
 
   btnNav: {

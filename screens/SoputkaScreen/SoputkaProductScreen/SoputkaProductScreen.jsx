@@ -33,7 +33,9 @@ export const SoputkaProductScreen = ({ route, navigation }) => {
     (state) => state.requestSlice
   );
 
-  const getData = () => dispatch(getListSoputkaProd(guidInvoice));
+  const getData = () => {
+    dispatch(getListSoputkaProd(guidInvoice));
+  };
 
   useEffect(() => getData(), [guidInvoice]);
 

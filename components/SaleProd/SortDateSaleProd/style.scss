@@ -1,0 +1,45 @@
+.dateSort {
+  .actions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 25px;
+    background: transparent;
+
+    img {
+      width: 25px;
+      height: 25px;
+    }
+
+    p {
+      font-size: 20px;
+      font-weight: 500;
+      color: #222;
+      background: transparent;
+    }
+  }
+
+  .date {
+    margin-right: 10px;
+  }
+
+  .react-datepicker__current-month {
+    text-align: center;
+  }
+
+  .react-datepicker__day {
+    font-size: 17px !important;
+  }
+
+  .blockDate {
+    height: 100vh;
+    min-width: 100%;
+    position: fixed;
+    background: #00000083;
+    top: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
