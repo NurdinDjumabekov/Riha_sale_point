@@ -2,7 +2,7 @@
 ///checkcheck
 export const totalSumRevision = (list) => {
   const totalSum = list?.reduce(
-    (total, item) => total + +item?.price * +item?.change_end_outcome,
+    (total, item) => total + +item?.sale_price * +item?.change_end_outcome,
     0
   );
 
@@ -16,6 +16,15 @@ export const totalCountReturns = (list) => {
   );
 
   return formatCount(totalCount);
+};
+
+/////////////////////////////// InvoiceCheckPage
+export const sumtotalPrice = (list) => {
+  const totalSum = list?.reduce((total, item) => {
+    return +item?.total + total;
+  }, 0);
+
+  return formatCount(totalSum);
 };
 
 /////////////////////////////// EveryListInvoiceReturn

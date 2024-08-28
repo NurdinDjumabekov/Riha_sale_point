@@ -15,7 +15,7 @@ import ConfirmationModal from "../../../common/ConfirmationModal/ConfirmationMod
 import SortDateSaleProd from "../../../components/SaleProd/SortDateSaleProd/SortDateSaleProd";
 
 ////// helpers
-import { formatCount } from "../../../helpers/amounts";
+import { formatCount, sumtotalPrice } from "../../../helpers/amounts";
 
 ////style
 import styles from "./style";
@@ -29,12 +29,15 @@ export const SoldProductScreen = ({ route, navigation }) => {
   const { preloader, listSoldProd } = useSelector(
     (state) => state.requestSlice
   );
+  const { seller_guid } = useSelector((state) => state.saveDataSlice.data);
 
-  const getData = () => dispatch(getListSoldProd(guidInvoice));
+  const getData = () => dispatch(getListSoldProd({ guidInvoice, seller_guid }));
 
   useEffect(() => {
     navigation.setOptions({
-      headerRight: () => <SortDateSaleProd navigation={navigation} />,
+      headerRight: () => (
+        <SortDateSaleProd seller_guid={seller_guid} guidInvoice={guidInvoice} />
+      ),
       ///// только для продажи
     });
 
@@ -46,7 +49,9 @@ export const SoldProductScreen = ({ route, navigation }) => {
     setModalItemGuid(null);
   };
 
-  if (listSoldProd?.length === 0) {
+  const noneData = listSoldProd?.length == 0;
+
+  if (noneData) {
     return <Text style={styles.noneData}>Список пустой</Text>;
   }
 
@@ -93,6 +98,11 @@ export const SoldProductScreen = ({ route, navigation }) => {
           <RefreshControl refreshing={preloader} onRefresh={getData} />
         }
       />
+      {!!!noneData && (
+        <Text style={styles.totalSum}>
+          Итоговая сумма: {sumtotalPrice(listSoldProd) || 0} сом
+        </Text>
+      )}
     </View>
   );
 };

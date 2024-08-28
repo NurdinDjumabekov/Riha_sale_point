@@ -69,6 +69,27 @@ const styles = StyleSheet.create({
   red: { color: "red" },
 
   green: { color: "rgba(12, 169, 70, 0.9)" },
+
+  //////////////////// krestik
+  krest: {
+    width: 18,
+    height: 18,
+    justifyContent: "center",
+    alignItems: "center",
+    position: "absolute",
+    right: 10,
+    top: 6,
+  },
+
+  line: {
+    position: "absolute",
+    width: "100%",
+    height: 2,
+    backgroundColor: "red",
+  },
+
+  deg: { transform: [{ rotate: "45deg" }] },
+  degMinus: { transform: [{ rotate: "-45deg" }] },
 });
 
 export default styles;

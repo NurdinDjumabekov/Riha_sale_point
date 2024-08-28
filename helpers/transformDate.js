@@ -9,3 +9,11 @@ export const transformDate = (date) => {
   const formattedDate = `${day}.${month}.${year}`;
   return formattedDate;
 };
+
+export const transformDateTime = (dateString) => {
+  ///  2024/08/20  ===>  2024-08-07
+
+  const newDateString = dateString.replace(/\//g, "-");
+
+  return newDateString;
+};

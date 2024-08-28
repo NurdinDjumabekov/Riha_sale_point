@@ -40,10 +40,6 @@ const styles = StyleSheet.create({
     color: "rgba(47, 71, 190, 0.672)",
   },
 
-  // status: {
-  //   color: "rgba(12, 169, 70, 0.9)",
-  // },
-
   title: {
     fontSize: 15,
     fontWeight: "500",
@@ -61,7 +57,6 @@ const styles = StyleSheet.create({
   totalPrice: {
     fontSize: 14,
     fontWeight: "500",
-    // marginTop: 15,
     color: "rgba(12, 169, 70, 0.9)",
   },
 
@@ -85,6 +80,12 @@ const styles = StyleSheet.create({
     width: "100%",
     paddingTop: 8,
     paddingBottom: 40,
+  },
+
+  totalSum: {
+    fontSize: 18,
+    fontWeight: "600",
+    padding: 8,
   },
 
   //////////////////// krestik

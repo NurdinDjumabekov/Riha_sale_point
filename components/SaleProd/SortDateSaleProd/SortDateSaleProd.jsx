@@ -1,13 +1,15 @@
 ////// hooks
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-// import ru from "date-fns/locale/ru";
+
+/////// tags
+import { Image, Text } from "react-native";
+import { TouchableOpacity, Modal } from "react-native";
+import { TouchableWithoutFeedback, View } from "react-native";
 
 /////// components
-// import NavMenu from "../../../common/NavMenu/NavMenu";
-// import DatePicker, { registerLocale } from "react-datepicker";
 import DatePicker from "react-native-modern-datepicker";
-import { getToday, getFormatedDate } from "react-native-modern-datepicker";
+import { getToday } from "react-native-modern-datepicker";
 
 ////// imgs
 import dateIcon from "../../../assets/images/date.png";
@@ -15,20 +17,14 @@ import dateIcon from "../../../assets/images/date.png";
 /////// style
 import styles from "./style.js";
 
-// import { transformDateTime } from "../../../helpers/transformDate";
-import { getListSoldProd } from "../../../store/reducers/requestSlice";
-import {
-  Image,
-  Text,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
-  View,
-} from "react-native";
-import { Modal } from "react-native";
+/////// fns
+import { getListSoldProd } from "../../../store/reducers/requestSlice.js";
 
-// registerLocale("ru", ru);
+/////// helpers
+import { transformDateTime } from "../../../helpers/transformDate.js";
+import { ViewButton } from "../../../customsTags/ViewButton.jsx";
 
-const SortDateSaleProd = ({ guidInvoice, seller_guid, navigation }) => {
+const SortDateSaleProd = ({ guidInvoice, seller_guid }) => {
   const dispatch = useDispatch();
 
   const [startDate, setStartDate] = useState(getToday());
@@ -37,14 +33,13 @@ const SortDateSaleProd = ({ guidInvoice, seller_guid, navigation }) => {
   const openDate = () => setOpen(true);
   const closeDate = () => setOpen(false);
 
-  const onChange = (date) => {
-    setStartDate(date);
-    // const dateSort = transformDateTime(date); //// форматирую время
-    // dispatch(getListSoldProd({ guidInvoice, dateSort, seller_guid })); //// отправка запроса для get данных
-    // closeDate(false);
-  };
+  const onChange = (date) => setStartDate(date);
 
-  console.log(startDate, "startDate");
+  const clickBtnDate = () => {
+    const dateSort = transformDateTime(startDate); //// форматирую время
+    dispatch(getListSoldProd({ guidInvoice, dateSort, seller_guid })); //// отправка запроса для get данных
+    closeDate(false);
+  };
 
   return (
     <>
@@ -60,21 +55,22 @@ const SortDateSaleProd = ({ guidInvoice, seller_guid, navigation }) => {
         onRequestClose={closeDate}
       >
         <TouchableWithoutFeedback onPress={closeDate}>
-          <View style={styles.calendare}>
-            <DatePicker
-              current={startDate} // Отображаем текущую дату
-              selected={startDate} // Выделяем текущую дату
-              onSelectedChange={(date) => onChange(date)}
-              mode="calendar"
-              selectedTextColor="#fff" // Цвет текста для выделенной даты
-              selectedBackgroundColor="#007bff" // Цвет фона для выделенной даты
-              customStyles={{
-                selectedDay: {
-                  backgroundColor: "#007bff", // цвет фона для выбранного дня
-                  color: "#fff", // цвет текста для выбранного дня
-                },
-              }}
-            />
+          <View style={styles.calendar}>
+            <View style={styles.calendarInner}>
+              <DatePicker
+                current={startDate} // Отображаем текущую дату
+                selected={startDate} // Выделяем текущую дату
+                onSelectedChange={(date) => onChange(date)}
+                mode="calendar"
+                selectedTextColor="#fff" // Цвет текста для выделенной даты
+                selectedBackgroundColor="#007bff" // Цвет фона для выделенной даты
+                maximumDate={getToday()}
+                locale="ru"
+              />
+              <ViewButton onclick={clickBtnDate} styles={styles.actionBtn}>
+                Найти
+              </ViewButton>
+            </View>
           </View>
         </TouchableWithoutFeedback>
       </Modal>

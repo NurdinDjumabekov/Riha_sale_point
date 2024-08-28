@@ -27,7 +27,6 @@ const EverySaleProdScreen = ({ route, navigation }) => {
   const { everyProdSale } = useSelector((state) => state.requestSlice);
 
   const [sum, setSum] = useState("");
-  const [isKeyboardVisible, setKeyboardVisible] = useState(false);
 
   const onChange = (text) => {
     if (/^\d*\.?\d*$/.test(text)) {
@@ -47,26 +46,6 @@ const EverySaleProdScreen = ({ route, navigation }) => {
     }
     dispatch(getEveryProd({ guid: obj?.guid, seller_guid: data?.seller_guid }));
     /////// получаю каждый прожуке для продажи
-  }, []);
-
-  useEffect(() => {
-    const keyboardDidShowListener = Keyboard.addListener(
-      "keyboardDidShow",
-      () => {
-        setKeyboardVisible(true);
-      }
-    );
-    const keyboardDidHideListener = Keyboard.addListener(
-      "keyboardDidHide",
-      () => {
-        setKeyboardVisible(false);
-      }
-    );
-
-    return () => {
-      keyboardDidHideListener.remove();
-      keyboardDidShowListener.remove();
-    };
   }, []);
 
   const typeProd = `Введите ${
@@ -116,25 +95,25 @@ const EverySaleProdScreen = ({ route, navigation }) => {
             maxLength={8}
           />
         </View>
-        <View style={styles.inputBlock}>
-          <Text style={styles.inputTitle}>
-            {typeVes?.[+everyProdSale?.count_type]}
-          </Text>
-          <TextInput
-            style={styles.input}
-            ref={refInput}
-            value={sum}
-            onChangeText={onChange}
-            keyboardType="numeric"
-            maxLength={8}
-          />
+        <View style={styles.blockAction}>
+          <View style={[styles.inputBlock, styles.twoAction]}>
+            <Text style={styles.inputTitle}>
+              {typeVes?.[+everyProdSale?.count_type]}
+            </Text>
+            <TextInput
+              style={styles.input}
+              ref={refInput}
+              value={sum}
+              onChangeText={onChange}
+              keyboardType="numeric"
+              maxLength={8}
+            />
+          </View>
+          <ViewButton styles={styles.btnAdd} onclick={addInInvoice}>
+            Продать
+          </ViewButton>
         </View>
       </View>
-      {!isKeyboardVisible && (
-        <ViewButton styles={styles.btnAdd} onclick={addInInvoice}>
-          Продать товар
-        </ViewButton>
-      )}
     </KeyboardAvoidingView>
   );
 };

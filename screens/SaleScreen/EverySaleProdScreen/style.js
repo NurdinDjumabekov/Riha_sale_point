@@ -48,21 +48,30 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
   },
 
+  blockAction: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "flex-end",
+    gap: 20,
+  },
+
+  twoAction: {
+    maxWidth: "100%",
+    width: "auto",
+  },
+
   btnAdd: {
     color: "#fff",
-    paddingTop: 11,
-    paddingBottom: 11,
+    paddingTop: 10,
+    paddingBottom: 10,
     borderRadius: 8,
     fontWeight: "600",
-    borderWidth: 1,
-    borderColor: "rgb(217 223 232)",
     fontSize: 18,
-    marginTop: 20,
     backgroundColor: "rgba(97 ,100, 239,0.7)",
-    position: "absolute",
-    bottom: 60,
-    alignSelf: "center",
-    minWidth: "100%",
+    minWidth: 110,
+    width: 110,
+    margin: 0,
   },
 
   //////////////////// krestik

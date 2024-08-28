@@ -52,8 +52,9 @@ export const InvoiceCheckScreen = ({ route, navigation }) => {
   const sendData = () => {
     //////////////////////////////////////////////
     const products = listActionLeftovers?.map((props) => {
-      const { guid, price, change_end_outcome, unit_codeid } = props;
-      return { guid, price, count: change_end_outcome, unit_codeid };
+      const { guid, sale_price, change_end_outcome, unit_codeid } = props;
+      const count = change_end_outcome;
+      return { guid, price: sale_price, count, unit_codeid };
     });
     const data = { invoice_guid, products };
     dispatch(sendCheckListProduct({ data, navigation }));

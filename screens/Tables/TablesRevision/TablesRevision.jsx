@@ -39,7 +39,7 @@ export const TablesRevision = ({ arr }) => {
               <Text style={styles.name}>
                 {index + 1}. {item?.product_name}
               </Text>
-              <Text style={styles.price}>{item?.price}</Text>
+              <Text style={styles.price}>{item?.sale_price}</Text>
               <Text style={styles.count}>{item?.end_outcome}</Text>
               <TouchableOpacity
                 style={styles.countReturn}

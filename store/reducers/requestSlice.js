@@ -511,12 +511,14 @@ export const getEveryProd = createAsyncThunk(
 export const getListSoldProd = createAsyncThunk(
   /// список проданных товаров
   "getListSoldProd",
-  async function (guidInvoice, { dispatch, rejectWithValue }) {
+  async function (props, { dispatch, rejectWithValue }) {
+    const { dateSort, guidInvoice, seller_guid } = props;
+
+    const date = !!dateSort ? `&date=${dateSort}` : "";
+    const url = `${API}/tt/get_point_invoice_product?invoice_guid=${guidInvoice}${date}&seller_guid=${seller_guid}`;
+
     try {
-      const response = await axios({
-        method: "GET",
-        url: `${API}/tt/get_point_invoice_product?invoice_guid=${guidInvoice}`,
-      });
+      const response = await axios(url);
       if (response.status >= 200 && response.status < 300) {
         return response?.data?.[0]?.list;
       } else {
@@ -612,6 +614,31 @@ export const addExpenseTT = createAsyncThunk(
       if (response.status >= 200 && response.status < 300) {
         getData();
         dispatch(clearExpense());
+        return response?.data;
+      } else {
+        throw Error(`Error: ${response.status}`);
+      }
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+/// delExpenseTT
+export const delExpenseTT = createAsyncThunk(
+  /// удаение расходов точки
+  "delExpenseTT",
+  async function (props, { dispatch, rejectWithValue }) {
+    const { getData, seller_guid, del } = props;
+    const data = { seller_guid, guid: del };
+    try {
+      const response = await axios({
+        method: "POST",
+        url: `${API}/tt/del_expense`,
+        data,
+      });
+      if (response.status >= 200 && response.status < 300) {
+        getData();
         return response?.data;
       } else {
         throw Error(`Error: ${response.status}`);
@@ -1628,6 +1655,19 @@ const requestSlice = createSlice({
       Alert.alert("Упс, что-то пошло не так!");
     });
     builder.addCase(addExpenseTT.pending, (state, action) => {
+      state.preloader = true;
+    });
+
+    /////// delExpenseTT
+    builder.addCase(delExpenseTT.fulfilled, (state, action) => {
+      state.preloader = false;
+    });
+    builder.addCase(delExpenseTT.rejected, (state, action) => {
+      state.error = action.payload;
+      state.preloader = false;
+      alert("Упс, что-то пошло не так!");
+    });
+    builder.addCase(delExpenseTT.pending, (state, action) => {
       state.preloader = true;
     });
 
