@@ -19,8 +19,6 @@ export const logInAccount = createAsyncThunk(
   "logInAccount",
   async function (props, { dispatch, rejectWithValue }) {
     const { dataLogin, navigation, data } = props;
-    console.log(dataLogin, data, "props");
-    console.log(`${API}/tt/login`, "login");
     try {
       const response = await axios({
         method: "POST",
@@ -30,8 +28,6 @@ export const logInAccount = createAsyncThunk(
       if (response.status >= 200 && response.status < 300) {
         const { result, seller_guid, seller_fio } = response?.data;
         const { point_name, count_type } = response?.data;
-
-        console.log(response?.data);
 
         if (+result === 1) {
           // Сохраняю seller_guid в AsyncStorage
@@ -257,15 +253,11 @@ export const getCategoryTT = createAsyncThunk(
       ? `${API}/tt/get_category?seller_guid=${seller_guid}&workshop_guid=${workshop_guid}` //// для пр0дажи и возрата
       : `${API}/tt/get_category_all`; //// для сопутки
 
-    console.log(urlLink, "urlLink getCategoryTT");
-
     try {
       const response = await axios(urlLink);
       if (response.status >= 200 && response.status < 300) {
         const category_guid = response.data?.[0]?.category_guid || "";
         dispatch(changeActiveSelectCategory(category_guid)); /// исользую в продаже и в остатках
-
-        console.log(workshop_guid, "workshop_guid");
 
         if (type === "leftovers") {
           if (category_guid) {
@@ -306,7 +298,6 @@ export const getProductTT = createAsyncThunk(
       ? `${API}/tt/get_product?categ_guid=${guid}&seller_guid=${seller_guid}&workshop_guid=${workshop_guid}` ///// продажа и возрат
       : `${API}/tt/get_product_all?categ_guid=${guid}&workshop_guid=${workshop_guid}`; //// для сопутки
 
-    console.log(urlLink, "urlLink getProductTT");
     try {
       const response = await axios(urlLink);
       if (response.status >= 200 && response.status < 300) {
@@ -358,7 +349,6 @@ export const searchProdSale = createAsyncThunk(
     try {
       const response = await axios(urlLink);
       if (response.status >= 200 && response.status < 300) {
-        console.log(response?.data, "response?.data");
         return response?.data;
       } else {
         throw Error(`Error: ${response.status}`);
@@ -374,8 +364,6 @@ export const getMyLeftovers = createAsyncThunk(
   "getMyLeftovers",
   async function (props, { dispatch, rejectWithValue }) {
     const { seller_guid, category_guid, workshop_guid } = props;
-
-    console.log(category_guid, "category_guid");
 
     try {
       const response = await axios({
@@ -1052,7 +1040,6 @@ export const getWorkShopsForRevision = createAsyncThunk(
         `${API}/tt/get_leftover_workshop?seller_guid=${seller_guid}`
       );
       if (response.status >= 200 && response.status < 300) {
-        console.log(response.data, "getWorkShopsForRevision");
         return response.data;
       } else {
         throw Error(`Error: ${response.status}`);

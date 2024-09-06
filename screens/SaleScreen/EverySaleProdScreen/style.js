@@ -63,14 +63,14 @@ const styles = StyleSheet.create({
 
   btnAdd: {
     color: "#fff",
-    paddingTop: 10,
-    paddingBottom: 10,
+    paddingTop: 8,
+    paddingBottom: 13,
     borderRadius: 8,
     fontWeight: "600",
-    fontSize: 18,
+    fontSize: 16,
     backgroundColor: "rgba(97 ,100, 239,0.7)",
-    minWidth: 110,
-    width: 110,
+    minWidth: 100,
+    width: 100,
     margin: 0,
   },
 

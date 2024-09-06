@@ -1,5 +1,5 @@
 ////// hooks
-import { useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 
 /////// tags
@@ -24,13 +24,20 @@ import { getListSoldProd } from "../../../store/reducers/requestSlice.js";
 import { transformDateTime } from "../../../helpers/transformDate.js";
 import { ViewButton } from "../../../customsTags/ViewButton.jsx";
 
-const SortDateSaleProd = ({ guidInvoice, seller_guid }) => {
+/////
+import BottomSheet, { BottomSheetBackdrop } from "@gorhom/bottom-sheet";
+
+const SortDateSaleProd = ({ props }) => {
+  const { seller_guid, guidInvoice, refAccord } = props;
   const dispatch = useDispatch();
 
   const [startDate, setStartDate] = useState(getToday());
   const [open, setOpen] = useState(false);
 
-  const openDate = () => setOpen(true);
+  const openDate = useCallback((index) => {
+    refAccord.current?.snapToIndex(index);
+  }, []);
+
   const closeDate = () => setOpen(false);
 
   const onChange = (date) => setStartDate(date);
@@ -44,11 +51,11 @@ const SortDateSaleProd = ({ guidInvoice, seller_guid }) => {
   return (
     <>
       <View style={styles.dateSort}>
-        <TouchableOpacity style={styles.btnDate} onPress={openDate}>
+        <TouchableOpacity style={styles.btnDate} onPress={() => openDate(0)}>
           <Image style={styles.btnDateIcon} source={dateIcon} />
         </TouchableOpacity>
       </View>
-      <Modal
+      {/* <Modal
         animationType="fade"
         transparent={true}
         visible={open}
@@ -73,7 +80,7 @@ const SortDateSaleProd = ({ guidInvoice, seller_guid }) => {
             </View>
           </View>
         </TouchableWithoutFeedback>
-      </Modal>
+      </Modal> */}
     </>
   );
 };

@@ -3,6 +3,16 @@ import { StyleSheet } from "react-native";
 const styles = StyleSheet.create({
   parentSolds: { paddingBottom: 60 },
 
+  totalSum: {
+    fontSize: 18,
+    fontWeight: "500",
+    color: "rgba(47, 71, 190, 0.987)",
+    padding: 8,
+    paddingBottom: 7,
+    borderBottomWidth: 2,
+    borderColor: "rgba(47, 71, 190, 0.287)",
+  },
+
   container: {
     backgroundColor: "rgba(162, 178, 238, 0.102)",
     minWidth: "100%",
@@ -78,14 +88,7 @@ const styles = StyleSheet.create({
 
   flatList: {
     width: "100%",
-    paddingTop: 8,
     paddingBottom: 40,
-  },
-
-  totalSum: {
-    fontSize: 18,
-    fontWeight: "600",
-    padding: 8,
   },
 
   //////////////////// krestik

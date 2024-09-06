@@ -3,6 +3,7 @@ import { FlatList, Text, View } from "react-native";
 
 ////// helpers
 import { objTitleLeftov } from "../../../helpers/Data";
+import { formatCount } from "../../../helpers/amounts";
 
 ///// style
 import styles from "./style";
@@ -37,11 +38,15 @@ export const TablesLeftovers = ({ arr }) => {
             <Text style={styles.name}>
               {index + 1}. {item?.product_name}
             </Text>
-            <Text style={styles.price}>{item?.price}</Text>
-            <Text style={styles.ostatokStart}>{item?.start_outcome}</Text>
-            <Text style={styles.prihod}>{item?.income}</Text>
-            <Text style={styles.rashod}>{item?.outcome}</Text>
-            <Text style={styles.ostatokEnd}>{item?.end_outcome}</Text>
+            <Text style={styles.price}>{formatCount(item?.price)}</Text>
+            <Text style={styles.ostatokStart}>
+              {formatCount(item?.start_outcome)}
+            </Text>
+            <Text style={styles.prihod}>{formatCount(item?.income)}</Text>
+            <Text style={styles.rashod}>{formatCount(item?.outcome)}</Text>
+            <Text style={styles.ostatokEnd}>
+              {formatCount(item?.end_outcome)}
+            </Text>
           </View>
         )}
         keyExtractor={(item, index) => `${item.guid}${index}`}

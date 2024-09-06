@@ -70,7 +70,9 @@ export const Navigation = () => {
 
   const { data } = useSelector((state) => state.saveDataSlice);
 
-  useEffect(() => getLocalDataUser({ changeLocalData, dispatch }), []);
+  useEffect(() => {
+    getLocalDataUser({ changeLocalData, dispatch });
+  }, []);
 
   const checkLogin = !data?.seller_guid;
 

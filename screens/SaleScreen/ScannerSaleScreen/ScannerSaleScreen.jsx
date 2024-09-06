@@ -55,13 +55,13 @@ const isCodeInCenter = (bounds) => {
   // console.log(size.height, "size.height");
 
   const check1 = codeLeft >= frameLeft;
-  console.log(check1, "check1");
+  // console.log(check1, "check1");
   const check2 = codeRight <= frameRight;
-  console.log(check2, "check2");
+  // console.log(check2, "check2");
   const check3 = codeTop >= frameTop;
-  console.log(check3, "check3");
+  // console.log(check3, "check3");
   const check4 = codeBottom <= frameBottom;
-  console.log(check4, "check4");
+  // console.log(check4, "check4");
 
   const allCheck = check1 && check2 && check3 && check4;
 

@@ -1,17 +1,19 @@
 ///// tags
 import { Text, View, Alert } from "react-native";
 import { TouchableOpacity, KeyboardAvoidingView } from "react-native";
-import { TextInput, Keyboard } from "react-native";
+import { TextInput } from "react-native";
 
-///hooks
+///// hooks
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-////style
+///// style
 import styles from "./style.js";
 
-////components
+///// components
 import { ViewButton } from "../../../customsTags/ViewButton.jsx";
+
+///// fns
 import { getEveryProd } from "../../../store/reducers/requestSlice.js";
 import { addProductInvoiceTT } from "../../../store/reducers/requestSlice.js";
 

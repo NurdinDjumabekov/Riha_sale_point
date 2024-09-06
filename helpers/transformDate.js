@@ -17,3 +17,11 @@ export const transformDateTime = (dateString) => {
 
   return newDateString;
 };
+
+export const transformDatePeriod = (dateString) => {
+  ///  Mon Apr 01 2019 20:29:00 GMT+0600  ===>  01.04.2019
+  const options = { day: "2-digit", month: "2-digit", year: "numeric" };
+  const date = new Date(dateString);
+  const formattedDate = date?.toLocaleDateString("ru-RU", options);
+  return formattedDate;
+};

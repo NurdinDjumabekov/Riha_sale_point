@@ -1,6 +1,6 @@
 ////// hooks
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 ////// tags
 import { FlatList, Text, View } from "react-native";
@@ -19,12 +19,17 @@ import { formatCount, sumtotalPrice } from "../../../helpers/amounts";
 
 ////style
 import styles from "./style";
+import ModalSortProds from "../../../components/SaleProd/ModalSortProds/ModalSortProds";
+import ModalSortPeriodProds from "../../../components/SaleProd/ModalSortPeriodProds/ModalSortPeriodProds";
 
 export const SoldProductScreen = ({ route, navigation }) => {
   //// список проданных продуктов
   const dispatch = useDispatch();
   const { guidInvoice } = route.params;
   const [modalItemGuid, setModalItemGuid] = useState(null); // Состояние для идентификатора элемента, для которого открывается модальное окно
+
+  const refAccord = useRef(null);
+  const refPeriod = useRef(null);
 
   const { preloader, listSoldProd } = useSelector(
     (state) => state.requestSlice
@@ -34,11 +39,11 @@ export const SoldProductScreen = ({ route, navigation }) => {
   const getData = () => dispatch(getListSoldProd({ guidInvoice, seller_guid }));
 
   useEffect(() => {
+    ///// только для продажи
     navigation.setOptions({
       headerRight: () => (
-        <SortDateSaleProd seller_guid={seller_guid} guidInvoice={guidInvoice} />
+        <SortDateSaleProd props={{ seller_guid, guidInvoice, refAccord }} />
       ),
-      ///// только для продажи
     });
 
     getData();
@@ -56,53 +61,59 @@ export const SoldProductScreen = ({ route, navigation }) => {
   }
 
   return (
-    <View style={[styles.parentSolds]}>
-      <FlatList
-        contentContainerStyle={styles.flatList}
-        data={listSoldProd}
-        renderItem={({ item, index }) => (
-          <View style={styles.container}>
-            <View style={styles.parentBlock}>
-              <View style={styles.mainData}>
-                <Text style={styles.titleNum}>{index + 1} </Text>
-                <View>
-                  <Text style={styles.titleDate}>{item.date || "..."}</Text>
-                  <Text style={styles.totalPrice}>
-                    {item?.product_price} сом х {item?.count} {item?.unit} ={" "}
-                    {formatCount(item?.total)} сом
-                  </Text>
-                </View>
-              </View>
-              <TouchableOpacity
-                style={styles.krest}
-                onPress={() => setModalItemGuid(item?.guid)}
-              >
-                <View style={[styles.line, styles.deg]} />
-                <View style={[styles.line, styles.degMinus]} />
-              </TouchableOpacity>
-            </View>
-            <View>
-              <Text style={styles.title}>{item?.product_name}</Text>
-            </View>
-            <ConfirmationModal
-              visible={modalItemGuid === item.guid}
-              message="Отменить продажу ?"
-              onYes={() => del(item.guid)}
-              onNo={() => setModalItemGuid(null)}
-              onClose={() => setModalItemGuid(null)}
-            />
-          </View>
+    <>
+      <View style={styles.parentSolds}>
+        {!!!noneData && (
+          <Text style={styles.totalSum}>
+            Итоговая сумма: {sumtotalPrice(listSoldProd)} сом
+          </Text>
         )}
-        keyExtractor={(item, index) => `${item.guid}${index}`}
-        refreshControl={
-          <RefreshControl refreshing={preloader} onRefresh={getData} />
-        }
+        <FlatList
+          contentContainerStyle={styles.flatList}
+          data={listSoldProd}
+          renderItem={({ item, index }) => (
+            <View style={styles.container}>
+              <View style={styles.parentBlock}>
+                <View style={styles.mainData}>
+                  <Text style={styles.titleNum}>{index + 1} </Text>
+                  <View>
+                    <Text style={styles.titleDate}>{item.date || "..."}</Text>
+                    <Text style={styles.totalPrice}>
+                      {item?.product_price} сом х {item?.count} {item?.unit} ={" "}
+                      {formatCount(item?.total)} сом
+                    </Text>
+                  </View>
+                </View>
+                <TouchableOpacity
+                  style={styles.krest}
+                  onPress={() => setModalItemGuid(item?.guid)}
+                >
+                  <View style={[styles.line, styles.deg]} />
+                  <View style={[styles.line, styles.degMinus]} />
+                </TouchableOpacity>
+              </View>
+              <View>
+                <Text style={styles.title}>{item?.product_name}</Text>
+              </View>
+              <ConfirmationModal
+                visible={modalItemGuid === item.guid}
+                message="Отменить продажу ?"
+                onYes={() => del(item.guid)}
+                onNo={() => setModalItemGuid(null)}
+                onClose={() => setModalItemGuid(null)}
+              />
+            </View>
+          )}
+          keyExtractor={(item, index) => `${item.guid}${index}`}
+          refreshControl={
+            <RefreshControl refreshing={preloader} onRefresh={getData} />
+          }
+        />
+      </View>
+      <ModalSortProds
+        props={{ seller_guid, guidInvoice, refAccord, refPeriod }}
       />
-      {!!!noneData && (
-        <Text style={styles.totalSum}>
-          Итоговая сумма: {sumtotalPrice(listSoldProd) || 0} сом
-        </Text>
-      )}
-    </View>
+      <ModalSortPeriodProds props={{ seller_guid, guidInvoice, refPeriod }} />
+    </>
   );
 };
